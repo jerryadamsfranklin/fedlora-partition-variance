@@ -14,6 +14,7 @@ import os
 import platform
 import subprocess
 import sys
+import time
 from copy import deepcopy
 from datetime import datetime
 import math
@@ -70,6 +71,47 @@ def load_config(path: str) -> Dict[str, Any]:
         config = _deep_merge(base, config)
 
     return config
+
+
+def _hardware_info() -> dict:
+    import hashlib
+    import socket
+    import subprocess
+
+    import datasets as hf_datasets
+    import peft
+    import transformers
+
+    info = {
+        "torch": torch.__version__,
+        "transformers": transformers.__version__,
+        "peft": peft.__version__,
+        "datasets": hf_datasets.__version__,
+        "hostname_hash": hashlib.sha256(socket.gethostname().encode()).hexdigest()[:12],
+    }
+    if torch.cuda.is_available():
+        p = torch.cuda.get_device_properties(0)
+        info.update(
+            cuda_version=torch.version.cuda,
+            gpu_name=torch.cuda.get_device_name(0),
+            gpu_count=torch.cuda.device_count(),
+            gpu_mem_total_bytes=int(p.total_memory),
+            peak_mem_allocated_bytes=int(torch.cuda.max_memory_allocated(0)),
+        )
+        try:
+            info["nvidia_smi"] = subprocess.check_output(
+                [
+                    "nvidia-smi",
+                    "--query-gpu=name,driver_version,memory.total",
+                    "--format=csv,noheader",
+                ],
+                text=True,
+            ).strip()
+        except Exception:
+            info["nvidia_smi"] = None
+    elif torch.backends.mps.is_available():
+        info["mps"] = True
+    return info
 
 
 def resolve_device(requested: str | None) -> str:
@@ -164,6 +206,7 @@ def apply_overrides(config: Dict[str, Any], overrides: list[str] | None) -> Dict
 
 
 def main() -> None:
+    _t0 = time.perf_counter()
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", required=True, help="Config YAML path")
     parser.add_argument(
@@ -694,6 +737,12 @@ def main() -> None:
         "git_commit": _git(["git", "rev-parse", "HEAD"]),
         "git_branch": _git(["git", "rev-parse", "--abbrev-ref", "HEAD"]),
         "git_dirty": bool(_git(["git", "status", "--porcelain"])),
+        "git_dirty_tracked": bool(
+            _git(["git", "status", "--porcelain", "--untracked-files=no"])
+        ),
+        "git_describe": _git(["git", "describe", "--tags", "--always"]),
+        "hardware": _hardware_info(),
+        "wall_clock_s": float(time.perf_counter() - _t0),
         "python": sys.version.split()[0],
         "platform": platform.platform(),
         "overrides": {
