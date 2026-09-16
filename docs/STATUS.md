@@ -6,7 +6,7 @@ Replace this file in the Claude Project whenever the state changes. Keep only on
 
 ## Current phase
 
-Phase D complete pending commit and full test run. Phase E (pre-registration and freeze-v1) authorized; Cursor to execute after cleanup, full pytest, and fast-forward merge.
+freeze-v1 tagged; Phase E complete; next is Phase F timing on Vast.
 
 ## Done
 
@@ -14,16 +14,14 @@ Phase D complete pending commit and full test run. Phase E (pre-registration and
 - Task 01 complete: v0-import (9cbc63e) verified clean
 - Phase B on main, full-diff review passed
 - Phase C and addendum on main (ab4e69e)
-- Phase D smoke checks passed; group-level sharding; merged configs, grid_status.py, orphan handling approved
-- Launcher fixes F1 to F5 implemented; end-to-end smoke grid on Mac passed: E1 (3 complete, attempt 1, one folder each), E2 (rerun trains nothing), E3 (holdout-only rerun in same folder), E4 (status correct at a different absolute path); tests/test_run_grid.py 19 passed
+- Phase D complete: launcher fixes F1 to F5; smoke grid; group-level sharding; fast-forward merged to main (48d0198)
+- Phase E complete: `docs/ANALYSIS_PLAN.md` pre-registered; tag `freeze-v1` at 0812fcf3bb1a31a7ad8ba126d0818d9f84ea3303
 
 ## Next
 
-1. Cursor: delete smoke outputs, full pytest (>= 69), commit and push phase-d, fast-forward into main
-2. Phase E: docs/ANALYSIS_PLAN.md from current Phase I (with I0 and amended I6), Phase J, I7; tag freeze-v1; record SHA
-3. Set up repo access for Vast (deploy key or read-only token)
-4. Phase F timing on Vast (same GPU model across instances of a grid)
-5. Confirm what the earlier Vast instance is running; stop it unless it is a timing run
+1. Set up repo access for Vast (deploy key or read-only token)
+2. Phase F timing on Vast (same GPU model across instances of a grid)
+3. Confirm what the earlier Vast instance is running; stop it unless it is a timing run
 
 ## Decisions made
 
@@ -34,7 +32,7 @@ Phase D complete pending commit and full test run. Phase E (pre-registration and
 - Phase B stays on main (no history rewrite). From Phase C: one branch per phase, fast-forward merge after review, never force-push
 - Pre-freeze amendments: effective clients and discarded trailing samples pre-registered; whole-group sharding; V2 requires identical gpu_name within a grid; communication compared only within method
 - Pre-freeze launcher fixes: path normalization, no retraining of complete cells, freeze tag check via --points-at, per-cell CSV with workers>1, smoke-grid support; run table built from holdout JSON only; jsonl attempt-0 lines are skip records and ignored
-- Freeze authorized 16 Sep 2026
+- Freeze authorized 16 Sep 2026; freeze-v1 tagged
 
 ## Findings to carry into the paper
 
