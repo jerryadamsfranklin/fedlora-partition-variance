@@ -526,8 +526,18 @@ def main() -> None:
         )
     )
 
+    from src.data.partition_stats import compute_partition_stats, resolve_label_source
+
+    require_label = bool(data_cfg.get("require_label_column", False))
+    label_source = resolve_label_source(
+        dataset.column_names,
+        partition_method,
+        label_column,
+        require_label,
+    )
+
     dataset_for_partition = dataset
-    if partition_method == "label_skew" and label_column not in dataset.column_names:
+    if label_source == "length_proxy":
         # Alpaca has no class labels; bucket by instruction length as a task-diversity proxy.
         def _proxy_labels_from_length(examples):
             if "instruction" in examples:
@@ -576,6 +586,19 @@ def main() -> None:
 
     print(f"Partition stats: {partitioner.get_stats(client_datasets)}")
     print(f"Seeds: data_seed={data_seed}  run_seed={run_seed}")
+
+    os.makedirs(output_dir, exist_ok=True)
+    _pstats = compute_partition_stats(
+        client_datasets,
+        label_column=label_column if label_column in dataset_for_partition.column_names else None,
+        label_source=label_source,
+        partition_method=partition_method,
+        partition_alpha=partition_alpha if partition_method == "label_skew" else None,
+        data_seed=data_seed,
+        num_clients_configured=num_clients,
+    )
+    with open(os.path.join(output_dir, "partition_stats.json"), "w") as f:
+        json.dump(_pstats, f, indent=2)
 
     # Re-seed for training / client init so --run-seed can vary independently.
     _random.seed(run_seed)
