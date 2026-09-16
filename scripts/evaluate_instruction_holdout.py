@@ -172,6 +172,20 @@ def format_instruction_texts(examples: Dict[str, List[Any]]) -> List[str]:
             f"### Instruction:\n{inst}\n\n### Response:\n{out}"
             for inst, out in zip(examples["instruction"], examples["output"])
         ]
+    if {"instruction", "context", "response"}.issubset(cols):
+        out = []
+        for inst, ctx, resp in zip(
+            examples["instruction"], examples["context"], examples["response"]
+        ):
+            if ctx:
+                out.append(
+                    f"### Instruction:\n{inst}\n\n"
+                    f"### Context:\n{ctx}\n\n"
+                    f"### Response:\n{resp}"
+                )
+            else:
+                out.append(f"### Instruction:\n{inst}\n\n### Response:\n{resp}")
+        return out
     if {"instruction", "response"}.issubset(cols):
         return [
             f"### Instruction:\n{inst}\n\n### Response:\n{resp}"
@@ -416,6 +430,8 @@ def main() -> None:
         # Tuned (adapter)
         model.set_lora_state_dict(state)
         tuned = evaluate_loss(model.model, loader, device=device)
+        eval_dtype = str(next(model.model.parameters()).dtype)
+        formatter_version = "v2-dolly-context"
 
         # Base (no adapter) computed once per evaluation config key
         base_key = (
@@ -465,6 +481,8 @@ def main() -> None:
             "lora_r": lora_r,
             "lora_alpha": lora_alpha,
             "device": device,
+            "formatter_version": formatter_version,
+            "eval_dtype": eval_dtype,
             "base_loss": base["loss"],
             "base_perplexity": base["perplexity"],
             "tuned_loss": tuned["loss"],
@@ -485,6 +503,8 @@ def main() -> None:
                 "heldout_start": args.start_index,
                 "heldout_examples": args.num_examples,
                 "max_seq_length": max_seq_length,
+                "formatter_version": formatter_version,
+                "eval_dtype": eval_dtype,
             },
         }
         out_path.parent.mkdir(parents=True, exist_ok=True)
