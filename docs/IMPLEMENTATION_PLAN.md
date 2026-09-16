@@ -368,7 +368,7 @@ Arguments:
 
 Behavior:
 
-1. **Enumerate cells.** Each cell is (het, data_seed, run_seed, method). Order them so partial completion stays balanced: sort by `(het_order, data_seed, run_seed)` with IID first, then method. Assign cells to shards by position modulo `num_shards`.
+1. **Enumerate cells.** Each cell is (het, data_seed, run_seed, method). Order them so partial completion stays balanced: sort by `(het_order, data_seed, run_seed)` with IID first, then method (fedit, ffa_lora, flora). Assign whole (het, data_seed, run_seed) groups to shards so all methods of a group run on the same GPU: order groups as above, then `shard = group_index mod num_shards`.
 2. **Production guard.** When `--production` is set, refuse to start unless `git describe --exact-match --tags HEAD` returns `freeze-v1`, `git status --porcelain --untracked-files=no` is empty, and `HF_TOKEN` is set.
 3. **Output directory.** A cell's directory is `results/raw/vp_{model}_{method}_{het}/{method}/seed_{d}_run{r}/{tag}/<timestamp>/`.
 4. **Per-cell state.**
@@ -580,7 +580,7 @@ Write `scripts/verify_varpart.py` in the style of the old `verify_numbers.py`: c
 | ID | Assertion |
 |---|---|
 | V1 | Each grid cell has exactly one complete production run tagged `prod_v1`; no duplicates, no extras |
-| V2 | Every run has `git_describe == freeze-v1`, `git_dirty_tracked == false`, device `cuda`, and `hardware.gpu_name` present. Library versions are identical across runs of the same grid |
+| V2 | Every run has `git_describe == freeze-v1`, `git_dirty_tracked == false`, device `cuda`, and `hardware.gpu_name` present. Library versions are identical across runs of the same grid. `hardware.gpu_name` is identical across all runs of the same grid |
 | V3 | Merged config values match Section 0: model, target modules, r, alpha, rounds, clients, dataset, max_samples, partition method, alpha, label column |
 | V4 | `partition_stats.label_source == "column"`; the global histogram has 8 keys and sums to 3000 |
 | V5 | Same data seed gives identical `client_sizes` and per-client histograms across all methods and run seeds (determinism) |

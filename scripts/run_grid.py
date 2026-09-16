@@ -105,12 +105,32 @@ def enumerate_cells(grid: Dict[str, Any]) -> List[Cell]:
     return cells
 
 
+def group_key(cell: Cell) -> Tuple[str, int, int]:
+    """Partition/run identity shared by all methods in a group."""
+    return (cell.het, cell.data_seed, cell.run_seed)
+
+
+def ordered_groups(cells: Sequence[Cell]) -> List[Tuple[str, int, int]]:
+    """Unique (het, data_seed, run_seed) groups in cell enumeration order."""
+    groups: List[Tuple[str, int, int]] = []
+    seen: set[Tuple[str, int, int]] = set()
+    for cell in cells:
+        key = group_key(cell)
+        if key not in seen:
+            seen.add(key)
+            groups.append(key)
+    return groups
+
+
 def shard_cells(cells: Sequence[Cell], shard: int, num_shards: int) -> List[Cell]:
     if num_shards < 1:
         raise ValueError("num_shards must be >= 1")
     if shard < 0 or shard >= num_shards:
         raise ValueError(f"shard must be in [0, {num_shards})")
-    return [c for i, c in enumerate(cells) if i % num_shards == shard]
+    group_shard = {
+        key: idx % num_shards for idx, key in enumerate(ordered_groups(cells))
+    }
+    return [c for c in cells if group_shard[group_key(c)] == shard]
 
 
 def production_guard(

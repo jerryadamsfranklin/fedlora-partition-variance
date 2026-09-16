@@ -27,3 +27,5 @@ Baseline test count at v0-import: 28 passed
 - D: Mac smoke tests (docs/smoke_report.md); classify orphan run folders in
   run_grid/grid_status; TinyLlama per-client upload 9,011,200 bytes (FedIT/FLoRA;
   FFA upload same, download B-only 3,244,032).
+- D fix: shard by (het, data_seed, run_seed) group so all methods share a GPU;
+  tl counts 27/24/24 and l3 15/15/15 for three shards.

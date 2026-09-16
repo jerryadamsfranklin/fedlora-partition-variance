@@ -9,6 +9,7 @@ import yaml
 
 from scripts.run_grid import (
     enumerate_cells,
+    group_key,
     load_grid,
     production_guard,
     shard_cells,
@@ -35,6 +36,32 @@ def test_shards_partition_exactly_once(n: int):
         seen.extend(shard_cells(cells, shard, n))
     assert len(seen) == len(cells)
     assert {c.cell_id for c in seen} == {c.cell_id for c in cells}
+
+
+@pytest.mark.parametrize("n", [1, 3, 6])
+def test_group_methods_share_shard(n: int):
+    cells = enumerate_cells(load_grid(REPO / "grids" / "tl.yaml"))
+    shard_by_cell = {}
+    for shard in range(n):
+        for cell in shard_cells(cells, shard, n):
+            shard_by_cell[cell.cell_id] = shard
+    by_group: dict[tuple, set[int]] = {}
+    for cell in cells:
+        by_group.setdefault(group_key(cell), set()).add(shard_by_cell[cell.cell_id])
+    for group, shards in by_group.items():
+        assert len(shards) == 1, f"group {group} split across shards {shards}"
+
+
+def test_tl_shard_run_counts_for_three_shards():
+    cells = enumerate_cells(load_grid(REPO / "grids" / "tl.yaml"))
+    counts = [len(shard_cells(cells, shard, 3)) for shard in range(3)]
+    assert counts == [27, 24, 24]
+
+
+def test_l3_shard_run_counts_for_three_shards():
+    cells = enumerate_cells(load_grid(REPO / "grids" / "l3.yaml"))
+    counts = [len(shard_cells(cells, shard, 3)) for shard in range(3)]
+    assert counts == [15, 15, 15]
 
 
 def test_first_three_a01_are_methods_for_2001_7001():
