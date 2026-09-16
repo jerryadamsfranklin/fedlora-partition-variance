@@ -663,6 +663,8 @@ For each method pair at alpha 0.1: paired t-test on partition-level means (avera
 Per partition, compute:
 
 - active clients
+- effective clients (active clients with at least one optimizer step), per model
+- discarded trailing samples (samples never entering a completed gradient-accumulation block), per model
 - Gini coefficient of client sizes
 - mean Jensen-Shannon divergence between each active client's category distribution and the global distribution (natural log)
 
@@ -733,7 +735,7 @@ Jerry re-checks a random 20% of rows and marks `checked`.
 | 6 Conclusion | 150 | |
 | Declarations | 100 | AI use, data and code availability, funding, conflicts |
 
-**Required limitations paragraph:** two model scales only (1.1B, 3B); one dataset; 15 rounds and 10 clients; 6 partitions at 3B; held-out loss as the only quality metric; exploratory RQ4 with n = 10.
+**Required limitations paragraph:** two model scales only (1.1B, 3B); one dataset; 15 rounds and 10 clients; 6 partitions at 3B; held-out loss as the only quality metric; exploratory RQ4 with n = 10; local updates use only complete gradient-accumulation blocks; clients with fewer samples than one block contribute no update.
 
 **Writing rules:**
 

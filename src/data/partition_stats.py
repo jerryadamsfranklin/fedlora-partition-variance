@@ -69,3 +69,52 @@ def compute_partition_stats(
         "per_client_label_hist": per_client,
         "global_label_hist": {k: int(global_hist[k]) for k in sorted(global_hist)},
     }
+
+
+def optimizer_steps_for_n(
+    n: int,
+    *,
+    batch_size: int,
+    grad_accum: int,
+    local_epochs: int = 1,
+) -> int:
+    """
+    Optimizer steps taken by FederatedClient for n samples.
+
+    Matches client.py: DataLoader without drop_last; optimizer.step only when
+    (batch_index + 1) % grad_accum == 0. Trailing incomplete accumulation blocks
+    are discarded.
+    """
+    if n <= 0 or batch_size <= 0 or grad_accum <= 0 or local_epochs <= 0:
+        return 0
+    # ceil(n / batch_size) without float:
+    num_batches = (n + batch_size - 1) // batch_size
+    steps_per_epoch = num_batches // grad_accum
+    return int(steps_per_epoch * local_epochs)
+
+
+def discarded_trailing_samples(
+    n: int,
+    *,
+    batch_size: int,
+    grad_accum: int,
+    local_epochs: int = 1,
+) -> int:
+    """
+    Samples that never enter a completed accumulation block (per epoch), times epochs.
+
+    For one epoch: samples in leftover batches after floor(ceil(n/batch)/accum)
+    full accumulation blocks. Equivalent to n - used_batches * batch_size when
+    used_batches < num_batches, else 0; when zero steps, all n are discarded.
+    """
+    if n <= 0 or batch_size <= 0 or grad_accum <= 0 or local_epochs <= 0:
+        return 0
+    num_batches = (n + batch_size - 1) // batch_size
+    used_batches = (num_batches // grad_accum) * grad_accum
+    if used_batches == 0:
+        discarded_per_epoch = n
+    elif used_batches >= num_batches:
+        discarded_per_epoch = 0
+    else:
+        discarded_per_epoch = n - used_batches * batch_size
+    return int(discarded_per_epoch * local_epochs)
