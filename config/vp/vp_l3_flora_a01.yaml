@@ -1,0 +1,32 @@
+_inherit: ../base_config_llama3_3b.yaml
+
+experiment:
+  name: "vp_l3_flora_a01"
+  description: "Partition-variance study | flora | LLaMA-3.2-3B | Dolly-3k | alpha0.1"
+
+lora:
+  r: 16
+  lora_alpha: 32
+  lora_dropout: 0.1
+  target_modules: ["q_proj", "v_proj"]
+
+federated:
+  aggregation_method: "flora"
+  num_rounds: 15
+  num_clients: 10
+  clients_per_round: 10
+
+data:
+  dataset_name: "databricks/databricks-dolly-15k"
+  dataset_split: "train"
+  max_samples: 3000
+  partition_method: "label_skew"
+  partition_alpha: 0.1
+  label_column: "category"
+  require_label_column: true
+  eval_split: null
+  eval_samples: 300
+
+checkpointing:
+  save_every: 5
+  keep_last_n: 1
