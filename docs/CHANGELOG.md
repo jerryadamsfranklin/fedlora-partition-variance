@@ -22,3 +22,5 @@ Baseline test count at v0-import: 28 passed
   deps, HF login, prefetch, pytest).
 - C: `scripts/inspect_partitions.py` and `docs/partition_preview.txt` for Dolly
   train[0:3000] label_skew alpha=0.1, seeds 2001 to 2010.
+- C addendum: effective clients and discarded trailing samples (optimizer steps
+  only on complete accumulation blocks); pre-registered in I6 and limitations.
