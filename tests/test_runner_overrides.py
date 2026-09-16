@@ -1,7 +1,7 @@
 import pytest
 import torch
 
-from scripts.run_experiment import apply_overrides, resolve_device
+from scripts.run_experiment import _hardware_info, apply_overrides, resolve_device
 
 
 def test_resolve_device_auto_matches_legacy():
@@ -42,4 +42,11 @@ def test_apply_overrides_yaml_typing():
     assert out["c"] == 0.01 and isinstance(out["c"], float)
     assert out["d"] == "foo"
     assert out["e"] == 5e-05 and isinstance(out["e"], float)
+
+
+def test_hardware_info_has_version_keys():
+    info = _hardware_info()
+    for key in ("torch", "transformers", "peft", "datasets", "hostname_hash"):
+        assert key in info
+        assert info[key]
 
