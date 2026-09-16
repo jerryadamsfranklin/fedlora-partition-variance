@@ -22,6 +22,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT))
 
 HET_ORDER = {"iid": 0, "a01": 1}
+RESULTS_RAW_MARKER = "results/raw/"
 
 
 @dataclass(frozen=True)
@@ -133,32 +134,54 @@ def shard_cells(cells: Sequence[Cell], shard: int, num_shards: int) -> List[Cell
     return [c for c in cells if group_shard[group_key(c)] == shard]
 
 
+def _results_key(path: str | Path) -> str:
+    """Normalize absolute or relative run paths for comparison."""
+    s = str(path).replace("\\", "/")
+    idx = s.find(RESULTS_RAW_MARKER)
+    if idx < 0:
+        raise ValueError(f"path missing {RESULTS_RAW_MARKER!r}: {path!r}")
+    return s[idx:]
+
+
+def _resolve_run_dir(run_dir: Path) -> Path:
+    if run_dir.is_absolute():
+        return run_dir.resolve()
+    return (REPO_ROOT / run_dir).resolve()
+
+
 def production_guard(
+    grid: Dict[str, Any],
     *,
-    git_describe_exact=None,
+    git_points_at=None,
     git_status_tracked=None,
     env: Optional[Dict[str, str]] = None,
 ) -> None:
     """Refuse production launch unless freeze-v1, clean tracked tree, HF_TOKEN set."""
     env = env if env is not None else os.environ
 
+    if grid.get("overrides"):
+        raise SystemExit(
+            "ERROR: --production requires a grid with no overrides "
+            f"(found {grid.get('overrides')!r})"
+        )
+
     def _run(cmd: List[str]) -> str:
         return subprocess.check_output(cmd, text=True, cwd=str(REPO_ROOT)).strip()
 
-    if git_describe_exact is None:
+    if git_points_at is None:
         try:
-            tag = _run(["git", "describe", "--exact-match", "--tags", "HEAD"])
+            tags = [t for t in _run(["git", "tag", "--points-at", "HEAD"]).splitlines() if t]
         except subprocess.CalledProcessError as e:
             raise SystemExit(
-                "ERROR: --production requires HEAD to be tagged freeze-v1 "
-                f"(git describe --exact-match failed: {e})"
+                "ERROR: --production requires HEAD tagged freeze-v1 "
+                f"(git tag --points-at HEAD failed: {e})"
             ) from e
     else:
-        tag = git_describe_exact()
+        tags = git_points_at()
 
-    if tag != "freeze-v1":
+    if "freeze-v1" not in tags:
         raise SystemExit(
-            f"ERROR: --production requires exact tag freeze-v1, got {tag!r}"
+            f"ERROR: --production requires freeze-v1 in git tag --points-at HEAD; got {tags!r}"
         )
 
     if git_status_tracked is None:
@@ -182,7 +205,7 @@ def _timestamp_dirs(cell: Cell) -> List[Path]:
     return sorted([p for p in base.iterdir() if p.is_dir()])
 
 
-def _has_complete_results_json(run_dir: Path) -> bool:
+def _has_complete_results_json(run_dir: Path, expected_rounds: int = 15) -> bool:
     path = run_dir / "results.json"
     if not path.is_file():
         return False
@@ -192,12 +215,23 @@ def _has_complete_results_json(run_dir: Path) -> bool:
     except Exception:
         return False
     if isinstance(data, list):
-        return len(data) == 15
+        return len(data) == expected_rounds
     if isinstance(data, dict):
         rounds = data.get("rounds") or data.get("history") or data.get("results")
         if isinstance(rounds, list):
-            return len(rounds) == 15
+            return len(rounds) == expected_rounds
     return False
+
+
+def _checkpoint_matches_holdout(run_dir: Path, checkpoint_value: str) -> bool:
+    if not checkpoint_value:
+        return False
+    try:
+        return _results_key(checkpoint_value) == _results_key(
+            run_dir / "final_adapter_state.pt"
+        )
+    except ValueError:
+        return False
 
 
 def _has_holdout(run_dir: Path) -> bool:
@@ -207,8 +241,6 @@ def _has_holdout(run_dir: Path) -> bool:
     downstream = REPO_ROOT / "results" / "downstream_instruction"
     if not downstream.is_dir():
         return False
-    ckpt = run_dir / "final_adapter_state.pt"
-    ckpt_s = str(ckpt)
     for p in downstream.rglob("instruction_holdout.json"):
         try:
             payload = json.loads(p.read_text(encoding="utf-8"))
@@ -216,18 +248,22 @@ def _has_holdout(run_dir: Path) -> bool:
             continue
         row = payload.get("row") or {}
         meta = payload.get("meta") or {}
-        if str(row.get("checkpoint", "")) == ckpt_s or str(meta.get("checkpoint", "")) == ckpt_s:
+        if _checkpoint_matches_holdout(
+            run_dir, str(row.get("checkpoint", ""))
+        ) or _checkpoint_matches_holdout(
+            run_dir, str(meta.get("checkpoint", ""))
+        ):
             return True
     return False
 
 
-def classify_cell(cell: Cell) -> str:
+def classify_cell(cell: Cell, expected_rounds: int = 15) -> str:
     """Return complete | needs_holdout | resumable | orphan | fresh."""
     dirs = _timestamp_dirs(cell)
     for d in reversed(dirs):
         has_meta = (d / "run_meta.json").is_file()
         has_pstats = (d / "partition_stats.json").is_file()
-        has_results = _has_complete_results_json(d)
+        has_results = _has_complete_results_json(d, expected_rounds)
         if has_results and has_meta and has_pstats:
             if _has_holdout(d):
                 return "complete"
@@ -238,19 +274,21 @@ def classify_cell(cell: Cell) -> str:
     # no complete results.json and no resumable checkpoint.
     for d in reversed(dirs):
         has_pstats = (d / "partition_stats.json").is_file()
-        has_results = _has_complete_results_json(d)
+        has_results = _has_complete_results_json(d, expected_rounds)
         has_ckpt = (d / "checkpoints" / "latest.pt").is_file()
         if has_pstats and not has_results and not has_ckpt:
             return "orphan"
     return "fresh"
 
 
-def find_run_dir(cell: Cell, prefer: str) -> Optional[Path]:
+def find_run_dir(
+    cell: Cell, prefer: str, expected_rounds: int = 15
+) -> Optional[Path]:
     dirs = _timestamp_dirs(cell)
     for d in reversed(dirs):
         has_meta = (d / "run_meta.json").is_file()
         has_pstats = (d / "partition_stats.json").is_file()
-        has_results = _has_complete_results_json(d)
+        has_results = _has_complete_results_json(d, expected_rounds)
         if prefer == "needs_holdout" and has_results and has_meta and has_pstats:
             return d
         if prefer == "resumable" and (d / "checkpoints" / "latest.pt").is_file():
@@ -269,7 +307,12 @@ def _gpu_name() -> str:
         return ""
 
 
-def train_cmd(cell: Cell, device: str, resume: Optional[Path] = None) -> List[str]:
+def train_cmd(
+    cell: Cell,
+    device: str,
+    resume: Optional[Path] = None,
+    overrides: Optional[Sequence[str]] = None,
+) -> List[str]:
     cmd = [
         sys.executable,
         str(REPO_ROOT / "scripts" / "run_experiment.py"),
@@ -286,6 +329,8 @@ def train_cmd(cell: Cell, device: str, resume: Optional[Path] = None) -> List[st
         "--save-every",
         "5",
     ]
+    for override in overrides or ():
+        cmd.extend(["--override", override])
     if resume is not None:
         cmd.extend(["--resume", str(resume)])
     return cmd
@@ -297,7 +342,13 @@ def holdout_cmd(
     device: str,
     grid_name: str,
     shard: int,
+    *,
+    workers: int = 1,
 ) -> List[str]:
+    if workers > 1:
+        csv_name = f"holdout_{grid_name}_shard{shard}_{cell.cell_id}.csv"
+    else:
+        csv_name = f"holdout_{grid_name}_shard{shard}.csv"
     return [
         sys.executable,
         str(REPO_ROOT / "scripts" / "evaluate_instruction_holdout.py"),
@@ -312,7 +363,7 @@ def holdout_cmd(
         "--max-seq-length",
         "256",
         "--summary-csv",
-        str(REPO_ROOT / "analysis" / f"holdout_{grid_name}_shard{shard}.csv"),
+        str(REPO_ROOT / "analysis" / csv_name),
         "--skip-existing",
     ]
 
@@ -335,8 +386,11 @@ def run_one_cell(
     dry_run: bool,
     log_dir: Path,
     jsonl_path: Path,
+    expected_rounds: int = 15,
+    overrides: Optional[Sequence[str]] = None,
+    workers: int = 1,
 ) -> str:
-    status0 = classify_cell(cell)
+    status0 = classify_cell(cell, expected_rounds)
     if status0 == "complete":
         _append_jsonl(
             jsonl_path,
@@ -370,31 +424,58 @@ def run_one_cell(
         train_exit = None
         holdout_exit = None
         run_dir: Optional[Path] = None
-        cur = classify_cell(cell)
+        cur = classify_cell(cell, expected_rounds)
 
         try:
+            if cur == "complete":
+                _append_jsonl(
+                    jsonl_path,
+                    {
+                        "cell_id": cell.cell_id,
+                        "attempt": attempt,
+                        "status": "complete",
+                        "start": start,
+                        "end": datetime.now(timezone.utc).isoformat(),
+                        "duration_s": round(time.perf_counter() - t0, 3),
+                        "train_exit": 0,
+                        "holdout_exit": 0,
+                        "run_dir": None,
+                        "gpu_name": _gpu_name(),
+                        "note": "already complete before attempt",
+                    },
+                )
+                return "complete"
+
             if holdout_only or cur == "needs_holdout":
-                run_dir = find_run_dir(cell, "needs_holdout")
+                run_dir = find_run_dir(cell, "needs_holdout", expected_rounds)
                 if run_dir is None:
                     raise RuntimeError("needs_holdout but no complete training dir found")
-            else:
+            elif cur in ("fresh", "orphan", "resumable"):
                 resume = None
                 if cur == "resumable":
-                    resume = find_run_dir(cell, "resumable")
-                cmd = train_cmd(cell, device, resume=resume)
+                    resume = find_run_dir(cell, "resumable", expected_rounds)
+                cmd = train_cmd(cell, device, resume=resume, overrides=overrides)
                 train_exit, out, err = _run_logged(cmd, log_dir / f"{cell.cell_id}.log")
-                run_dir = _parse_output_dir(out) or find_run_dir(cell, "needs_holdout")
+                parsed = _parse_output_dir(out)
+                run_dir = _resolve_run_dir(parsed) if parsed is not None else None
+                if run_dir is None:
+                    run_dir = find_run_dir(cell, "needs_holdout", expected_rounds)
                 if train_exit != 0:
                     raise RuntimeError(f"train failed exit={train_exit}")
                 if run_dir is None:
-                    # Fall back to newest timestamp dir
                     dirs = _timestamp_dirs(cell)
                     run_dir = dirs[-1] if dirs else None
                 if run_dir is None:
                     raise RuntimeError("training finished but run_dir not found")
+                run_dir = _resolve_run_dir(run_dir)
+            else:
+                raise RuntimeError(f"unexpected cell status {cur!r}")
 
             assert run_dir is not None
-            hcmd = holdout_cmd(cell, run_dir, device, grid_name, shard)
+            run_dir = _resolve_run_dir(run_dir)
+            hcmd = holdout_cmd(
+                cell, run_dir, device, grid_name, shard, workers=workers
+            )
             holdout_exit, hout, herr = _run_logged(
                 hcmd, log_dir / f"{cell.cell_id}.log", append=True
             )
@@ -407,18 +488,19 @@ def run_one_cell(
             if downstream.is_dir():
                 holdouts.extend(downstream.rglob("instruction_holdout.json"))
             ok = False
-            ckpt = str(run_dir / "final_adapter_state.pt")
             for hp in holdouts:
                 try:
                     payload = json.loads(hp.read_text(encoding="utf-8"))
                 except Exception:
                     continue
                 row = payload.get("row") or {}
-                if str(row.get("checkpoint", "")) != ckpt and str(
-                    (payload.get("meta") or {}).get("checkpoint", "")
-                ) != ckpt:
+                meta = payload.get("meta") or {}
+                ckpt_val = str(row.get("checkpoint", "")) or str(
+                    meta.get("checkpoint", "")
+                )
+                if not _checkpoint_matches_holdout(run_dir, ckpt_val):
                     continue
-                ds = row.get("dataset") or (payload.get("meta") or {}).get("dataset")
+                ds = row.get("dataset") or meta.get("dataset")
                 if ds != "databricks/databricks-dolly-15k":
                     raise RuntimeError(
                         f"holdout dataset mismatch: expected Dolly, got {ds!r}"
@@ -426,7 +508,6 @@ def run_one_cell(
                 ok = True
                 break
             if not ok:
-                # Soft: holdout script may write under downstream with matching checkpoint
                 raise RuntimeError("holdout JSON for this checkpoint not found after eval")
 
             last_status = "complete"
@@ -520,9 +601,11 @@ def main(argv: Optional[Sequence[str]] = None) -> None:
             f"but enumerated {len(cells)}"
         )
     mine = shard_cells(cells, args.shard, args.num_shards)
+    expected_rounds = int(grid.get("expected_rounds", 15))
+    grid_overrides = list(grid.get("overrides") or [])
 
     if args.production:
-        production_guard()
+        production_guard(grid)
 
     grid_name = str(grid.get("name", grid_path.stem))
     log_dir = REPO_ROOT / "logs" / f"{grid_name}_shard{args.shard}"
@@ -534,7 +617,10 @@ def main(argv: Optional[Sequence[str]] = None) -> None:
     )
     if args.dry_run:
         for c in mine:
-            print(f"  {c.cell_id}  {c.config}  status={classify_cell(c)}")
+            print(
+                f"  {c.cell_id}  {c.config}  "
+                f"status={classify_cell(c, expected_rounds)}"
+            )
         return
 
     counts: Dict[str, int] = {}
@@ -550,6 +636,9 @@ def main(argv: Optional[Sequence[str]] = None) -> None:
                 dry_run=False,
                 log_dir=log_dir,
                 jsonl_path=jsonl_path,
+                expected_rounds=expected_rounds,
+                overrides=grid_overrides,
+                workers=args.workers,
             )
             counts[st] = counts.get(st, 0) + 1
     else:
@@ -566,6 +655,9 @@ def main(argv: Optional[Sequence[str]] = None) -> None:
                     dry_run=False,
                     log_dir=log_dir,
                     jsonl_path=jsonl_path,
+                    expected_rounds=expected_rounds,
+                    overrides=grid_overrides,
+                    workers=args.workers,
                 ): c
                 for c in mine
             }

@@ -6,34 +6,35 @@ Replace this file in the Claude Project whenever the state changes. Keep only on
 
 ## Current phase
 
-Phase D (Mac smoke tests): complete on phase-d (7a0607b, 64 tests). Group-level sharding fixed. Launcher source in phase_d_review.zip for review. No freeze-v1.
+Phase D complete pending commit and full test run. Phase E (pre-registration and freeze-v1) authorized; Cursor to execute after cleanup, full pytest, and fast-forward merge.
 
 ## Done
 
 - Tag `ijacsa-fork-point` in the old repo (local folder `federated-lora-experiments`), commit 96c40f7040313b8cd5d3ef3ea8362e5ccbcab981
 - Task 01 complete: v0-import (9cbc63e) verified clean
 - Phase B on main, full-diff review passed
-- Phase C and addendum approved and fast-forwarded into main (da78869..ab4e69e)
-- Phase D smoke checks passed: category label source, no length proxy, empty clients handled for all methods, held-out uses Dolly with v2-dolly-context, provenance fields present, seed 2008 sizes match preview, seed 2008 upload equals 9 x 9,011,200 B
-- Orphan folders reported separately by grid_status.py
+- Phase C and addendum on main (ab4e69e)
+- Phase D smoke checks passed; group-level sharding; merged configs, grid_status.py, orphan handling approved
+- Launcher fixes F1 to F5 implemented; end-to-end smoke grid on Mac passed: E1 (3 complete, attempt 1, one folder each), E2 (rerun trains nothing), E3 (holdout-only rerun in same folder), E4 (status correct at a different absolute path); tests/test_run_grid.py 19 passed
 
 ## Next
 
-1. Upload phase_d_review.zip; review run_grid.py, grid_status.py, merged_configs.txt
-2. Fast-forward phase-d into main after launcher review passes
-3. Fast-forward phase-d into main, then Phase E (pre-registration and freeze-v1) on explicit "freeze"
-4. Confirm what the started Vast instance is running; only timing runs allowed before freeze
+1. Cursor: delete smoke outputs, full pytest (>= 69), commit and push phase-d, fast-forward into main
+2. Phase E: docs/ANALYSIS_PLAN.md from current Phase I (with I0 and amended I6), Phase J, I7; tag freeze-v1; record SHA
+3. Set up repo access for Vast (deploy key or read-only token)
+4. Phase F timing on Vast (same GPU model across instances of a grid)
+5. Confirm what the earlier Vast instance is running; stop it unless it is a timing run
 
 ## Decisions made
 
 - Venue: IJACSA, October issue (submit by 24 Sep); fall back to November if go/no-go fails on 21 Sep
 - Two scales: TinyLlama-1.1B (primary) and LLaMA-3.2-3B (replication, subject to the Phase F timing gate)
-- GPUs: Vast.ai, on-demand RTX 4090; A100 or L40S only if 3B does not fit
-- Cursor runs one phase at a time; freeze-v1 only on explicit "freeze"; GPU renting and launches done by Jerry
+- GPUs: Vast.ai, on-demand RTX 4090; A100 or L40S only if 3B does not fit; identical GPU model within a grid
+- Cursor runs one phase at a time; GPU renting and launches done by Jerry
 - Phase B stays on main (no history rewrite). From Phase C: one branch per phase, fast-forward merge after review, never force-push
-- Pre-freeze amendment: effective clients and discarded trailing samples are pre-registered partition statistics
-- Pre-freeze amendment: shard whole (het, data_seed, run_seed) groups so all methods of a group share a GPU; V2 requires identical gpu_name within a grid
-- Communication compared only within method across partitions; methods not ranked by bytes
+- Pre-freeze amendments: effective clients and discarded trailing samples pre-registered; whole-group sharding; V2 requires identical gpu_name within a grid; communication compared only within method
+- Pre-freeze launcher fixes: path normalization, no retraining of complete cells, freeze tag check via --points-at, per-cell CSV with workers>1, smoke-grid support; run table built from holdout JSON only; jsonl attempt-0 lines are skip records and ignored
+- Freeze authorized 16 Sep 2026
 
 ## Findings to carry into the paper
 
@@ -46,13 +47,14 @@ Phase D (Mac smoke tests): complete on phase-d (7a0607b, 64 tests). Group-level 
 
 ## Open items
 
-- Vast instance started before freeze: identify what it is running
+- Vast instance started before freeze: identify what it is running; stop unless timing
 - Attorney: does an IJACSA publication carry weight, given the publisher's history?
 - Attorney: does IEEE Early Access with a DOI count as published for the OJ-CS paper?
 - AI disclosure: choose the declaration version that matches actual use
 - Private repo access for Vast instances: deploy key or fine-grained token (needed before Phase F)
 - Overlap check (Phase M): set OLD to the local folder federated-lora-experiments
 - Timing and peak-memory fields cover only the resumed segment for resumed runs; treat as partial in analysis
+- Held-out eval recomputes base loss per cell (about half of Mac smoke time); include about 2 to 3 GPU-minutes per cell in Phase G sizing
 - Local tooling: use .venv/bin/python; plain git commit via /usr/bin/git if the wrapper fails
 
 ## Run progress
@@ -73,3 +75,4 @@ Phase D (Mac smoke tests): complete on phase-d (7a0607b, 64 tests). Group-level 
 | TinyLlama minutes per run (4090) | |
 | LLaMA-3B minutes per run, and GPU used | |
 | Workers per GPU (TinyLlama) | |
+| Mac smoke cell (1 round, 300 samples, incl. holdout) | about 280 s; holdout-only about 136 s |
