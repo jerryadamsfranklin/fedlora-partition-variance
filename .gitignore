@@ -1,0 +1,92 @@
+# -----------------------------------------------------------------------------
+# Secrets, credentials, and local environment (never commit these)
+# -----------------------------------------------------------------------------
+.env
+.env.*
+.envrc
+.python-env
+*.secret
+secrets/
+credentials/
+*credentials*.json
+service-account*.json
+*.pem
+id_rsa
+id_rsa.pub
+*.p12
+.netrc
+netrc
+
+# Optional local overrides that may contain tokens or paths
+config/local_config.yaml
+config/*local*.yaml
+*.override.yaml
+
+# Hugging Face / ML tooling (if stored inside the repo tree)
+.huggingface/
+
+# -----------------------------------------------------------------------------
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.venv/
+venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Editors
+.idea/
+.vscode/
+*.swp
+
+# macOS
+.DS_Store
+* 2.*
+
+# Logs / experiment artifacts
+wandb/
+*.log
+logs/
+
+# LaTeX build artifacts
+*.aux
+*.out
+*.bbl
+*.blg
+*.synctex.gz
+
+# Local caches
+.cache/
+
+# Experiment results: track run JSON/YAML under results/raw/ for reproducibility.
+# Ignore heavy weight artifacts and checkpoint directories.
+*.pt
+*.bin
+*.safetensors
+results/**/*.pth
+results/**/checkpoint*/
+
+# Local exports: handoffs, Stage 0 summaries, Claude bundles (do not commit)
+exports/**
+!exports/.gitkeep
+**/*handoff*.txt
+**/*handoff*.md
+
+# Stage 5 brief and stage-specific docs can be kept local-only.
+docs/stage5.md
+docs/stage1_pathB.md
+docs/stage4_setup.md
+
+# Local maintainer drafting copies; do not track
+docs/drafts/
+
+# Figures: keep generated plots (usually small); ignore huge raw exports if needed
+figures/**/*.tif
+figures/**/*.psd
+dist/
