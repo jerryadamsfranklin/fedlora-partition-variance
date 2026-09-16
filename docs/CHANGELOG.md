@@ -13,3 +13,6 @@ Baseline test count at v0-import: 28 passed
   training); JSON records `formatter_version=v2-dolly-context` and `eval_dtype`.
   Formatter test uses hard-coded strings from `client.py` (no FederatedClient
   construction).
+- B4: add `scripts/make_vp_configs.py` (12 `config/vp/*.yaml`),
+  `scripts/print_merged_config.py`, and `docs/merged_configs.txt`; list merge
+  replaces base `target_modules` with q_proj/v_proj.
