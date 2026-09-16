@@ -18,3 +18,5 @@ Baseline test count at v0-import: 28 passed
   replaces base `target_modules` with q_proj/v_proj.
 - B5: grids `grids/tl.yaml` and `grids/l3.yaml`, launcher `scripts/run_grid.py`,
   status tool `scripts/grid_status.py` (enumerate, shard, production guard).
+- B6: add `scripts/vast_setup.sh` for Vast.ai instance bootstrap (clone freeze-v1,
+  deps, HF login, prefetch, pytest).
