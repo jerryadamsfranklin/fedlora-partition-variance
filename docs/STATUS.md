@@ -6,7 +6,7 @@ Replace this file in the Claude Project whenever the state changes. Keep only on
 
 ## Current phase
 
-Phase D (Mac smoke tests): checks passed on phase-d (0503fca, 59 tests). Blocking fix in progress: group-level sharding. Launcher source review pending. No freeze-v1.
+Phase D (Mac smoke tests): complete on phase-d (7a0607b, 64 tests). Group-level sharding fixed. Launcher source in phase_d_review.zip for review. No freeze-v1.
 
 ## Done
 
@@ -19,8 +19,8 @@ Phase D (Mac smoke tests): checks passed on phase-d (0503fca, 59 tests). Blockin
 
 ## Next
 
-1. Phase D fix on phase-d: shard by (het, data_seed, run_seed) group; tests for shard coverage, same-shard groups, per-shard counts (tl 27/24/24, l3 15/15/15); plan B5 and V2 updated; two DECISIONS.md entries
-2. Upload phase_d_review.zip; review run_grid.py, grid_status.py, merged_configs.txt
+1. Upload phase_d_review.zip; review run_grid.py, grid_status.py, merged_configs.txt
+2. Fast-forward phase-d into main after launcher review passes
 3. Fast-forward phase-d into main, then Phase E (pre-registration and freeze-v1) on explicit "freeze"
 4. Confirm what the started Vast instance is running; only timing runs allowed before freeze
 
