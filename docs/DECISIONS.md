@@ -8,3 +8,5 @@ Record material decisions that affect scope, design, or analysis. Do not edit pa
 | 16 Sep 2026 | Methods limited to fedit, ffa_lora, flora | Frozen design for partition-variance study | docs/SCOPE.md |
 | 16 Sep 2026 | Primary model TinyLlama-1.1B; LLaMA-3.2-3B subject to Phase F timing gate | Cost and fit on on-demand RTX 4090 | docs/SCOPE.md; Phase F gate |
 | 16 Sep 2026 | Old-repo local path for Phase M overlap check is federated-lora-experiments | Private reference name fedlora-protocols; local folder differs | Task 01 verification |
+| 16 Sep 2026 | Phase B committed directly to main per IMPLEMENTATION_PLAN.md | plan instruction; private single-author repo; rewrite adds risk | commits 2393d04..ec68b81 |
+| 16 Sep 2026 | From Phase C: work on branch phase-x, push the branch, after review fast-forward merge into main (git merge --ff-only). No force-push ever | usual branch rule going forward; skip PRs without a reviewer | STATUS.md 16 Sep 2026 |
