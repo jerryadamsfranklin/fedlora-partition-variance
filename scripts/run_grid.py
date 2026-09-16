@@ -202,7 +202,7 @@ def _has_holdout(run_dir: Path) -> bool:
 
 
 def classify_cell(cell: Cell) -> str:
-    """Return complete | needs_holdout | resumable | fresh."""
+    """Return complete | needs_holdout | resumable | orphan | fresh."""
     dirs = _timestamp_dirs(cell)
     for d in reversed(dirs):
         has_meta = (d / "run_meta.json").is_file()
@@ -214,6 +214,14 @@ def classify_cell(cell: Cell) -> str:
             return "needs_holdout"
         if (d / "checkpoints" / "latest.pt").is_file() and not has_results:
             return "resumable"
+    # Orphan: timestamp dir with partition_stats (or other partial artifacts) but
+    # no complete results.json and no resumable checkpoint.
+    for d in reversed(dirs):
+        has_pstats = (d / "partition_stats.json").is_file()
+        has_results = _has_complete_results_json(d)
+        has_ckpt = (d / "checkpoints" / "latest.pt").is_file()
+        if has_pstats and not has_results and not has_ckpt:
+            return "orphan"
     return "fresh"
 
 

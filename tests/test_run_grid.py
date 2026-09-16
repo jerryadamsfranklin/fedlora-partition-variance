@@ -70,3 +70,29 @@ def test_production_guard_fails_dirty_or_missing_token():
             git_status_tracked=lambda: "",
             env={},
         )
+
+
+def test_orphan_folder_classified_separately(tmp_path, monkeypatch):
+    from scripts import run_grid as rg
+
+    cells = enumerate_cells(load_grid(REPO / "grids" / "tl.yaml"))
+    cell = next(
+        c
+        for c in cells
+        if c.het == "a01" and c.method == "fedit" and c.data_seed == 2001 and c.run_seed == 7001
+    )
+    # Point REPO_ROOT results under tmp
+    monkeypatch.setattr(rg, "REPO_ROOT", tmp_path)
+    orphan = (
+        tmp_path
+        / "results"
+        / "raw"
+        / cell.exp_name
+        / cell.method
+        / cell.seed_dir
+        / cell.tag
+        / "19990101_000000"
+    )
+    orphan.mkdir(parents=True)
+    (orphan / "partition_stats.json").write_text('{"schema_version": 1}\n', encoding="utf-8")
+    assert rg.classify_cell(cell) == "orphan"

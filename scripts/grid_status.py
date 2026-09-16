@@ -30,10 +30,12 @@ def main() -> None:
         counts[st] += 1
         rows.append((st, c.cell_id))
     print(f"Grid: {grid.get('name', grid_path.stem)}  expected={grid.get('expected_runs')}  enumerated={len(cells)}")
+    known = ("complete", "needs_holdout", "resumable", "orphan", "fresh")
     print(
         f"complete={counts['complete']}  needs_holdout={counts['needs_holdout']}  "
-        f"resumable={counts['resumable']}  fresh={counts['fresh']}  "
-        f"other={sum(v for k, v in counts.items() if k not in ('complete', 'needs_holdout', 'resumable', 'fresh'))}"
+        f"resumable={counts['resumable']}  orphan={counts['orphan']}  "
+        f"fresh={counts['fresh']}  "
+        f"other={sum(v for k, v in counts.items() if k not in known)}"
     )
     print("-" * 72)
     print(f"{'status':<14} cell_id")

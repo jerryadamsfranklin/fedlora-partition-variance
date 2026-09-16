@@ -24,3 +24,6 @@ Baseline test count at v0-import: 28 passed
   train[0:3000] label_skew alpha=0.1, seeds 2001 to 2010.
 - C addendum: effective clients and discarded trailing samples (optimizer steps
   only on complete accumulation blocks); pre-registered in I6 and limitations.
+- D: Mac smoke tests (docs/smoke_report.md); classify orphan run folders in
+  run_grid/grid_status; TinyLlama per-client upload 9,011,200 bytes (FedIT/FLoRA;
+  FFA upload same, download B-only 3,244,032).

@@ -6,22 +6,22 @@ Replace this file in the Claude Project whenever the state changes. Keep only on
 
 ## Current phase
 
-Phase C addendum complete on branch phase-c. Awaiting review before fast-forward into main. Do not start Phase D until continue.
+Phase D (Mac smoke tests): complete on branch phase-d. Awaiting review. Do not merge and do not freeze.
 
 ## Done
 
 - Tag `ijacsa-fork-point` in the old repo (local folder `federated-lora-experiments`), commit 96c40f7040313b8cd5d3ef3ea8362e5ccbcab981
 - Task 01 complete: v0-import (9cbc63e) verified clean; skeleton abc4d20; baseline tests db0a7c2 (28 passed)
-- Phase B on main (2393d04..ec68b81), 55 tests passing; full-diff review passed
-- Docs branch docs-phase-b-decision fast-forwarded into main (ec68b81..da78869)
-- Phase C checks: Dolly train[0:3000] has 8 categories summing to 3000; held-out overlap 0; minimum active clients 9 (seeds 2005, 2008), all other seeds 10
-- Phase C addendum: effective clients and discarded trailing samples reported; DECISIONS.md and plan I6/limitations updated; seed 2008 has 2 zero-step active clients on both models
+- Phase B on main (2393d04..ec68b81), full-diff review passed; docs branch merged (da78869)
+- Phase C + addendum fast-forwarded into main (ab4e69e)
+- Phase D smokes on MPS: three methods (seed 2001, 300 samples, 1 round) + seed-2008 full FedIT 1-round; holdout JSON Dolly + v2-dolly-context; orphan classification added; smoke raw deleted
 
 ## Next
 
-1. Review Phase C addendum report, then fast-forward phase-c into main
-2. Phase D on branch phase-d: Mac smoke tests; report must include run_grid.py source, docs/merged_configs.txt, and grid_status handling of orphan run folders
-3. Phase E freeze only after B, C, D reviewed and run_grid.py plus merged configs approved
+1. Review Phase D report (smoke_report.md, run_grid.py, grid_status.py, merged_configs.txt, orphan handling, dry-run shards)
+2. After approval, fast-forward phase-d into main
+3. Confirm what any started GPU instance is running; production is not allowed before freeze-v1
+4. Phase E freeze only after Phase D and the launcher review pass
 
 ## Decisions made
 
@@ -31,24 +31,27 @@ Phase C addendum complete on branch phase-c. Awaiting review before fast-forward
 - Cursor runs one phase at a time; freeze-v1 only on explicit "freeze"; GPU renting and launches done by Jerry
 - Phase B stays on main (no history rewrite). From Phase C: one branch per phase, fast-forward merge after review, never force-push
 - B3 formatter test uses hard-coded strings copied from client.py (allowed by plan)
-- Pre-freeze plan amendment: add effective clients (at least one optimizer step) and discarded trailing samples as pre-registered partition statistics; add the accumulation-block limitation to the paper
+- Pre-freeze plan amendment: effective clients and discarded trailing samples added as pre-registered partition statistics; accumulation-block limitation added to the paper
 
 ## Findings to carry into the paper
 
-- Active clients vary only between 9 and 10 across the 10 alpha 0.1 seeds, so active-client count has little explanatory range (RQ4) and communication totals differ for only 2 partitions
-- client.py steps only on complete accumulation blocks (no drop_last): TinyLlama clients with n<=12 and LLaMA clients with n<=14 upload the unchanged global adapter; trailing partial blocks are discarded
-- Seed 2008 has 2 zero-step active clients under both TinyLlama (4x4) and LLaMA (2x8); seeds 2001, 2003, 2009 have 1 each; effective federation size therefore varies more than active-client count
+- Alpha 0.1 partitions (seeds 2001-2010): active clients 9 to 10; effective clients 7 to 10 (TinyLlama) with 4 of 10 seeds having at least one zero-step client (seed 2008 has two)
+- Zero-step clients hold at most 11 samples (under 0.4% weight each; 23 samples in total across seeds)
+- Discarded trailing samples per seed: 27 to 60 (TinyLlama, 0.9% to 2.0%), 41 to 104 (LLaMA, up to 3.5%)
+- Client sizes range from 2 to 1218 samples across seeds
+- client.py steps only on complete accumulation blocks (no drop_last)
+- TinyLlama per-client upload: 9,011,200 bytes (FedIT/FLoRA); FFA-LoRA upload same, download/broadcast 3,244,032 bytes
 
 ## Open items
 
+- GPU instance started before freeze: identify what it is running (no Vast host/check commands available in this Cursor session)
 - Attorney: does an IJACSA publication carry weight, given the publisher's history?
 - Attorney: does IEEE Early Access with a DOI count as published for the OJ-CS paper?
 - AI disclosure: choose the declaration version that matches actual use
 - Private repo access for Vast instances: deploy key or fine-grained token (needed before Phase F)
 - Overlap check (Phase M): set OLD to the local folder federated-lora-experiments
 - Timing and peak-memory fields cover only the resumed segment for resumed runs; treat as partial in analysis
-- partition_stats.json is written before training; crashed runs leave orphan folders (completeness keyed on results.json with 15 rounds)
-- Review run_grid.py and docs/merged_configs.txt before freeze
+- partition_stats.json is written before training; crashed runs leave orphan folders (now classified as orphan by grid_status)
 - Local tooling: use .venv/bin/python; plain git commit via /usr/bin/git if the wrapper fails
 
 ## Run progress
@@ -62,8 +65,8 @@ Phase C addendum complete on branch phase-c. Awaiting review before fast-forward
 
 | Item | Value |
 |---|---|
-| TinyLlama per-client upload, FedIT / FLoRA | expected 9,011,200 bytes |
-| TinyLlama per-client upload, FFA-LoRA | |
+| TinyLlama per-client upload, FedIT / FLoRA | 9,011,200 bytes (measured, smoke) |
+| TinyLlama per-client upload, FFA-LoRA | 9,011,200 bytes upload; 3,244,032 bytes download/broadcast |
 | LLaMA-3B per-client upload, FedIT / FLoRA | expected 9,175,040 bytes |
 | LLaMA-3B per-client upload, FFA-LoRA | |
 | TinyLlama minutes per run (4090) | |
