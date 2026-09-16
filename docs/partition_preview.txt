@@ -1,0 +1,181 @@
+Phase C partition preview
+dataset: databricks/databricks-dolly-15k
+train slice: train[0:3000]
+holdout slice: train[3000:3500]
+partition: label_skew alpha=0.1 label_column=category num_clients=10
+data seeds: 2001 to 2010
+
+Global category histogram (train[0:3000]):
+  brainstorming: 334
+  classification: 401
+  closed_qa: 370
+  creative_writing: 139
+  general_qa: 464
+  information_extraction: 305
+  open_qa: 749
+  summarization: 238
+  categories=8  sum=3000
+
+Held-out overlap check (row indices):
+  train indices: 0..2999 (n=3000)
+  holdout indices: 3000..3499 (n=500)
+  overlap count: 0
+  PASS: no index overlap
+
+label_source=column
+
+=== data_seed=2001  active_clients=10  total=3000 ===
+client_sizes: [65, 334, 9, 202, 16, 59, 756, 742, 348, 469]
+  client 0: size=65  hist={'brainstorming': 9, 'creative_writing': 56}
+  client 1: size=334  hist={'classification': 8, 'general_qa': 47, 'open_qa': 68, 'summarization': 211}
+  client 2: size=9  hist={'classification': 8, 'closed_qa': 1}
+  client 3: size=202  hist={'classification': 186, 'creative_writing': 14, 'open_qa': 2}
+  client 4: size=16  hist={'classification': 7, 'general_qa': 3, 'summarization': 6}
+  client 5: size=59  hist={'general_qa': 15, 'information_extraction': 1, 'open_qa': 43}
+  client 6: size=756  hist={'creative_writing': 7, 'general_qa': 9, 'information_extraction': 113, 'open_qa': 627}
+  client 7: size=742  hist={'brainstorming': 159, 'classification': 108, 'closed_qa': 366, 'general_qa': 105, 'information_extraction': 2, 'summarization': 2}
+  client 8: size=348  hist={'classification': 80, 'creative_writing': 59, 'information_extraction': 187, 'open_qa': 6, 'summarization': 16}
+  client 9: size=469  hist={'brainstorming': 166, 'classification': 4, 'closed_qa': 3, 'creative_writing': 3, 'general_qa': 285, 'information_extraction': 2, 'open_qa': 3, 'summarization': 3}
+global_label_hist: {'brainstorming': 334, 'classification': 401, 'closed_qa': 370, 'creative_writing': 139, 'general_qa': 464, 'information_extraction': 305, 'open_qa': 749, 'summarization': 238}
+
+=== data_seed=2002  active_clients=10  total=3000 ===
+client_sizes: [60, 318, 39, 314, 227, 379, 196, 705, 172, 590]
+  client 0: size=60  hist={'classification': 31, 'closed_qa': 17, 'open_qa': 12}
+  client 1: size=318  hist={'brainstorming': 54, 'classification': 88, 'general_qa': 176}
+  client 2: size=39  hist={'brainstorming': 9, 'closed_qa': 13, 'open_qa': 10, 'summarization': 7}
+  client 3: size=314  hist={'brainstorming': 199, 'creative_writing': 115}
+  client 4: size=227  hist={'closed_qa': 11, 'general_qa': 212, 'open_qa': 4}
+  client 5: size=379  hist={'classification': 276, 'information_extraction': 103}
+  client 6: size=196  hist={'brainstorming': 69, 'classification': 3, 'general_qa': 40, 'information_extraction': 82, 'open_qa': 2}
+  client 7: size=705  hist={'classification': 1, 'open_qa': 697, 'summarization': 7}
+  client 8: size=172  hist={'general_qa': 34, 'information_extraction': 118, 'open_qa': 20}
+  client 9: size=590  hist={'brainstorming': 3, 'classification': 2, 'closed_qa': 329, 'creative_writing': 24, 'general_qa': 2, 'information_extraction': 2, 'open_qa': 4, 'summarization': 224}
+global_label_hist: {'brainstorming': 334, 'classification': 401, 'closed_qa': 370, 'creative_writing': 139, 'general_qa': 464, 'information_extraction': 305, 'open_qa': 749, 'summarization': 238}
+
+=== data_seed=2003  active_clients=10  total=3000 ===
+client_sizes: [74, 167, 10, 252, 191, 61, 650, 567, 803, 225]
+  client 0: size=74  hist={'classification': 16, 'closed_qa': 21, 'information_extraction': 35, 'summarization': 2}
+  client 1: size=167  hist={'classification': 36, 'closed_qa': 110, 'creative_writing': 21}
+  client 2: size=10  hist={'classification': 10}
+  client 3: size=252  hist={'brainstorming': 15, 'classification': 197, 'closed_qa': 10, 'open_qa': 28, 'summarization': 2}
+  client 4: size=191  hist={'classification': 138, 'closed_qa': 52, 'open_qa': 1}
+  client 5: size=61  hist={'open_qa': 54, 'summarization': 7}
+  client 6: size=650  hist={'brainstorming': 178, 'classification': 1, 'general_qa': 463, 'information_extraction': 8}
+  client 7: size=567  hist={'closed_qa': 83, 'information_extraction': 258, 'summarization': 226}
+  client 8: size=803  hist={'brainstorming': 137, 'information_extraction': 2, 'open_qa': 664}
+  client 9: size=225  hist={'brainstorming': 4, 'classification': 3, 'closed_qa': 94, 'creative_writing': 118, 'general_qa': 1, 'information_extraction': 2, 'open_qa': 2, 'summarization': 1}
+global_label_hist: {'brainstorming': 334, 'classification': 401, 'closed_qa': 370, 'creative_writing': 139, 'general_qa': 464, 'information_extraction': 305, 'open_qa': 749, 'summarization': 238}
+
+=== data_seed=2004  active_clients=10  total=3000 ===
+client_sizes: [223, 145, 734, 236, 228, 454, 145, 99, 230, 506]
+  client 0: size=223  hist={'creative_writing': 46, 'general_qa': 17, 'information_extraction': 160}
+  client 1: size=145  hist={'brainstorming': 70, 'creative_writing': 50, 'general_qa': 2, 'information_extraction': 23}
+  client 2: size=734  hist={'brainstorming': 19, 'classification': 290, 'open_qa': 425}
+  client 3: size=236  hist={'closed_qa': 1, 'summarization': 235}
+  client 4: size=228  hist={'classification': 71, 'general_qa': 55, 'open_qa': 102}
+  client 5: size=454  hist={'closed_qa': 69, 'general_qa': 279, 'information_extraction': 106}
+  client 6: size=145  hist={'brainstorming': 1, 'classification': 35, 'general_qa': 109}
+  client 7: size=99  hist={'closed_qa': 73, 'information_extraction': 7, 'open_qa': 19}
+  client 8: size=230  hist={'brainstorming': 228, 'information_extraction': 1, 'open_qa': 1}
+  client 9: size=506  hist={'brainstorming': 16, 'classification': 5, 'closed_qa': 227, 'creative_writing': 43, 'general_qa': 2, 'information_extraction': 8, 'open_qa': 202, 'summarization': 3}
+global_label_hist: {'brainstorming': 334, 'classification': 401, 'closed_qa': 370, 'creative_writing': 139, 'general_qa': 464, 'information_extraction': 305, 'open_qa': 749, 'summarization': 238}
+
+=== data_seed=2005  active_clients=9  total=3000 ===
+client_sizes: [465, 255, 498, 197, 613, 0, 192, 344, 246, 190]
+  client 0: size=465  hist={'brainstorming': 3, 'classification': 82, 'closed_qa': 10, 'creative_writing': 106, 'general_qa': 66, 'information_extraction': 191, 'open_qa': 7}
+  client 1: size=255  hist={'brainstorming': 248, 'classification': 2, 'summarization': 5}
+  client 2: size=498  hist={'brainstorming': 3, 'classification': 1, 'closed_qa': 3, 'general_qa': 125, 'open_qa': 365, 'summarization': 1}
+  client 3: size=197  hist={'classification': 174, 'information_extraction': 10, 'open_qa': 13}
+  client 4: size=613  hist={'classification': 2, 'general_qa': 268, 'information_extraction': 11, 'open_qa': 243, 'summarization': 89}
+  client 5: size=0  hist={}
+  client 6: size=192  hist={'closed_qa': 174, 'information_extraction': 13, 'summarization': 5}
+  client 7: size=344  hist={'closed_qa': 164, 'creative_writing': 32, 'general_qa': 3, 'open_qa': 20, 'summarization': 125}
+  client 8: size=246  hist={'brainstorming': 74, 'classification': 137, 'information_extraction': 30, 'summarization': 5}
+  client 9: size=190  hist={'brainstorming': 6, 'classification': 3, 'closed_qa': 19, 'creative_writing': 1, 'general_qa': 2, 'information_extraction': 50, 'open_qa': 101, 'summarization': 8}
+global_label_hist: {'brainstorming': 334, 'classification': 401, 'closed_qa': 370, 'creative_writing': 139, 'general_qa': 464, 'information_extraction': 305, 'open_qa': 749, 'summarization': 238}
+
+=== data_seed=2006  active_clients=10  total=3000 ===
+client_sizes: [445, 85, 377, 238, 182, 493, 460, 180, 94, 446]
+  client 0: size=445  hist={'classification': 41, 'general_qa': 404}
+  client 1: size=85  hist={'closed_qa': 5, 'creative_writing': 62, 'general_qa': 9, 'open_qa': 7, 'summarization': 2}
+  client 2: size=377  hist={'creative_writing': 9, 'open_qa': 368}
+  client 3: size=238  hist={'classification': 4, 'closed_qa': 203, 'open_qa': 31}
+  client 4: size=182  hist={'brainstorming': 41, 'classification': 41, 'creative_writing': 65, 'open_qa': 35}
+  client 5: size=493  hist={'brainstorming': 87, 'closed_qa': 4, 'information_extraction': 185, 'open_qa': 164, 'summarization': 53}
+  client 6: size=460  hist={'brainstorming': 181, 'closed_qa': 77, 'general_qa': 17, 'open_qa': 5, 'summarization': 180}
+  client 7: size=180  hist={'classification': 88, 'closed_qa': 2, 'information_extraction': 87, 'open_qa': 3}
+  client 8: size=94  hist={'classification': 2, 'closed_qa': 77, 'open_qa': 15}
+  client 9: size=446  hist={'brainstorming': 25, 'classification': 225, 'closed_qa': 2, 'creative_writing': 3, 'general_qa': 34, 'information_extraction': 33, 'open_qa': 121, 'summarization': 3}
+global_label_hist: {'brainstorming': 334, 'classification': 401, 'closed_qa': 370, 'creative_writing': 139, 'general_qa': 464, 'information_extraction': 305, 'open_qa': 749, 'summarization': 238}
+
+=== data_seed=2007  active_clients=10  total=3000 ===
+client_sizes: [163, 381, 412, 427, 93, 377, 326, 21, 34, 766]
+  client 0: size=163  hist={'brainstorming': 2, 'classification': 48, 'closed_qa': 111, 'summarization': 2}
+  client 1: size=381  hist={'brainstorming': 4, 'general_qa': 87, 'open_qa': 247, 'summarization': 43}
+  client 2: size=412  hist={'brainstorming': 18, 'classification': 16, 'closed_qa': 248, 'creative_writing': 103, 'information_extraction': 1, 'summarization': 26}
+  client 3: size=427  hist={'classification': 59, 'closed_qa': 1, 'creative_writing': 26, 'general_qa': 341}
+  client 4: size=93  hist={'brainstorming': 1, 'closed_qa': 3, 'open_qa': 89}
+  client 5: size=377  hist={'classification': 175, 'open_qa': 113, 'summarization': 89}
+  client 6: size=326  hist={'brainstorming': 171, 'classification': 52, 'closed_qa': 4, 'creative_writing': 6, 'open_qa': 19, 'summarization': 74}
+  client 7: size=21  hist={'classification': 1, 'general_qa': 11, 'open_qa': 9}
+  client 8: size=34  hist={'classification': 2, 'creative_writing': 1, 'information_extraction': 8, 'open_qa': 23}
+  client 9: size=766  hist={'brainstorming': 138, 'classification': 48, 'closed_qa': 3, 'creative_writing': 3, 'general_qa': 25, 'information_extraction': 296, 'open_qa': 249, 'summarization': 4}
+global_label_hist: {'brainstorming': 334, 'classification': 401, 'closed_qa': 370, 'creative_writing': 139, 'general_qa': 464, 'information_extraction': 305, 'open_qa': 749, 'summarization': 238}
+
+=== data_seed=2008  active_clients=9  total=3000 ===
+client_sizes: [2, 409, 0, 308, 327, 11, 229, 825, 758, 131]
+  client 0: size=2  hist={'information_extraction': 1, 'summarization': 1}
+  client 1: size=409  hist={'brainstorming': 136, 'classification': 13, 'creative_writing': 129, 'information_extraction': 97, 'open_qa': 34}
+  client 2: size=0  hist={}
+  client 3: size=308  hist={'brainstorming': 13, 'information_extraction': 204, 'summarization': 91}
+  client 4: size=327  hist={'closed_qa': 253, 'general_qa': 2, 'summarization': 72}
+  client 5: size=11  hist={'closed_qa': 1, 'general_qa': 7, 'information_extraction': 1, 'open_qa': 2}
+  client 6: size=229  hist={'brainstorming': 183, 'closed_qa': 8, 'creative_writing': 8, 'general_qa': 30}
+  client 7: size=825  hist={'classification': 24, 'general_qa': 107, 'open_qa': 653, 'summarization': 41}
+  client 8: size=758  hist={'classification': 361, 'closed_qa': 54, 'general_qa': 316, 'summarization': 27}
+  client 9: size=131  hist={'brainstorming': 2, 'classification': 3, 'closed_qa': 54, 'creative_writing': 2, 'general_qa': 2, 'information_extraction': 2, 'open_qa': 60, 'summarization': 6}
+global_label_hist: {'brainstorming': 334, 'classification': 401, 'closed_qa': 370, 'creative_writing': 139, 'general_qa': 464, 'information_extraction': 305, 'open_qa': 749, 'summarization': 238}
+
+=== data_seed=2009  active_clients=10  total=3000 ===
+client_sizes: [489, 56, 118, 285, 389, 126, 2, 23, 1218, 294]
+  client 0: size=489  hist={'brainstorming': 101, 'classification': 45, 'closed_qa': 72, 'general_qa': 265, 'open_qa': 6}
+  client 1: size=56  hist={'classification': 8, 'closed_qa': 36, 'information_extraction': 6, 'open_qa': 6}
+  client 2: size=118  hist={'brainstorming': 1, 'general_qa': 13, 'summarization': 104}
+  client 3: size=285  hist={'closed_qa': 160, 'creative_writing': 125}
+  client 4: size=389  hist={'general_qa': 104, 'information_extraction': 285}
+  client 5: size=126  hist={'brainstorming': 7, 'classification': 107, 'closed_qa': 12}
+  client 6: size=2  hist={'creative_writing': 2}
+  client 7: size=23  hist={'classification': 14, 'general_qa': 1, 'information_extraction': 4, 'summarization': 4}
+  client 8: size=1218  hist={'brainstorming': 208, 'closed_qa': 79, 'creative_writing': 10, 'general_qa': 78, 'information_extraction': 7, 'open_qa': 735, 'summarization': 101}
+  client 9: size=294  hist={'brainstorming': 17, 'classification': 227, 'closed_qa': 11, 'creative_writing': 2, 'general_qa': 3, 'information_extraction': 3, 'open_qa': 2, 'summarization': 29}
+global_label_hist: {'brainstorming': 334, 'classification': 401, 'closed_qa': 370, 'creative_writing': 139, 'general_qa': 464, 'information_extraction': 305, 'open_qa': 749, 'summarization': 238}
+
+=== data_seed=2010  active_clients=10  total=3000 ===
+client_sizes: [449, 288, 253, 430, 211, 470, 376, 96, 83, 344]
+  client 0: size=449  hist={'general_qa': 444, 'open_qa': 5}
+  client 1: size=288  hist={'brainstorming': 230, 'closed_qa': 16, 'creative_writing': 24, 'general_qa': 15, 'information_extraction': 3}
+  client 2: size=253  hist={'closed_qa': 208, 'information_extraction': 15, 'open_qa': 24, 'summarization': 6}
+  client 3: size=430  hist={'creative_writing': 12, 'general_qa': 3, 'open_qa': 373, 'summarization': 42}
+  client 4: size=211  hist={'classification': 211}
+  client 5: size=470  hist={'brainstorming': 2, 'classification': 125, 'open_qa': 343}
+  client 6: size=376  hist={'brainstorming': 100, 'classification': 3, 'creative_writing': 4, 'information_extraction': 269}
+  client 7: size=96  hist={'closed_qa': 76, 'creative_writing': 20}
+  client 8: size=83  hist={'closed_qa': 67, 'information_extraction': 16}
+  client 9: size=344  hist={'brainstorming': 2, 'classification': 62, 'closed_qa': 3, 'creative_writing': 79, 'general_qa': 2, 'information_extraction': 2, 'open_qa': 4, 'summarization': 190}
+global_label_hist: {'brainstorming': 334, 'classification': 401, 'closed_qa': 370, 'creative_writing': 139, 'general_qa': 464, 'information_extraction': 305, 'open_qa': 749, 'summarization': 238}
+
+Summary active_clients by seed:
+  2001: 10
+  2002: 10
+  2003: 10
+  2004: 10
+  2005: 9
+  2006: 10
+  2007: 10
+  2008: 9
+  2009: 10
+  2010: 10
+minimum active_clients across seeds: 9 (seeds [2005, 2008])
+
+PASS: global category histogram has 8 categories and sums to 3000
+PASS: minimum active_clients=9 >= 3

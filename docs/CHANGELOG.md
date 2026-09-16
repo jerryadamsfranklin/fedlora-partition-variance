@@ -20,3 +20,5 @@ Baseline test count at v0-import: 28 passed
   status tool `scripts/grid_status.py` (enumerate, shard, production guard).
 - B6: add `scripts/vast_setup.sh` for Vast.ai instance bootstrap (clone freeze-v1,
   deps, HF login, prefetch, pytest).
+- C: `scripts/inspect_partitions.py` and `docs/partition_preview.txt` for Dolly
+  train[0:3000] label_skew alpha=0.1, seeds 2001 to 2010.
