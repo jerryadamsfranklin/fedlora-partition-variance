@@ -1,0 +1,12 @@
+name: l3
+tag: prod_v1
+methods: [fedit, ffa_lora, flora]
+config_pattern: "config/vp/vp_l3_{method}_{het}.yaml"
+cells:
+  - het: a01
+    data_seeds: [2001, 2002, 2003, 2004, 2005, 2006]
+    run_seeds: [7001, 7002]
+  - het: iid
+    data_seeds: [2001]
+    run_seeds: [7001, 7002, 7003]
+expected_runs: 45

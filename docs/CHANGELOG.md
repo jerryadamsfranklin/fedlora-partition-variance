@@ -16,3 +16,5 @@ Baseline test count at v0-import: 28 passed
 - B4: add `scripts/make_vp_configs.py` (12 `config/vp/*.yaml`),
   `scripts/print_merged_config.py`, and `docs/merged_configs.txt`; list merge
   replaces base `target_modules` with q_proj/v_proj.
+- B5: grids `grids/tl.yaml` and `grids/l3.yaml`, launcher `scripts/run_grid.py`,
+  status tool `scripts/grid_status.py` (enumerate, shard, production guard).

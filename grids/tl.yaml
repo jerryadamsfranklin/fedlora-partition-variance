@@ -1,0 +1,12 @@
+name: tl
+tag: prod_v1
+methods: [fedit, ffa_lora, flora]
+config_pattern: "config/vp/vp_tl_{method}_{het}.yaml"
+cells:
+  - het: a01
+    data_seeds: [2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010]
+    run_seeds: [7001, 7002]
+  - het: iid
+    data_seeds: [2001]
+    run_seeds: [7001, 7002, 7003, 7004, 7005]
+expected_runs: 75
