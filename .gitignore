@@ -90,3 +90,9 @@ docs/drafts/
 figures/**/*.tif
 figures/**/*.psd
 dist/
+
+# --- fedlora-partition-variance additions ---
+*.safetensors
+checkpoints/
+.venv/
+wandb/
