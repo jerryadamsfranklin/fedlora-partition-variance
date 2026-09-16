@@ -23,10 +23,11 @@ def main() -> None:
         grid_path = REPO_ROOT / grid_path
     grid = load_grid(grid_path)
     cells = enumerate_cells(grid)
+    expected_rounds = int(grid.get("expected_rounds", 15))
     counts: Counter = Counter()
     rows = []
     for c in cells:
-        st = classify_cell(c)
+        st = classify_cell(c, expected_rounds)
         counts[st] += 1
         rows.append((st, c.cell_id))
     print(f"Grid: {grid.get('name', grid_path.stem)}  expected={grid.get('expected_runs')}  enumerated={len(cells)}")

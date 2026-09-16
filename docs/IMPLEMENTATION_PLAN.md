@@ -369,7 +369,7 @@ Arguments:
 Behavior:
 
 1. **Enumerate cells.** Each cell is (het, data_seed, run_seed, method). Order them so partial completion stays balanced: sort by `(het_order, data_seed, run_seed)` with IID first, then method (fedit, ffa_lora, flora). Assign whole (het, data_seed, run_seed) groups to shards so all methods of a group run on the same GPU: order groups as above, then `shard = group_index mod num_shards`.
-2. **Production guard.** When `--production` is set, refuse to start unless `git describe --exact-match --tags HEAD` returns `freeze-v1`, `git status --porcelain --untracked-files=no` is empty, and `HF_TOKEN` is set.
+2. **Production guard.** When `--production` is set, refuse to start unless `git tag --points-at HEAD` includes `freeze-v1`, the grid YAML has no `overrides`, `git status --porcelain --untracked-files=no` is empty, and `HF_TOKEN` is set.
 3. **Output directory.** A cell's directory is `results/raw/vp_{model}_{method}_{het}/{method}/seed_{d}_run{r}/{tag}/<timestamp>/`.
 4. **Per-cell state.**
    - **complete:** some timestamp directory has a `results.json` with 15 entries, a `run_meta.json`, a `partition_stats.json`, and an `instruction_holdout.json` file somewhere under `results/downstream_instruction/` for that checkpoint.
@@ -388,6 +388,7 @@ Behavior:
      --start-index 3000 --num-examples 500 --max-seq-length 256 \
      --summary-csv analysis/holdout_{grid}_shard{I}.csv --skip-existing
    ```
+   When `--workers > 1`, use per-cell CSV paths `analysis/holdout_{grid}_shard{I}_{cell_id}.csv` to avoid concurrent writes.
    The dataset is read from the run's `config_merged.yaml`. Assert that the written JSON reports `databricks/databricks-dolly-15k`.
 7. **Logging.** Stream stdout and stderr to `logs/{grid}_shard{I}/{cell_id}.log`. Append one JSON line per attempt to `results/launch/{grid}_shard{I}.jsonl` with: `cell_id`, `attempt`, `status`, `start`, `end`, `duration_s`, `train_exit`, `holdout_exit`, `run_dir`, `gpu_name`.
 8. **Failure handling.** On failure, retry up to `--max-retries`, resuming if a checkpoint exists. After final failure, log `status: failed` and continue to the next cell.
@@ -591,11 +592,13 @@ Write `scripts/verify_varpart.py` in the style of the old `verify_numbers.py`: c
 
 Run with `python scripts/verify_varpart.py --grids grids/tl.yaml grids/l3.yaml`. The run must exit 0 before Phase I results are trusted, and again before submission.
 
+jsonl lines with attempt 0 are skip records and are ignored by verification and status counts.
+
 ---
 
 ## Phase I. Analysis (pre-registered)
 
-**I0. Run table.** `scripts/analysis/build_runs_table.py` writes `analysis/runs.csv`, one row per run, with columns: `model, het, method, data_seed, run_seed, heldout_loss, base_loss, delta_loss, final_train_loss, comm_mb_total, upload_mb_total, active_clients, run_dir, gpu_name, wall_clock_s`.
+**I0. Run table.** `scripts/analysis/build_runs_table.py` writes `analysis/runs.csv`, one row per run, with columns: `model, het, method, data_seed, run_seed, heldout_loss, base_loss, delta_loss, final_train_loss, comm_mb_total, upload_mb_total, active_clients, run_dir, gpu_name, wall_clock_s`. Build the table from `instruction_holdout.json` files only; holdout summary CSVs are convenience logs and may be sharded per cell when `--workers > 1`.
 
 All analyses use `heldout_loss` as Y. `scripts/analysis/analyze_variance.py` produces I1 to I6 for each model separately.
 

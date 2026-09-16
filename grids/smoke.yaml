@@ -1,0 +1,13 @@
+name: smoke
+tag: smoke
+methods: [fedit, ffa_lora, flora]
+config_pattern: "config/vp/vp_tl_{method}_{het}.yaml"
+expected_runs: 3
+expected_rounds: 1
+overrides:
+  - federated.num_rounds=1
+  - data.max_samples=300
+cells:
+  - het: a01
+    data_seeds: [2001]
+    run_seeds: [7001]
