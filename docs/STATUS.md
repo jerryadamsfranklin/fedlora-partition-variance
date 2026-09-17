@@ -1,37 +1,34 @@
 # STATUS
 
-Last updated: 16 Sep 2026
+Last updated: 17 Sep 2026
 
 Replace this file in the Claude Project whenever the state changes. Keep only one copy.
 
 ## Current phase
 
-freeze-v1 tagged; Phase E complete; next is Phase F timing on Vast.
+Phase F complete (gates passed). Phase G started: `tl` shards 0 and 1 on two RTX 4090s (`--workers 1`). Shard 2 and LLaMA grid not started yet. Freeze tag `freeze-v1` at 0812fcf.
 
 ## Done
 
 - Tag `ijacsa-fork-point` in the old repo (local folder `federated-lora-experiments`), commit 96c40f7040313b8cd5d3ef3ea8362e5ccbcab981
 - Task 01 complete: v0-import (9cbc63e) verified clean
-- Phase B on main, full-diff review passed
-- Phase C and addendum on main (ab4e69e)
-- Phase D complete: launcher fixes F1 to F5; smoke grid; group-level sharding; fast-forward merged to main (48d0198)
-- Phase E complete: `docs/ANALYSIS_PLAN.md` pre-registered; tag `freeze-v1` at 0812fcf3bb1a31a7ad8ba126d0818d9f84ea3303
+- Phases B–E on main; `freeze-v1` at 0812fcf
+- Phase F timing on Vast RTX 4090s: F1 29.3 min; F2 65.2 min / ~9 GB peak; F3 concurrency ratio 1.06× → workers 1; bytes match (TL 9011200, L3 9175040). Report: `docs/phase_f_report.md`
+- Phase G launched: tl shard 0 (27 cells) and shard 1 (24 cells), `--production --workers 1`
 
 ## Next
 
-1. Set up repo access for Vast (deploy key or read-only token)
-2. Phase F timing on Vast (same GPU model across instances of a grid)
-3. Confirm what the earlier Vast instance is running; stop it unless it is a timing run
+1. Add Vast credits; keep both instances running; rent a third 4090 for `tl` shard 2
+2. Sync results to Mac every few hours; monitor `grid_status.py`
+3. After `tl` complete (or in parallel with spare GPUs), launch `grids/l3.yaml` on identical RTX 4090 `gpu_name`
+4. Phase H verification when grids complete
 
 ## Decisions made
 
 - Venue: IJACSA, October issue (submit by 24 Sep); fall back to November if go/no-go fails on 21 Sep
-- Two scales: TinyLlama-1.1B (primary) and LLaMA-3.2-3B (replication, subject to the Phase F timing gate)
-- GPUs: Vast.ai, on-demand RTX 4090; A100 or L40S only if 3B does not fit; identical GPU model within a grid
-- Cursor runs one phase at a time; GPU renting and launches done by Jerry
-- Phase B stays on main (no history rewrite). From Phase C: one branch per phase, fast-forward merge after review, never force-push
-- Pre-freeze amendments: effective clients and discarded trailing samples pre-registered; whole-group sharding; V2 requires identical gpu_name within a grid; communication compared only within method
-- Pre-freeze launcher fixes: path normalization, no retraining of complete cells, freeze tag check via --points-at, per-cell CSV with workers>1, smoke-grid support; run table built from holdout JSON only; jsonl attempt-0 lines are skip records and ignored
+- Two scales: TinyLlama-1.1B and LLaMA-3.2-3B (F2 gate passed on 4090)
+- GPUs: Vast.ai on-demand RTX 4090; identical GPU model within a grid
+- Phase F: `--workers 1` for TinyLlama (F3 throughput 1.06× &lt; 1.6×)
 - Freeze authorized 16 Sep 2026; freeze-v1 tagged
 
 ## Findings to carry into the paper
@@ -42,35 +39,30 @@ freeze-v1 tagged; Phase E complete; next is Phase F timing on Vast.
 - Client sizes range from 2 to 1218 samples
 - client.py steps only on complete accumulation blocks (no drop_last)
 - As implemented, FFA-LoRA uploads A and B and downloads B only; state this in the setup section
+- RTX 4090 TinyLlama ~29 min/run; LLaMA-3.2-3B ~65 min/run; peak ~9 GB for 3B flora timing
 
 ## Open items
 
-- Vast instance started before freeze: identify what it is running; stop unless timing
-- Attorney: does an IJACSA publication carry weight, given the publisher's history?
-- Attorney: does IEEE Early Access with a DOI count as published for the OJ-CS paper?
-- AI disclosure: choose the declaration version that matches actual use
-- Private repo access for Vast instances: deploy key or fine-grained token (needed before Phase F)
-- Overlap check (Phase M): set OLD to the local folder federated-lora-experiments
-- Timing and peak-memory fields cover only the resumed segment for resumed runs; treat as partial in analysis
-- Held-out eval recomputes base loss per cell (about half of Mac smoke time); include about 2 to 3 GPU-minutes per cell in Phase G sizing
-- Local tooling: use .venv/bin/python; plain git commit via /usr/bin/git if the wrapper fails
+- Vast credits for full Phase G (~40 GPU-hours tl + ~51 l3 including holdout)
+- Third 4090 for tl shard 2
+- Attorney / AI disclosure / Phase M overlap path
+- Held-out eval adds ~2–3 GPU-min per production cell
 
 ## Run progress
 
-| Grid | Complete | Failed | Total |
-|---|---|---|---|
-| tl | 0 | 0 | 75 |
-| l3 | 0 | 0 | 45 |
+| Grid | Complete | Failed | Total | Notes |
+|---|---|---|---|---|
+| tl | (in progress) | 0 | 75 | shards 0+1 running; shard 2 pending |
+| l3 | 0 | 0 | 45 | after tl capacity / third+ GPUs |
 
-## Measured constants (fill in during Phases D and F)
+## Measured constants
 
 | Item | Value |
 |---|---|
-| TinyLlama per-client upload, FedIT / FLoRA | 9,011,200 bytes (measured, Phase D) |
-| TinyLlama per-client upload, FFA-LoRA | 9,011,200 bytes upload; 3,244,032 bytes download (measured, Phase D) |
-| LLaMA-3B per-client upload, FedIT / FLoRA | expected 9,175,040 bytes |
-| LLaMA-3B per-client upload, FFA-LoRA | |
-| TinyLlama minutes per run (4090) | |
-| LLaMA-3B minutes per run, and GPU used | |
-| Workers per GPU (TinyLlama) | |
+| TinyLlama per-client upload, FedIT / FLoRA | 9,011,200 bytes (Phase D + F1 confirm) |
+| TinyLlama per-client upload, FFA-LoRA | 9,011,200 upload; 3,244,032 download (Phase D) |
+| LLaMA-3B per-client upload, FedIT / FLoRA | 9,175,040 bytes (measured F2) |
+| TinyLlama minutes per run (4090) | ~29.3 train-only (F1); use ~32 with holdout |
+| LLaMA-3B minutes per run, and GPU used | ~65.2 train-only (F2) on RTX 4090; peak ~9 GB |
+| Workers per GPU (TinyLlama) | **1** (F3 gate) |
 | Mac smoke cell (1 round, 300 samples, incl. holdout) | about 280 s; holdout-only about 136 s |
