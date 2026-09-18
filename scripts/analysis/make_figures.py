@@ -186,6 +186,9 @@ def fig2_rank_flip() -> Path:
                 color=color,
                 label=protocol,
             )
+        ks = sorted(sub["k"].unique().tolist())
+        ax.set_xticks(ks)
+        ax.set_xticklabels([str(int(k)) for k in ks])
         ax.set_ylim(0, 1)
         ax.set_xlabel("Partitions drawn (k)", fontsize=8)
         ax.set_ylabel("P(best differs)" if model == "tl" else "", fontsize=8)
@@ -217,6 +220,9 @@ def fig2_rank_flip() -> Path:
                 linestyle=ls,
                 label=label,
             )
+        ks = sorted(sub["k"].unique().tolist())
+        ax.set_xticks(ks)
+        ax.set_xticklabels([str(int(k)) for k in ks])
         ax.set_ylim(-0.02, 1.02)
         ax.set_xlabel("Partitions drawn (k)", fontsize=8)
         ax.set_ylabel("P(pair order flips)" if model == "tl" else "", fontsize=8)
@@ -235,9 +241,10 @@ def fig2_rank_flip() -> Path:
 
 
 def fig3_power() -> Path:
-    """Full-width draws-needed figure."""
+    """Full-width draws-needed figure (preregistered deltas + observed near-tie)."""
     power = pd.read_csv(ANALYSIS / "power.csv")
     pre = power[power.kind == "preregistered_delta"].copy()
+    obs = power[(power.kind == "observed_gap") & (power.pair == "fedit-flora")].copy()
     min_font = 8.0
 
     def _n_num(v):
@@ -245,47 +252,77 @@ def fig3_power() -> Path:
             return 1000.0
         return float(v)
 
-    fig, axes = plt.subplots(1, 2, figsize=(IN_FULL, 2.5), sharey=True)
+    fig, axes = plt.subplots(1, 2, figsize=(IN_FULL, 2.7), sharey=True)
     for ax, model in zip(axes, ("tl", "l3")):
-        sub = pre[pre.model == model].sort_values("delta")
-        for protocol, col, key in (
-            ("paired", C["paired"], "n_paired"),
-            ("unpaired", C["unpaired"], "n_unpaired_per_method"),
+        sub = pre[pre.model == model].sort_values("delta").reset_index(drop=True)
+        xs = np.arange(len(sub), dtype=float)
+        for protocol, col, key, mark in (
+            ("paired", C["paired"], "n_paired", "o"),
+            ("unpaired", C["unpaired"], "n_unpaired_per_method", "s"),
         ):
             ys = [_n_num(v) for v in sub[key]]
             ax.plot(
-                sub["delta"],
+                xs,
                 ys,
-                marker="o",
+                marker=mark,
                 markersize=4,
                 linewidth=1.2,
                 color=col,
                 label=protocol,
             )
+        o = obs[obs.model == model]
+        if not o.empty:
+            n_paired = float(o["n_paired"].iloc[0])
+            gap = abs(float(o["delta"].iloc[0]))
+            # Place star to the right of the preregistered series to use empty upper region
+            x_star = float(len(sub)) + 0.35
+            ax.scatter(
+                [x_star],
+                [n_paired],
+                marker="*",
+                s=70,
+                color=C["tie"],
+                zorder=5,
+                label="obs. near-tie (paired)",
+            )
+            ax.annotate(
+                f"n={int(n_paired)}\n(|g|={gap:.4f})",
+                xy=(x_star, n_paired),
+                xytext=(x_star - 0.15, n_paired * 0.55),
+                fontsize=8,
+                color=C["tie"],
+                arrowprops=dict(arrowstyle="-", color=C["tie"], lw=0.7),
+                ha="right",
+                va="top",
+            )
         ax.set_yscale("log")
-        ax.set_xlabel("Detectable Delta", fontsize=8)
+        ax.set_xlabel(r"Detectable $\Delta$ / observed gap", fontsize=8)
         if model == "tl":
             ax.set_ylabel("Partitions needed (n)", fontsize=8)
         ax.set_title(MODEL_LABEL[model], fontsize=8)
-        ax.set_xticks(sub["delta"].tolist())
-        ax.set_xticklabels([f"{d:g}" for d in sub["delta"]], fontsize=8)
+        tick_x = list(xs) + ([float(len(sub)) + 0.35] if not o.empty else [])
+        tick_lab = [f"{d:g}" for d in sub["delta"]] + (["near-tie"] if not o.empty else [])
+        ax.set_xticks(tick_x)
+        ax.set_xticklabels(tick_lab, fontsize=8)
+        ax.set_xlim(-0.35, float(len(sub)) + 0.9)
         ax.tick_params(labelsize=8)
         ax.grid(True, which="both", alpha=0.3, linewidth=0.5)
         if model == "tl":
-            ax.legend(frameon=False, fontsize=8)
+            ax.legend(frameon=False, fontsize=8, loc="upper left")
         ax.axhline(1000, color="#888888", linewidth=0.6, linestyle="--")
         ax.text(
             0.98,
-            0.05,
+            0.92,
             "cap >1000",
             transform=ax.transAxes,
             ha="right",
+            va="top",
             fontsize=8,
             color="#555555",
         )
-    fig.subplots_adjust(left=0.09, right=0.99, top=0.90, bottom=0.20, wspace=0.22)
+    fig.subplots_adjust(left=0.09, right=0.99, top=0.88, bottom=0.20, wspace=0.25)
     out = FIG / "fig3_draws_needed.pdf"
-    fig.set_size_inches(IN_FULL, 2.5)
+    fig.set_size_inches(IN_FULL, 2.7)
     fig.savefig(out, bbox_inches=None, pad_inches=0)
     plt.close(fig)
     print(f"{out.name}: width={PT_FULL:.1f} pt (target full), min_font={min_font:.1f} pt")

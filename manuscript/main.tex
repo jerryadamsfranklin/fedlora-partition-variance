@@ -1,5 +1,6 @@
 %% manuscript/main.tex
 %% SAI / IJACSA paper format (IEEEtran conference class from thesai.org ZipFileHandler).
+%% Review copy: anonymized (Phase M step 4).
 \documentclass[conference, letterpaper]{IEEEtran}
 
 \usepackage[pdftex]{graphicx}
@@ -19,7 +20,7 @@
   citecolor=black,
   urlcolor=black,
   pdfauthor={},
-  pdftitle={Partition Draws, Not Aggregators: Decomposing Result Variance in Federated LoRA Fine-Tuning Under Non-IID Splits}
+  pdftitle={}
 }
 
 \graphicspath{{../figures/}{figures/}}
@@ -38,10 +39,9 @@
 
 \title{Partition Draws, Not Aggregators: Decomposing Result Variance in Federated LoRA Fine-Tuning Under Non-IID Splits}
 
-% Author block retained for assembly; anonymized in Phase M step 4.
-\author{\IEEEauthorblockN{Jerry Adams Franklin}
-\IEEEauthorblockA{Independent Researcher\\
-Email: jerryadamsfranklin@example.com}
+% Double-blind review copy: no author, affiliation, or acknowledgments.
+\author{\IEEEauthorblockN{Anonymous Author(s)}
+\IEEEauthorblockA{Anonymous Affiliation}
 }
 
 \maketitle
@@ -83,7 +83,7 @@ Email: jerryadamsfranklin@example.com}
 \begin{figure*}[!t]
 \centering
 \includegraphics[width=\textwidth]{fig1_heldout_loss.pdf}
-\caption{Held-out loss by method and partition at Dirichlet $\alpha{=}0.1$.}
+\caption{Held-out loss by method: IID (left group) and Dirichlet $\alpha{=}0.1$ (right group), points colored by partition.}
 \label{fig:heldout}
 \end{figure*}
 
@@ -97,7 +97,7 @@ Email: jerryadamsfranklin@example.com}
 \begin{figure*}[!t]
 \centering
 \includegraphics[width=\textwidth]{fig3_draws_needed.pdf}
-\caption{Partition draws needed for pre-registered deltas and observed gaps.}
+\caption{Partition draws needed for pre-registered deltas and the observed FedIT--FLoRA near-tie (star).}
 \label{fig:draws}
 \end{figure*}
 
@@ -112,7 +112,7 @@ None.
 \paragraph{Conflicts of interest.}
 None.
 \paragraph{Generative AI.}
-Declaration version to be selected by the author before submission (plan versions a or b).
+The author used Claude (Anthropic) for language editing and drafting support, and AI coding assistants for implementing experiment and analysis scripts. The author designed the study, verified all code and results, and is responsible for all technical content, analysis, and interpretations.
 
 \balance
 \bibliographystyle{IEEEtran}
