@@ -36,3 +36,5 @@ Baseline test count at v0-import: 28 passed
 - H close: float32 spot-check evidence committed; Phase K audit dropped in DECISIONS.
 - I: `scripts/analysis/build_runs_table.py` and `analyze_variance.py` (I0 to I6);
   outputs under `analysis/*.csv`.
+- I addendum: pair-level flip table (`rank_flip_pairs.csv`) and observed-gap power rows.
+- J: `make_figures.py` (Figs 1 to 3, pair panel on Fig 2) and `make_tables.py` (Tabs 1 to 3).
