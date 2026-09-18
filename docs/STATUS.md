@@ -6,26 +6,31 @@ Replace this file in the Claude Project whenever the state changes. Keep only on
 
 ## Current phase
 
-Phase M on phase-m, paused after step 5. Seven review fixes applied; review copy anonymized; typography and overlap clean. Step 6 (final reference verification) next.
+Phase M on phase-m. Template verified against thesai.org ZIP (letterpaper confirmed), header fixed, step 6 reference check done. Awaiting PDF review before fast-forward and tag.
 
 ## Done
 
-- Phases B to L on main; Phase M assembly (7 pages, V9, verifier exit 0)
-- Seven review fixes: prevalence claims scoped; FedIT ten-shard detail; byte-accounting cite without author name; Conclusion opening; Fig 1/2/3 fixes
-- Step 4 anonymization: Anonymous Author; empty pdfauthor/pdftitle; code availability release-upon-acceptance; Generative AI declaration version (b); figure PDFs clean of home paths
-- Step 5: typography OK; overlap max 0.082% shared 8-grams vs OJ-CS body/supplemental
+- Phases B to E on main; freeze-v1 at 0812fcf; freeze-v2 at 4f9fcf8
+- Phase F gates passed; Phase G complete (tl 75/75, l3 45/45); Phase H verifier exits 0
+- Phase I complete; Phase J figures 505 pt, 8 pt minimum fonts
+- Phase L complete and merged into main (8031a74)
+- Phase M steps 1 to 5: SAI template assembly (7 pages), V9 complete (25 claims), verifier exit 0, seven review fixes, anonymization (author and title metadata empty, GenAI declaration version b, no username paths in figures), typography clean across 12 files, overlap 0.082% vs OJ-CS body and 0.000% vs supplement (target under 5%)
+- IJACSA format and submission requirements filed as docs/IJACSA_FORMAT_AND_SUBMISSION.md
+- Official LaTeX ZIP and copyright PDF stored under manuscript/template/; paper size matches (`conference, letterpaper`); left header now "(IJACSA) ..."; rebuild still 7 pages
+- Phase M checklist adds signed copyright form and non-Gmail email plus ORCID
+- Step 6: nine refs verified against primary sources; FFA-LoRA OpenReview ID corrected (DPIGDbSsbV to NLPzL6HWNl)
 
 ## Next
 
-1. Step 6 final reference verification against primary sources
-2. Destroy M3; revoke the GitHub and HF tokens
-3. Jerry: attorney answer on IJACSA weight before paying the APC; real email for the submission form; JCR impact factor figure
-4. Mon 21 Sep go/no-go; target submission Tue 22 Sep
+1. Review the final PDF here, then fast-forward phase-m into main and tag ijacsa-submitted-v1
+2. Mon 21 Sep go/no-go; target submission Tue 22 Sep
 
 ## Blocking before submission
 
-- Attorney confirmation that IJACSA counts, before the GBP 800 APC
-- Real author email on the submission form and camera-ready
+- Attorney confirmation that an IJACSA publication carries weight, before the GBP 800 APC
+- Signed IJACSA copyright form (blank copy in manuscript/template/IJACSA_Copyright.pdf; complete and sign before send)
+- Real author email for the submission form; prefer an address on jerryadamsfranklin.com over Gmail, since IJACSA discourages Gmail; ORCID iD ready
+- Affiliation stays "Independent Researcher"
 
 ## Framing rules for the manuscript
 
@@ -44,15 +49,18 @@ Phase M on phase-m, paused after step 5. Seven review fixes applied; review copy
 ## Decisions made
 
 - Venue: IJACSA October cycle, target submission Tue 22 Sep; November fallback if go/no-go fails 21 Sep
-- Generative AI declaration version (b)
-- Byte accounting cites arXiv:2609.13512 in the third person without naming the author in prose
+- Two scales on RTX 4090, --workers 1; l3 holdout float16, tl float32
+- freeze-v2 for the eval-only change; --max-retries 5 because of host instability
 - Phase K literature audit dropped; no audit-derived counts
 - Release statement covers results and metadata, not adapter weights
+- Byte accounting cites arXiv:2609.13512 in the third person, without naming the author in the text
+- Generative AI declaration: plan version (b)
 
 ## Open items
 
-- JCR impact factor; attorney questions (IJACSA weight, IEEE Early Access)
-- M3 still up; destroy and revoke tokens
+- JCR impact factor figure for IJACSA (read from Clarivate)
+- Attorney question on IEEE Early Access counting as published for the OJ-CS paper
+- M3 still up; destroy and revoke the GitHub and HF tokens
 - Local tooling: use .venv/bin/python
 
 ## Run progress

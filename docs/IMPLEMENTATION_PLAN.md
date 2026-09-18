@@ -797,6 +797,8 @@ IJACSA treats undeclared or inaccurately declared AI use as misconduct, so accur
 - [ ] Every reference verified
 - [ ] No em dashes or curly quotes: `python scripts/check_typography.py manuscript/` reports clean. The script flags U+2014, U+2013, U+201C, U+201D, U+2018, and U+2019 in every `.tex` and `.bib` file, and flags sentences starting with First, Furthermore, Moreover, or Additionally.
 - [ ] Cover letter names the related preprint and states that the present study uses new experiments, different methods, and a different research question
+- [ ] Signed IJACSA copyright form completed and attached with the manuscript (download from thesai.org/Home/Downloads; blank copy in `manuscript/template/IJACSA_Copyright.pdf`)
+- [ ] Non-Gmail author email ready for the submission form (prefer an address on jerryadamsfranklin.com); ORCID iD ready; affiliation remains Independent Researcher
 - [ ] Final commit tagged `ijacsa-submitted-v1`
 
 ---
