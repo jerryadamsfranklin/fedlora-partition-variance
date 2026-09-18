@@ -4,7 +4,7 @@ Element & Value \\
 \midrule
 Methods & FedIT, FFA-LoRA, FLoRA \\
 Models & TinyLlama-1.1B-Chat-v1.0; LLaMA-3.2-3B \\
-LoRA & $r{=}16$, $\alpha{=}32$, dropout $0.1$, $q\_proj$+$v\_proj$ \\
+LoRA & $r{=}16$, $\alpha_{\mathrm{LoRA}}{=}32$, dropout $0.1$, $q\_proj$+$v\_proj$ \\
 Federation & 10 clients, full participation, 15 rounds, 1 local epoch \\
 Data & Dolly-15k train$[0{:}3000]$; held-out train$[3000{:}3500]$ \\
 Non-IID & Dirichlet label skew on \texttt{category}, $\alpha{=}0.1$ \\

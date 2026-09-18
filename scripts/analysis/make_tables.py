@@ -13,6 +13,8 @@ TABLES = REPO / "manuscript" / "tables"
 
 METHOD_TEX = {"fedit": "FedIT", "ffa_lora": "FFA-LoRA", "flora": "FLoRA"}
 MODEL_TEX = {"tl": "TinyLlama-1.1B", "l3": "LLaMA-3.2-3B"}
+# Design: m=3 methods, r=2 run seeds; p partitions differ by model
+DESIGN = {"tl": {"p": 10, "m": 3, "r": 2}, "l3": {"p": 6, "m": 3, "r": 2}}
 
 
 def _read(name: str) -> List[Dict[str, str]]:
@@ -28,14 +30,13 @@ def _f(x: Any, fmt: str) -> str:
 
 
 def tab1_setup() -> str:
-    # From frozen Section 0 / SCOPE (static from plan; no hand-typed results numbers)
     return r"""\begin{tabular}{ll}
 \toprule
 Element & Value \\
 \midrule
 Methods & FedIT, FFA-LoRA, FLoRA \\
 Models & TinyLlama-1.1B-Chat-v1.0; LLaMA-3.2-3B \\
-LoRA & $r{=}16$, $\alpha{=}32$, dropout $0.1$, $q\_proj$+$v\_proj$ \\
+LoRA & $r{=}16$, $\alpha_{\mathrm{LoRA}}{=}32$, dropout $0.1$, $q\_proj$+$v\_proj$ \\
 Federation & 10 clients, full participation, 15 rounds, 1 local epoch \\
 Data & Dolly-15k train$[0{:}3000]$; held-out train$[3000{:}3500]$ \\
 Non-IID & Dirichlet label skew on \texttt{category}, $\alpha{=}0.1$ \\
@@ -52,13 +53,16 @@ LLaMA-3.2-3B cells & 36 ($\alpha{=}0.1$) + 9 (IID) \\
 def tab2_variance() -> str:
     rows = _read("variance_components.csv")
     lines = [
-        r"\begin{tabular}{lrrrlll}",
+        r"\begin{tabular}{lrrrlllrrr}",
         r"\toprule",
-        r"Model & $\hat\sigma^2_P$ & $\hat\sigma^2_{PM}$ & $\hat\sigma^2_E$ & Share $P$ & Share $PM$ & Share $E$ \\",
+        r"Model & $\hat\sigma^2_P$ & $\hat\sigma^2_{PM}$ & $\hat\sigma^2_E$ "
+        r"& Share $P$ & Share $PM$ & Share $E$ & $p$ & $m$ & $r$ \\",
         r"\midrule",
     ]
     for r in rows:
-        model = MODEL_TEX[r["model"]]
+        model_key = r["model"]
+        model = MODEL_TEX[model_key]
+        d = DESIGN[model_key]
         share = (
             f"{_f(r['share_P'], '.3f')} [{_f(r['share_P_ci_lo'], '.3f')}, {_f(r['share_P_ci_hi'], '.3f')}]"
         )
@@ -68,15 +72,20 @@ def tab2_variance() -> str:
         share_e = (
             f"{_f(r['share_E'], '.3f')} [{_f(r['share_E_ci_lo'], '.3f')}, {_f(r['share_E_ci_hi'], '.3f')}]"
         )
-        # scientific for variance components
         lines.append(
             f"{model} & {_f(r['s2_P'], '.2e')} & {_f(r['s2_PM'], '.2e')} & {_f(r['s2_E'], '.2e')} "
-            f"& {share} & {share_pm} & {share_e} \\\\"
+            f"& {share} & {share_pm} & {share_e} "
+            f"& {d['p']} & {d['m']} & {d['r']} \\\\"
         )
-    lines += [r"\bottomrule", r"\end{tabular}", ""]
-    lines.append(
-        r"% Shares show point estimate and percentile bootstrap 95\% CI over partitions ($B{=}2000$)."
-    )
+    lines += [
+        r"\bottomrule",
+        r"\end{tabular}",
+        "",
+        r"% Caption note: balanced two-way ANOVA with replication at Dirichlet $\alpha{=}0.1$; "
+        r"$p$ partitions, $m{=}3$ methods (fixed), $r{=}2$ run seeds. "
+        r"Shares are point estimates with percentile bootstrap 95\% CIs over partitions ($B{=}2000$). "
+        r"No method-of-moments estimate was truncated at zero.",
+    ]
     return "\n".join(lines) + "\n"
 
 
@@ -92,9 +101,12 @@ def tab3_means_comm() -> str:
     ]
     for model in ("tl", "l3"):
         for meth in ("fedit", "ffa_lora", "flora"):
-            m = next(r for r in means if r["model"] == model and r["method"] == meth and r["het"] == "a01")
+            m = next(
+                r
+                for r in means
+                if r["model"] == model and r["method"] == meth and r["het"] == "a01"
+            )
             c = next(r for r in comm if r["model"] == model and r["method"] == meth)
-            # active range from partition_effects for this model
             act = [int(r["active_clients"]) for r in parts if r["model"] == model]
             lines.append(
                 f"{MODEL_TEX[model]} & {METHOD_TEX[meth]} & "

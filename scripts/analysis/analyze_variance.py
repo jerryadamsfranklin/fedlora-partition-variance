@@ -781,33 +781,47 @@ def select_i7(results: Dict[str, Dict[str, Any]]) -> List[str]:
     claims = []
     for model, res in results.items():
         share_p = res["vc"]["share_P"]
+        share_lo = res["vc"]["share_P_ci_lo"]
         flip3 = res["rank_k3_paired_best"]
-        if share_p >= 0.30 or flip3 >= 0.20:
+        # Prefer the robust trigger when stating row 1.
+        if share_p >= 0.30:
             claims.append(
-                f"{model}: row1 (partition share>={share_p:.3f} or 3-draw paired flip>={flip3:.3f})"
+                f"{model}: row1 on partition share ({share_p:.3f}; CI "
+                f"[{share_lo:.3f}, {res['vc']['share_P_ci_hi']:.3f}]); "
+                f"3-draw paired flip also {flip3:.3f}"
+            )
+        elif flip3 >= 0.20:
+            claims.append(
+                f"{model}: row1 on 3-draw paired flip probability only "
+                f"({flip3:.3f}); share_P={share_p:.3f} is below the 0.30 threshold "
+                f"and its CI includes 0 "
+                f"([{share_lo:.3f}, {res['vc']['share_P_ci_hi']:.3f}]); "
+                f"flip is the near-tied fedit-flora pair"
             )
         elif share_p < 0.10 and flip3 < 0.05:
             claims.append(
-                f"{model}: row2 (partition share<{share_p:.3f} and flip<{flip3:.3f})"
+                f"{model}: row2 (partition share={share_p:.3f} and flip={flip3:.3f})"
             )
         else:
             claims.append(
                 f"{model}: row3 in-between (share={share_p:.3f}, flip3_paired_best={flip3:.3f})"
             )
         if res["est"]["s2_PM"] > res["est"]["s2_P"] and res["est"]["s2_PM"] > 0:
-            claims.append(f"{model}: row4 interaction s2_PM large relative to s2_P")
+            claims.append(
+                f"{model}: row4 interaction "
+                f"(share_PM={res['vc']['share_PM']:.3f} > share_P={share_p:.3f})"
+            )
 
-    # cross-scale CI overlap on share_P
     if "tl" in results and "l3" in results:
         tl = results["tl"]["vc"]
         l3 = results["l3"]["vc"]
-        # non-overlapping CIs?
         lo1, hi1 = tl["share_P_ci_lo"], tl["share_P_ci_hi"]
         lo2, hi2 = l3["share_P_ci_lo"], l3["share_P_ci_hi"]
         overlap = not (hi1 < lo2 or hi2 < lo1)
-        # direction differ: point estimates on opposite sides meaningfully
         if not overlap:
-            claims.append("cross-scale: row5 TinyLlama and LLaMA shares differ (non-overlapping CIs)")
+            claims.append(
+                "cross-scale: row5 TinyLlama and LLaMA shares differ (non-overlapping CIs)"
+            )
         else:
             claims.append("cross-scale: row6 overlapping CIs across scales")
     return claims

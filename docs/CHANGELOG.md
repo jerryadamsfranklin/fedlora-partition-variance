@@ -38,3 +38,6 @@ Baseline test count at v0-import: 28 passed
   outputs under `analysis/*.csv`.
 - I addendum: pair-level flip table (`rank_flip_pairs.csv`) and observed-gap power rows.
 - J: `make_figures.py` (Figs 1 to 3, pair panel on Fig 2) and `make_tables.py` (Tabs 1 to 3).
+- J fix: figures at 505 pt full width with >=8 pt fonts; Tab1 LoRA alpha notation;
+  Tab2 design p/m/r and no-truncation note; I7 claim wording for l3 near-tie.
+- L: draft Setup section (`manuscript/sections/03_setup.tex`).
