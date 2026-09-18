@@ -6,7 +6,7 @@ Replace this file in the Claude Project whenever the state changes. Keep only on
 
 ## Current phase
 
-Phase L drafting. Setup and Results drafted on phase-l (294b72c); four Results revisions pending. Related Work next.
+Phase L drafting on phase-l (a1a4fbb). Setup and Results reviewed; four Results revisions applied. Related Work drafted (~430 words); Discussion next.
 
 ## Done
 
@@ -14,17 +14,18 @@ Phase L drafting. Setup and Results drafted on phase-l (294b72c); four Results r
 - Phase F gates passed; Phase G complete (tl 75/75, l3 45/45); Phase H verifier exits 0 (V1 to V8, V11)
 - Phase I complete, plus the pair-level flip and observed-gap power addendum
 - Phase J fixes on main (0669f93): all figures 505 pt wide, minimum font 8 pt; i7 claims wording; Tab 2 design parameters; Tab 1 alpha notation
-- Setup section drafted and reviewed (six fixes applied, pre-registration and variance-model paragraphs added, refs.bib started with verified FedIT, FFA-LoRA, FLoRA cites)
-- Results drafted (~1030 words) and verified in the Claude Project: Holm p values, CIs, Wilson widths, unpaired n, and the FFA-LoRA byte accounting all reproduce
+- Setup section drafted and reviewed (six fixes, pre-registration and variance-model paragraphs, refs.bib with verified cites)
+- Results drafted and revised: MixedLM partial cross-check disclosed; FFA-LoRA A/B then B-only wording; flip-equality explanation; unpaired pointer to fig:flip and rank_flip.csv
+- DECISIONS row: MixedLM partition component failed to identify; moment estimates primary
+- Related Work drafted (variance/seeds; Dirichlet and category non-IID; FedIT/FFA-LoRA/FLoRA margins; gap)
 
 ## Next
 
-1. Apply the four Results revisions (mixed-model disclosure, FFA-LoRA byte wording, flip-equality explanation, unpaired pointer) plus the DECISIONS row on the MixedLM partition component
-2. Draft Related Work (about 500 words), then Discussion, Introduction, Abstract
-3. Phase M: SAI template, anonymization, V9 claims list, overlap check, typography, references
-4. Destroy M3; revoke the GitHub and HF tokens
-5. Jerry: JCR impact factor; attorney questions; AI disclosure version choice
-6. Mon 21 Sep go/no-go; target submission Tue 22 Sep
+1. Draft Discussion, then Introduction, then Abstract
+2. Phase M: SAI template, anonymization, V9 claims list, overlap check, typography, references
+3. Destroy M3; revoke the GitHub and HF tokens
+4. Jerry: JCR impact factor; attorney questions; AI disclosure version choice
+5. Mon 21 Sep go/no-go; target submission Tue 22 Sep
 
 ## Framing rules for the manuscript
 
