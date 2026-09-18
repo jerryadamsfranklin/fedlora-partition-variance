@@ -6,46 +6,54 @@ Replace this file in the Claude Project whenever the state changes. Keep only on
 
 ## Current phase
 
-Phase N on phase-n. N5a to N5d complete (pre-launch). Ready for Jerry to rent three RTX 4090s and launch per docs/PHASE_N_RUNBOOK.md. Do not destroy gate until 60/60 + 24/24 + 84 adapters.
+Phase N pre-launch complete on phase-n / freeze-v3 (f3e773d). GPUs being rented; runbook is docs/PHASE_N_RUNBOOK.md. Phase O2b done (43fc0a7); O2c reference expansion done (refs.bib 27).
 
 ## Standing rule
 
-Every change request goes into docs/IMPLEMENTATION_PLAN.md as a numbered phase with acceptance checks, and is executed from the plan. No ad-hoc execution.
-
-## Venue decision
-
-- Target: IEEE Access; IJACSA November/December fallback; never dual-submit
-
-## Contribution naming
-
-The Partition-Draw Reporting Protocol (no acronym). Three numbered steps in abstract and discussion.
+Every change request goes into docs/IMPLEMENTATION_PLAN.md as a numbered phase with acceptance checks, then is executed from the plan.
 
 ## Done
 
-- N1 to N4: configs, grids, I8-I10, V12, freeze-v3
-- N5 runbook written
-- N5a: freeze_tag on all four grids; production_guard requires matching tag; vast_setup honors FREEZE_TAG
-- N5b: partition preview appended (alpha 0.5 seeds 2001-2010, min active 10; alpha 0.1 seeds 2007-2010, min active 9); both PASS
-- N5c: V7 cross-tag base_loss pooling vs 2.120666 (tl) and 2.168946 (l3)
-- N5d: DECISIONS + PROVENANCE cite ed80372 for float32 spot-check CLI
-- O2b: Gap paragraph narrowed; FlowerTune setup sentence; five refs verified (refs.bib 14/~25); DECISIONS row
+- Phases B to M under freeze-v1 and freeze-v2: 120 runs, verifier exit 0, 7-page manuscript, overlap 0.082%
+- Phase N: N1 to N4 (configs, grids, pre-registered I8 to I10, V12 pass), N5a to N5d (freeze_tag guard, partition preview, V7 pooling check, provenance)
+- Partition preview: alpha 0.5 keeps 10 active clients in every seed; alpha 0.1 seeds 2007 to 2010 minimum 9 (seed 2008); both blocks 8 categories summing to 3000
+- V7 pooling: base_loss 2.120666 (tl, 75 holdouts) and 2.168946 (l3, 45 holdouts) within 1e-6
+- Phase O2b: gap claim narrowed; five new references verified (unlearning ICC, SAE benchmark, recommender seeds, JII non-IID assessment, FlowerTune)
+- Phase O2c: thirteen foundation/context/stats references added with home sentences; refs.bib at 27
 
 ## Next
 
-1. Jerry: regenerate tokens; rent 3x RTX 4090 (exact name gate); follow PHASE_N_RUNBOOK
-2. Cursor: Mac sync every 2-3 hours after launch starts; first-cell check (freeze-v3, gpu_name, base_loss 2.120666)
-3. N6 already logged in DECISIONS; N7 after runs
+1. Rent 3 RTX 4090s (exact gpu_name gate, new read-only tokens, staggered launches); run tl_a05 shards 0 to 2, then l3_ext on the same boxes
+2. First-cell gate: git_describe freeze-v3, gpu_name exact, base_loss 2.120666; stop on any drift
+3. Sync adapters from the start; 84 adapters on the Mac before destroying any instance
+4. Analysis I8 to I10, then Phase O rework for IEEE Access
+5. Target submission Fri 26 Sep; hard stop on runs Mon 22 Sep
+
+## Findings to carry into the paper
+
+- Alpha 0.5 partitions keep all 10 clients active; alpha 0.1 yields 9 or 10. Report as a partition statistic alongside the variance components
+- Gap claim names adjacent decompositions (unlearning seeds, benchmark variants, fixed-partition seed studies) rather than claiming none exist
+- Cite the JII non-IID assessment as 2026, volume 50, article 101052
+
+## Venue
+
+- IEEE Access primary: about 20% acceptance, 4 weeks to decision, 4 to 6 weeks to publication, APC $2,160. Desk-screen risk mitigated by the Partition-Draw Reporting Protocol framing and the alpha gradient
+- IJACSA fallback (November or December cycle); never both at once
+- Odds after the addendum: desk reject 25 to 30%; publication before March 2027 roughly 45 to 55%
 
 ## Open items
 
-- Attorney / Cabells / ORCID / Zenodo as before
+- Cabells Predatory Reports check on IJACSA (fallback only)
+- Attorney: IEEE Access and the scholarly-articles criterion; Early Access as publication for the OJ-CS paper
+- ORCID, non-Gmail email, public repo plus Zenodo DOI
+- prod_v1 adapters gone (25 of 120); retain every prod_v2 adapter
 - Local tooling: use .venv/bin/python
 
 ## Run progress
 
 | Grid | Complete | Total | Tag |
 |---|---|---|---|
-| tl | 75 | 75 | prod_v1 |
-| l3 | 45 | 45 | prod_v1 |
+| tl (alpha 0.1 + IID) | 75 | 75 | prod_v1 |
+| l3 (alpha 0.1 + IID) | 45 | 45 | prod_v1 |
 | tl_a05 | 0 | 60 | prod_v2 |
 | l3_ext | 0 | 24 | prod_v2 |

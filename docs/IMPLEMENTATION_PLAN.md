@@ -1003,6 +1003,18 @@ Independent of prod_v2 GPU runs. Do not touch grids or `analysis/` while prod_v2
 
 **O2b-4.** DONE. DECISIONS row 18 Sep 2026 narrowing Gap claim.
 
+### O2c. Reference expansion (home sentences, 18 Sep) — DONE 18 Sep 2026
+
+Independent of prod_v2 GPU runs. Do not touch grids or `analysis/`. Every new cite must have a home sentence; drop any entry that cannot be verified against a primary source.
+
+**O2c-1.** DONE. Setup cites: LoRA, FedAvg, Dolly-15k, TinyLlama, Llama 3 herd.
+
+**O2c-2.** DONE. Related-work cites: Yang survey; FederatedScope-LLM; OpenFedLLM + FedLLM-Bench with FlowerTune; Cho hetLoRA clause on FLoRA.
+
+**O2c-3.** DONE. Reimers (EMNLP 2017); Dror (ACL 2018) at Holm; Kairouz (FnT ML 2021) at client heterogeneity.
+
+**O2c-4.** DONE. `refs.bib` count 27; STATUS.md updated; verification reported; commit on phase-n.
+
 ### O3. IEEE Access template and de-anonymization
 
 Convert the manuscript to the IEEE Access template. Single-anonymized review: restore author name, affiliation "Independent Researcher", real email, and ORCID.
