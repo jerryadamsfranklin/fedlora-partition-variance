@@ -6,25 +6,25 @@ Replace this file in the Claude Project whenever the state changes. Keep only on
 
 ## Current phase
 
-Phase L drafting on phase-l. Setup, Results, Related Work done. Discussion revised; Introduction drafted for review; Abstract next.
+Phase L drafting on phase-l. Full prose draft complete (Abstract through Discussion). Phase M next after Abstract review.
 
 ## Done
 
 - Phases B to E on main; freeze-v1 at 0812fcf; freeze-v2 at 4f9fcf8
 - Phase F gates passed; Phase G complete (tl 75/75, l3 45/45); Phase H verifier exits 0
 - Phase I complete with pair-level flip and observed-gap power addendum; Phase J figures 505 pt, 8 pt minimum fonts
-- Setup and Results drafted, verified, revised
-- Related Work drafted and corrected; all external citations verified against primary sources
-- Discussion revised: unpaired power correction (206 vs 416; 46 vs 57; interaction enters paired difference twice), limitations (two scales, 10 clients, 15 rounds, accumulation blocks), cross-scale confounds, wording
-- Introduction drafted (~600 words): FFA/FLoRA motivating practice, RQ1--RQ3, contributions, roadmap
+- Setup, Results, Related Work, Discussion drafted, verified, revised
+- All external citations verified against primary sources
+- Introduction revised: softened absence claims; held-out loss scale; recommendation in contributions; byte-accounting cite logged
+- Abstract drafted (180--200 words): question, design, three headlines, recommendation, no method recommendation
+- DECISIONS: cite arXiv:2609.13512 (Franklin) in third person in Setup Communication because measured-payload accounting follows that preprint
 
 ## Next
 
-1. Review Introduction; then draft Abstract (180 to 200 words)
-2. Phase M: SAI template, anonymization, V9 claims list, overlap check, typography
-3. Destroy M3 after syncing available adapters; revoke the GitHub and HF tokens
-4. Jerry: JCR impact factor; attorney questions; AI disclosure version choice
-5. Mon 21 Sep go/no-go; target submission Tue 22 Sep
+1. Review Abstract; then Phase M: SAI template, anonymization, V9 claims list, overlap check, typography, final verifier run
+2. Destroy M3 after syncing available adapters; revoke the GitHub and HF tokens
+3. Jerry: JCR impact factor; attorney questions; AI disclosure version choice
+4. Mon 21 Sep go/no-go; target submission Tue 22 Sep
 
 ## Framing rules for the manuscript
 
@@ -37,8 +37,9 @@ Phase L drafting on phase-l. Setup, Results, Related Work done. Discussion revis
 - No method recommendation
 - MixedLM cross-check partial; moment estimates primary
 - Position against FFA-LoRA's across-run SDs: prior work reports run variance; this paper decomposes it
-- Cross-scale comparisons are confounded: TinyLlama-1.1B-Chat is instruction-tuned while LLaMA-3.2-3B is a base model, and base weights are float32 versus float16
+- Cross-scale comparisons are confounded (instruction-tuned versus base model; float32 versus float16 base weights)
 - Where the interaction dominates, pairing on partitions buys little
+- No prevalence claims about the literature: cite specific papers, never "usually" or "most papers"
 
 ## Decisions made
 
@@ -48,6 +49,7 @@ Phase L drafting on phase-l. Setup, Results, Related Work done. Discussion revis
 - Phase K literature audit dropped; motivate from cited published practice; no audit-derived counts
 - Release statement covers results and metadata, not adapter weights
 - Do not pay the IJACSA APC until the attorney confirms the venue counts
+- Cite arXiv:2609.13512 in third person where measured-payload byte accounting is used (Setup)
 
 ## Open items
 
