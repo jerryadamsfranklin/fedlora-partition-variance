@@ -910,9 +910,41 @@ After N4 report and Jerry approval to launch, follow the runbook in `docs/PHASE_
 - Same three machines: finish each machine's `tl_a05` shard before starting its `l3_ext` shard (`--workers 1`, `--max-retries 2`).
 - Mac sync every 2 to 3 hours including `final_adapter_state.pt`; destroy only after 60/60, 24/24, 84 adapters, V12 exit 0, and results pushed.
 
-Update `production_guard` so `--production` accepts `freeze-v3` for `prod_v2` grids (do not weaken the freeze-v1 requirement for `prod_v1` grids). Update `scripts/vast_setup.sh` to honor `FREEZE_TAG` (default `freeze-v1`) so Phase N can set `FREEZE_TAG=freeze-v3`.
+#### N5a. Grid `freeze_tag` and production_guard
 
-Acceptance: `grid_status` shows 60/60 and 24/24 complete; 84 local adapters present; tokens revoked after destroy.
+`production_guard` reads a required `freeze_tag:` key from the grid YAML and passes only if that exact tag is in `git tag --points-at HEAD`.
+
+- `grids/tl.yaml` and `grids/l3.yaml`: `freeze_tag: freeze-v1`
+- `grids/tl_a05.yaml` and `grids/l3_ext.yaml`: `freeze_tag: freeze-v3`
+
+Tests: passes with matching tag; fails with a different tag; fails when the key is absent. V12 must still show an empty diff over `src` and the two run scripts (`run_experiment.py`, `evaluate_instruction_holdout.py` vs freeze-v2).
+
+Update `scripts/vast_setup.sh` to honor `FREEZE_TAG` (default `freeze-v1`).
+
+#### N5b. Partition preview before launch (Mac)
+
+Before any GPU spend, run `inspect_partitions.py` for:
+
+- alpha 0.5, data seeds 2001 to 2010 (TinyLlama a05 cells)
+- alpha 0.1, data seeds 2007 to 2010 (LLaMA extension cells)
+
+Append to `docs/partition_preview.txt` with per-seed active clients, effective clients (both model configs), client sizes, and category histograms. Stop if any seed has fewer than 3 active clients or a histogram that is not 8 categories summing to 3000.
+
+#### N5c. V7 pooling check (Phase N acceptance)
+
+Extend V7: `base_loss` must be identical within 1e-6 across **all** runs of a model regardless of tag. Reference values from prod_v1: TinyLlama `2.120666`, LLaMA `2.168946`. Failure means the eval path drifted and the addendum cannot be pooled; do not launch or do not accept prod_v2 cells.
+
+#### N5d. Spot-check CLI provenance
+
+Add to `DECISIONS.md` and `docs/PROVENANCE.md`: the holdout spot-check CLI was reverted to the freeze-v2 blob so prod_v2 pins the prod_v1 eval path; the code that produced the float32 spot-check (max |fp16-fp32| tuned_loss 4.1e-5) remains at commit `ed80372`. The manuscript limitations paragraph should cite that commit.
+
+#### N5 acceptance (pre-launch)
+
+- N5a to N5d complete; production_guard and freeze_tag tests green; V12 empty diffs; partition preview appended and stop conditions pass; V7 extended; DECISIONS/PROVENANCE updated; runbook current.
+
+#### N5 acceptance (post-run)
+
+`grid_status` shows 60/60 and 24/24 complete; 84 local adapters present; tokens revoked after destroy.
 
 ### N6. DECISIONS.md entries
 
@@ -931,6 +963,7 @@ Re-specify the MixedLM cross-check so the partition component identifies (cross-
 - All tests pass
 - `freeze-v3` tagged
 - V12 passes
+- V7 pooling: base_loss matches prod_v1 references across tags (2.120666 tl, 2.168946 l3)
 - `grid_status` shows 60/60 (`tl_a05`) and 24/24 (`l3_ext`) complete
 - 84 adapters present locally
 
