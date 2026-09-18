@@ -1,0 +1,121 @@
+%% manuscript/main.tex
+%% SAI / IJACSA paper format (IEEEtran conference class from thesai.org ZipFileHandler).
+\documentclass[conference, letterpaper]{IEEEtran}
+
+\usepackage[pdftex]{graphicx}
+\usepackage[cmex10]{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{cite}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{balance}
+\usepackage{xcolor}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  citecolor=black,
+  urlcolor=black,
+  pdfauthor={},
+  pdftitle={Partition Draws, Not Aggregators: Decomposing Result Variance in Federated LoRA Fine-Tuning Under Non-IID Splits}
+}
+
+\graphicspath{{../figures/}{figures/}}
+
+% SAI header/footer (from Paper_format.tex)
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\footnotesize International Journal of Advanced Computer Science and Applications,}
+\fancyhead[R]{\footnotesize Vol.\ , No.\ , 2026}
+\renewcommand{\headrulewidth}{0.5pt}
+\fancyfoot[C]{www.ijacsa.thesai.org}
+\renewcommand{\footrulewidth}{0.5pt}
+\fancyfoot[R]{\thepage \  $|$ P a g e }
+
+\begin{document}
+
+\title{Partition Draws, Not Aggregators: Decomposing Result Variance in Federated LoRA Fine-Tuning Under Non-IID Splits}
+
+% Author block retained for assembly; anonymized in Phase M step 4.
+\author{\IEEEauthorblockN{Jerry Adams Franklin}
+\IEEEauthorblockA{Independent Researcher\\
+Email: jerryadamsfranklin@example.com}
+}
+
+\maketitle
+
+\input{sections/00_abstract}
+
+\IEEEpeerreviewmaketitle
+
+\input{sections/01_introduction}
+\input{sections/02_related_work}
+\input{sections/03_setup}
+
+\begin{table}[!t]
+\centering
+\caption{Frozen experimental design.}
+\label{tab:setup}
+\small
+\input{tables/tab1_setup}
+\end{table}
+
+\input{sections/04_results}
+
+\begin{table*}[!t]
+\centering
+\caption{Method-of-moments variance components at Dirichlet $\alpha{=}0.1$ with bootstrap 95\% CIs over partitions ($B{=}2000$).}
+\label{tab:variance}
+\small
+\input{tables/tab2_variance}
+\end{table*}
+
+\begin{table*}[!t]
+\centering
+\caption{Method means and communication ranges at $\alpha{=}0.1$.}
+\label{tab:means}
+\small
+\input{tables/tab3_means_comm}
+\end{table*}
+
+\begin{figure*}[!t]
+\centering
+\includegraphics[width=\textwidth]{fig1_heldout_loss.pdf}
+\caption{Held-out loss by method and partition at Dirichlet $\alpha{=}0.1$.}
+\label{fig:heldout}
+\end{figure*}
+
+\begin{figure*}[!t]
+\centering
+\includegraphics[width=\textwidth]{fig2_rank_flip.pdf}
+\caption{Ranking-flip probabilities under paired and unpaired protocols.}
+\label{fig:flip}
+\end{figure*}
+
+\begin{figure*}[!t]
+\centering
+\includegraphics[width=\textwidth]{fig3_draws_needed.pdf}
+\caption{Partition draws needed for pre-registered deltas and observed gaps.}
+\label{fig:draws}
+\end{figure*}
+
+\input{sections/05_discussion}
+\input{sections/06_conclusion}
+
+\section*{Declarations}
+\paragraph{Data and code availability.}
+Code and run artifacts will be released upon acceptance.
+\paragraph{Funding.}
+None.
+\paragraph{Conflicts of interest.}
+None.
+\paragraph{Generative AI.}
+Declaration version to be selected by the author before submission (plan versions a or b).
+
+\balance
+\bibliographystyle{IEEEtran}
+\bibliography{refs}
+
+\end{document}
