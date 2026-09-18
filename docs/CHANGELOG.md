@@ -45,3 +45,5 @@ Baseline test count at v0-import: 28 passed
   ANALYSIS_PLAN I8 to I10; V12 training-path freeze check; tag `freeze-v3`.
   Holdout eval restored to the freeze-v2 blob so V12 can pin prod_v2 eval.
 - N5 runbook: `docs/PHASE_N_RUNBOOK.md` (RTX 4090 name gate, stagger, tl then l3).
+- N5a-d: grid `freeze_tag` + production_guard; partition preview append;
+  V7 cross-tag base_loss pooling; DECISIONS/PROVENANCE for ed80372 spot-check.

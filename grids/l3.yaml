@@ -1,5 +1,6 @@
 name: l3
 tag: prod_v1
+freeze_tag: freeze-v1
 methods: [fedit, ffa_lora, flora]
 config_pattern: "config/vp/vp_l3_{method}_{het}.yaml"
 cells:

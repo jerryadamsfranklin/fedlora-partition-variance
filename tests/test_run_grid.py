@@ -117,20 +117,36 @@ def test_first_three_a01_are_methods_for_2001_7001():
     ]
 
 
-def test_production_guard_fails_untagged():
-    with pytest.raises(SystemExit, match="freeze-v1"):
+def test_production_guard_fails_when_freeze_tag_absent():
+    with pytest.raises(SystemExit, match="freeze_tag"):
         production_guard(
             {},
-            git_points_at=lambda: ["v0-import"],
+            git_points_at=lambda: ["freeze-v1"],
             git_status_tracked=lambda: "",
             env={"HF_TOKEN": "x"},
         )
 
 
-def test_production_guard_passes_with_multiple_tags_including_freeze():
+def test_production_guard_fails_when_tag_mismatches():
+    with pytest.raises(SystemExit, match="freeze-v3"):
+        production_guard(
+            {"freeze_tag": "freeze-v3"},
+            git_points_at=lambda: ["freeze-v1"],
+            git_status_tracked=lambda: "",
+            env={"HF_TOKEN": "x"},
+        )
+
+
+def test_production_guard_passes_with_matching_freeze_tag():
     production_guard(
-        {},
+        {"freeze_tag": "freeze-v1"},
         git_points_at=lambda: ["release-candidate", "freeze-v1", "other"],
+        git_status_tracked=lambda: "",
+        env={"HF_TOKEN": "x"},
+    )
+    production_guard(
+        {"freeze_tag": "freeze-v3"},
+        git_points_at=lambda: ["freeze-v3"],
         git_status_tracked=lambda: "",
         env={"HF_TOKEN": "x"},
     )
@@ -139,7 +155,7 @@ def test_production_guard_passes_with_multiple_tags_including_freeze():
 def test_production_guard_fails_when_grid_has_overrides():
     with pytest.raises(SystemExit, match="overrides"):
         production_guard(
-            {"overrides": ["federated.num_rounds=1"]},
+            {"freeze_tag": "freeze-v1", "overrides": ["federated.num_rounds=1"]},
             git_points_at=lambda: ["freeze-v1"],
             git_status_tracked=lambda: "",
             env={"HF_TOKEN": "x"},
@@ -149,19 +165,18 @@ def test_production_guard_fails_when_grid_has_overrides():
 def test_production_guard_fails_dirty_or_missing_token():
     with pytest.raises(SystemExit, match="clean tracked"):
         production_guard(
-            {},
+            {"freeze_tag": "freeze-v1"},
             git_points_at=lambda: ["freeze-v1"],
             git_status_tracked=lambda: " M foo.py",
             env={"HF_TOKEN": "x"},
         )
     with pytest.raises(SystemExit, match="HF_TOKEN"):
         production_guard(
-            {},
+            {"freeze_tag": "freeze-v1"},
             git_points_at=lambda: ["freeze-v1"],
             git_status_tracked=lambda: "",
             env={},
         )
-
 
 def test_results_key_normalizes_relative_absolute_and_workspace_paths():
     run_rel = "results/raw/vp_tl_fedit_a01/fedit/seed_2001_run7001/smoke/20260101_120000"
