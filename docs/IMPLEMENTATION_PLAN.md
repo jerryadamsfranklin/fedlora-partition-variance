@@ -903,21 +903,16 @@ Acceptance: V12 passes; freeze-v3 tagged and pushed; pytest for N1/N2 green.
 
 ### N5. Launch (three instances, same GPU model)
 
-After N4 report and Jerry approval to launch:
+After N4 report and Jerry approval to launch, follow the runbook in `docs/PHASE_N_RUNBOOK.md` (source of truth for instance specs, setup, sequencing, sync, and destroy). Summary:
 
-```bash
-# per instance i in {0,1,2}, after vast_setup on freeze-v3:
-python scripts/run_grid.py --grid grids/tl_a05.yaml --shard i --num-shards 3 \
-  --device cuda --production --max-retries 5
-python scripts/run_grid.py --grid grids/l3_ext.yaml --shard i --num-shards 3 \
-  --device cuda --production --max-retries 5
-```
+- Three on-demand Vast.ai RTX 4090 (24 GB) instances; reject any GPU whose `nvidia-smi` name is not exactly `NVIDIA GeForce RTX 4090`.
+- New read-only GitHub and HF tokens; setup on `freeze-v3`; stagger machine starts by 10 minutes.
+- Same three machines: finish each machine's `tl_a05` shard before starting its `l3_ext` shard (`--workers 1`, `--max-retries 2`).
+- Mac sync every 2 to 3 hours including `final_adapter_state.pt`; destroy only after 60/60, 24/24, 84 adapters, V12 exit 0, and results pushed.
 
-Update `production_guard` so `--production` accepts `freeze-v3` for `prod_v2` grids (do not weaken the freeze-v1 requirement for `prod_v1` grids).
+Update `production_guard` so `--production` accepts `freeze-v3` for `prod_v2` grids (do not weaken the freeze-v1 requirement for `prod_v1` grids). Update `scripts/vast_setup.sh` to honor `FREEZE_TAG` (default `freeze-v1`) so Phase N can set `FREEZE_TAG=freeze-v3`.
 
-Sync must include `final_adapter_state.pt`. Confirm 84 adapters on the Mac before destroying any instance.
-
-Acceptance: `grid_status` shows 60/60 and 24/24 complete; 84 local adapters present.
+Acceptance: `grid_status` shows 60/60 and 24/24 complete; 84 local adapters present; tokens revoked after destroy.
 
 ### N6. DECISIONS.md entries
 
