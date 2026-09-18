@@ -6,24 +6,26 @@ Replace this file in the Claude Project whenever the state changes. Keep only on
 
 ## Current phase
 
-Phase M on phase-m, paused after step 3 (assembly + V9 + verifier). Awaiting review before anonymization / typography / overlap.
+Phase M on phase-m, paused after step 5. Seven review fixes applied; review copy anonymized; typography and overlap clean. Step 6 (final reference verification) next.
 
 ## Done
 
-- phase-l fast-forwarded into main (8031a74); Phase M continues on phase-m
-- Abstract finalized (3B interaction share; Dolly category partition; IEEEkeywords)
-- manuscript/main.tex assembled in SAI IEEEtran template (from thesai.org ZipFileHandler); Sections 1-6; Figs 1-3; Tabs 1-3; refs.bib
-- Conclusion drafted (~120 words) from existing claims only
-- V9 CLAIMS populated (25 entries: analysis-checked + external-verified); verify_varpart.py exits 0
+- Phases B to L on main; Phase M assembly (7 pages, V9, verifier exit 0)
+- Seven review fixes: prevalence claims scoped; FedIT ten-shard detail; byte-accounting cite without author name; Conclusion opening; Fig 1/2/3 fixes
+- Step 4 anonymization: Anonymous Author; empty pdfauthor/pdftitle; code availability release-upon-acceptance; Generative AI declaration version (b); figure PDFs clean of home paths
+- Step 5: typography OK; overlap max 0.082% shared 8-grams vs OJ-CS body/supplemental
 
 ## Next
 
-1. Review page count / V9 / verifier report
-2. Phase M step 4: anonymize review copy
-3. Step 5: typography + overlap check (OLD=federated-lora-experiments)
-4. Step 6: re-verify every reference against primary sources
-5. Jerry: AI disclosure version (b); attorney on IJACSA; destroy M3; revoke tokens
-6. Mon 21 Sep go/no-go; target submission Tue 22 Sep
+1. Step 6 final reference verification against primary sources
+2. Destroy M3; revoke the GitHub and HF tokens
+3. Jerry: attorney answer on IJACSA weight before paying the APC; real email for the submission form; JCR impact factor figure
+4. Mon 21 Sep go/no-go; target submission Tue 22 Sep
+
+## Blocking before submission
+
+- Attorney confirmation that IJACSA counts, before the GBP 800 APC
+- Real author email on the submission form and camera-ready
 
 ## Framing rules for the manuscript
 
@@ -35,25 +37,22 @@ Phase M on phase-m, paused after step 3 (assembly + V9 + verifier). Awaiting rev
 - Communication as measured, within method; no efficiency ranking
 - No method recommendation
 - MixedLM cross-check partial; moment estimates primary
-- Position against FFA-LoRA's across-run SDs
-- Cross-scale comparisons are confounded (instruction-tuned versus base; float32 versus float16)
+- Cross-scale comparisons confounded (instruction-tuned versus base; float32 versus float16 base weights)
 - Where the interaction dominates, pairing on partitions buys little
-- No prevalence claims about the literature
+- No prevalence claims about the literature: cite specific papers, never "usually", "rarely", or "most papers"
 
 ## Decisions made
 
 - Venue: IJACSA October cycle, target submission Tue 22 Sep; November fallback if go/no-go fails 21 Sep
-- Cite arXiv:2609.13512 in third person where measured-payload byte accounting is used
+- Generative AI declaration version (b)
+- Byte accounting cites arXiv:2609.13512 in the third person without naming the author in prose
 - Phase K literature audit dropped; no audit-derived counts
 - Release statement covers results and metadata, not adapter weights
-- Do not pay the IJACSA APC until the attorney confirms the venue counts
 
 ## Open items
 
-- AI disclosure: version (b) (drafting support)
-- Attorney: whether IJACSA counts before APC
+- JCR impact factor; attorney questions (IJACSA weight, IEEE Early Access)
 - M3 still up; destroy and revoke tokens
-- Anonymization, typography, overlap (Phase M steps 4-5)
 - Local tooling: use .venv/bin/python
 
 ## Run progress
