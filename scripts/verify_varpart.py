@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Phase H verification for the partition-variance study.
+"""Phase H/N verification for the partition-variance study.
 
-Curated assertions V1-V11. Exit 0 only when V1-V8 and V11 pass.
-V9 stays empty until Phase L. V10 prints a resume/retry census and never fails.
+Curated assertions V1-V12. Exit 0 only when V1-V8, V9 (populated), V11, and V12 pass.
+V10 prints a resume/retry census and never fails.
 """
 
 from __future__ import annotations
@@ -856,6 +856,51 @@ def v11() -> CheckResult:
     return r
 
 
+def v12() -> CheckResult:
+    """Training path unchanged freeze-v1..freeze-v3; eval path pinned at freeze-v2."""
+    r = CheckResult("V12")
+    try:
+        subprocess.check_output(
+            ["git", "rev-parse", "--verify", "freeze-v3"],
+            cwd=str(REPO_ROOT),
+            stderr=subprocess.DEVNULL,
+        )
+    except subprocess.CalledProcessError:
+        r.fail("freeze-v3 tag missing; tag after N1-N4 before launching prod_v2")
+        return r
+
+    def _diff(a: str, b: str, *paths: str) -> str:
+        return subprocess.check_output(
+            ["git", "diff", "--name-only", f"{a}..{b}", "--", *paths],
+            cwd=str(REPO_ROOT),
+            text=True,
+        ).strip()
+
+    train_diff = _diff("freeze-v1", "freeze-v3", "src", "scripts/run_experiment.py")
+    if train_diff:
+        r.fail(
+            "training path changed freeze-v1..freeze-v3; prod_v2 cannot pool with prod_v1:\n"
+            f"{train_diff}"
+        )
+    else:
+        r.note("training path unchanged freeze-v1..freeze-v3 (src, run_experiment.py)")
+
+    eval_diff = _diff(
+        "freeze-v2", "freeze-v3", "scripts/evaluate_instruction_holdout.py"
+    )
+    if eval_diff:
+        r.fail(
+            "holdout eval changed freeze-v2..freeze-v3; pin eval at freeze-v2:\n"
+            f"{eval_diff}"
+        )
+    else:
+        r.note(
+            "holdout eval unchanged freeze-v2..freeze-v3 "
+            "(evaluate_instruction_holdout.py)"
+        )
+    return r
+
+
 def run_for_grid(grid_path: Path) -> Tuple[str, str, List[Cell], List[CheckResult]]:
     grid = load_grid(grid_path)
     cells = enumerate_cells(grid)
@@ -907,8 +952,8 @@ def main() -> None:
             all_results.append(res)
 
     print("\n======== cross-grid ========")
-    for res in (v9(), v10(grid_names), v11()):
-        # V9 and V10 never fail the exit criteria for Phase H; V11 must pass
+    for res in (v9(), v10(grid_names), v11(), v12()):
+        # V9 and V10 never fail the exit criteria for Phase H; V11/V12 must pass
         if res.vid == "V9":
             status = "SKIP" if not CLAIMS else ("PASS" if res.ok else "FAIL")
         elif res.vid == "V10":
@@ -922,7 +967,7 @@ def main() -> None:
             print(f"       FAIL: {f}")
         all_results.append(res)
 
-    # Exit criteria: V1-V8, V9 (populated), and V11 must pass; V10 informational
+    # Exit criteria: V1-V8, V9 (populated), V11, and V12 must pass; V10 informational
     blocking = [
         res
         for res in all_results
@@ -931,7 +976,7 @@ def main() -> None:
     if blocking:
         print(f"\nVERIFY FAILED: {len(blocking)} blocking check(s)")
         sys.exit(1)
-    print("\nVERIFY OK: V1-V8, V9, and V11 passed (V10 informational)")
+    print("\nVERIFY OK: V1-V8, V9, V11, and V12 passed (V10 informational)")
     sys.exit(0)
 
 

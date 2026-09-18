@@ -6,7 +6,7 @@ Replace this file in the Claude Project whenever the state changes. Keep only on
 
 ## Current phase
 
-Venue switched to IEEE Access. Phase N (84-run addendum, freeze-v3) and Phase O (Access rework) being added to the implementation plan on branch phase-n, then executed.
+Phase N on phase-n. N1 to N4 complete; freeze-v3 tagged. Awaiting launch approval for N5 (84 prod_v2 runs).
 
 ## Standing rule
 
@@ -27,16 +27,18 @@ The Partition-Draw Reporting Protocol, spelled out, no acronym (PDR, PDP, PVR, P
 ## Done
 
 - Phases B to M complete under freeze-v1 and freeze-v2: 120 runs, verifier exit 0, full 7-page manuscript, typography clean, overlap 0.082% against the OJ-CS body
-- All external citations verified against primary sources
-- IEEE Access scope, decision model, timeline, and reproducibility program researched; IJACSA risk dossier written
+- Phase N and Phase O added to the plan; SCOPE.md updated for alpha 0.5 and l3 extension
+- N1: 15 configs (3 × tl a05); config tests pass
+- N2: grids/tl_a05.yaml (60) and grids/l3_ext.yaml (24); shard counts 21/21/18 and 9/9/6; group-shard tests pass
+- N3: ANALYSIS_PLAN I8 to I10 plus four outcome-to-claim rows
+- N4: V12 implemented; freeze-v3 tagged; training path empty freeze-v1..freeze-v3; eval pinned freeze-v2..freeze-v3
 
 ## Next
 
-1. Phase N and Phase O added to the plan and committed; SCOPE.md updated
-2. Execute N1 to N4; report before launch (grid tests plus V12)
-3. Launch 84 runs on 3 RTX 4090 instances, about 58 GPU-hours, adapters retained
-4. Analysis for I8 to I10; then Phase O rework
-5. Target submission Fri 26 Sep; hard stop on runs Mon 22 Sep
+1. N5: update production_guard for freeze-v3 / prod_v2; launch 84 runs on 3 RTX 4090s
+2. N6 DECISIONS rows; sync with adapters retained; N7 MixedLM and refs after runs
+3. Analysis I8 to I10; Phase O Access rework
+4. Target submission Fri 26 Sep; hard stop on runs Mon 22 Sep
 
 ## Framing rules for the manuscript
 

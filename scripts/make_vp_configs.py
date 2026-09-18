@@ -26,6 +26,11 @@ HETS = {
         "partition_alpha": 0.1,
         "het_label": "alpha0.1",
     },
+    "a05": {
+        "partition_method": "label_skew",
+        "partition_alpha": 0.5,
+        "het_label": "alpha0.5",
+    },
     "iid": {
         "partition_method": "iid",
         "partition_alpha": None,
@@ -89,6 +94,9 @@ def main() -> None:
     for model_key in MODELS:
         for method in METHODS:
             for het_key in HETS:
+                # Alpha 0.5 addendum is TinyLlama-only (Phase N).
+                if het_key == "a05" and model_key != "tl":
+                    continue
                 name = f"vp_{model_key}_{method}_{het_key}.yaml"
                 path = OUT_DIR / name
                 path.write_text(render(model_key, method, het_key), encoding="utf-8")

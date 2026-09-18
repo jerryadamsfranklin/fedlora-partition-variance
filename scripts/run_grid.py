@@ -21,7 +21,7 @@ import yaml
 REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT))
 
-HET_ORDER = {"iid": 0, "a01": 1}
+HET_ORDER = {"iid": 0, "a01": 1, "a05": 2}
 RESULTS_RAW_MARKER = "results/raw/"
 
 
