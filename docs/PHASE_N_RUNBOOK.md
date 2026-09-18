@@ -38,11 +38,7 @@ export HF_TOKEN=...          # new HF token
 export REPO_URL=...          # private clone URL using the new read-only GitHub token
 export FREEZE_TAG=freeze-v3
 
-# From the repo once production_guard and vast_setup honor FREEZE_TAG (N5 code):
-bash scripts/vast_setup.sh
-# If vast_setup still hardcodes freeze-v1, immediately after clone/setup:
-#   cd /workspace/fedlora-partition-variance
-#   git fetch --tags && git checkout freeze-v3
+bash scripts/vast_setup.sh   # checks out FREEZE_TAG (default freeze-v1 if unset)
 ```
 
 Then:
@@ -140,9 +136,10 @@ Only after Section 6:
 
 - [ ] Three exact RTX 4090 instances (name gate passed)
 - [ ] New GitHub and HF tokens; staggered starts (+0 / +10 / +20 min)
+- [ ] Partition preview appended for alpha 0.5 (2001-2010) and alpha 0.1 (2007-2010); stop conditions pass
 - [ ] Each machine: `freeze-v3` exact-match, pytest green, remote URL stripped
-- [ ] `production_guard` accepts freeze-v3 for prod_v2
+- [ ] Grid `freeze_tag` matches HEAD (`freeze-v3` for prod_v2); production_guard green
 - [ ] Each machine: `tl_a05` shard complete before `l3_ext` starts
 - [ ] Mac sync includes `final_adapter_state.pt`; status 60/60 and 24/24
-- [ ] 84 adapters on Mac; V12 exit 0; results pushed
+- [ ] 84 adapters on Mac; V7 base_loss pooling and V12 exit 0; results pushed
 - [ ] Instances destroyed; both tokens revoked

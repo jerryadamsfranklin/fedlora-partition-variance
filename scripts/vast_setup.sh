@@ -2,10 +2,12 @@
 set -euo pipefail
 : "${HF_TOKEN:?set HF_TOKEN}"
 : "${REPO_URL:?set REPO_URL}"          # private repo URL with a read-only deploy key or gh auth
+FREEZE_TAG="${FREEZE_TAG:-freeze-v1}"
 cd /workspace
 git clone "$REPO_URL" fedlora-partition-variance
 cd fedlora-partition-variance
-git checkout freeze-v1
+git fetch --tags
+git checkout "$FREEZE_TAG"
 python3 -m venv .venv && source .venv/bin/activate
 pip install --upgrade pip
 pip install -r requirements.txt pytest statsmodels
@@ -24,3 +26,4 @@ print("prefetch ok")
 EOF
 python -m pytest -q
 mkdir -p logs
+echo "setup ok at $(git describe --tags --exact-match)"

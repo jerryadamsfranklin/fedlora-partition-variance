@@ -49,6 +49,11 @@ EXPECTED_MODEL = {
     "tl": "TinyLlama/TinyLlama-1.1B-Chat-v1.0",
     "l3": "meta-llama/Llama-3.2-3B",
 }
+# prod_v1 held-out base_loss references (rounded); V7 requires all tags match within 1e-6.
+EXPECTED_BASE_LOSS = {
+    "tl": 2.120666,
+    "l3": 2.168946,
+}
 PROD_EVAL_SHA256 = "201b79752f63ccc06aab8c612c8fb450e9c7f18ee04fff2a31aaf6808458df30"
 DOLLY = "databricks/databricks-dolly-15k"
 MB = 1024 * 1024
@@ -608,6 +613,7 @@ def v6(cells: Sequence[Cell], model_key: str) -> CheckResult:
 def v7(cells: Sequence[Cell], model_key: str) -> CheckResult:
     r = CheckResult("V7")
     want_dtype = EXPECTED_EVAL_DTYPE[model_key]
+    want_base = EXPECTED_BASE_LOSS[model_key]
     dtypes: set = set()
     base_losses: List[float] = []
     for cell in cells:
@@ -655,10 +661,36 @@ def v7(cells: Sequence[Cell], model_key: str) -> CheckResult:
                     f"{ref} vs {b} (index {i})"
                 )
                 break
+            if abs(b - want_base) > 1e-6:
+                r.fail(
+                    f"grid {model_key}: base_loss={b} differs from prod_v1 reference "
+                    f"{want_base} by more than 1e-6 (eval path drift; cannot pool)"
+                )
+                break
+
+    # Cross-tag pooling: every holdout JSON for this model must match the reference.
+    prefix = f"vp_{model_key}_"
+    cross_tag: List[Tuple[str, float]] = []
+    for hp in (REPO_ROOT / "results" / "downstream_instruction").glob(
+        f"{prefix}*/**/instruction_holdout.json"
+    ):
+        row = (_load_json(hp).get("row") or {})
+        if "base_loss" not in row:
+            continue
+        cross_tag.append((str(hp.relative_to(REPO_ROOT)), float(row["base_loss"])))
+    for path, b in cross_tag:
+        if abs(b - want_base) > 1e-6:
+            r.fail(
+                f"{path}: base_loss={b} != prod_v1 reference {want_base} "
+                f"(cross-tag pooling failed)"
+            )
+            break
+
     if r.ok:
+        n_cross = len(cross_tag)
         r.note(
-            f"{model_key}: eval_dtype={want_dtype}, base_loss={base_losses[0]:.10f} "
-            f"identical within 1e-6"
+            f"{model_key}: eval_dtype={want_dtype}, base_loss≈{want_base} "
+            f"identical within 1e-6 across grid and {n_cross} holdout JSON(s) (all tags)"
         )
     return r
 

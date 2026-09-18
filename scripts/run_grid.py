@@ -156,13 +156,20 @@ def production_guard(
     git_status_tracked=None,
     env: Optional[Dict[str, str]] = None,
 ) -> None:
-    """Refuse production launch unless freeze-v1, clean tracked tree, HF_TOKEN set."""
+    """Refuse production launch unless grid freeze_tag is on HEAD, clean tree, HF_TOKEN."""
     env = env if env is not None else os.environ
 
     if grid.get("overrides"):
         raise SystemExit(
             "ERROR: --production requires a grid with no overrides "
             f"(found {grid.get('overrides')!r})"
+        )
+
+    freeze_tag = grid.get("freeze_tag")
+    if not freeze_tag or not isinstance(freeze_tag, str):
+        raise SystemExit(
+            "ERROR: --production requires grid key freeze_tag: "
+            "(e.g. freeze-v1 or freeze-v3)"
         )
 
     def _run(cmd: List[str]) -> str:
@@ -173,15 +180,16 @@ def production_guard(
             tags = [t for t in _run(["git", "tag", "--points-at", "HEAD"]).splitlines() if t]
         except subprocess.CalledProcessError as e:
             raise SystemExit(
-                "ERROR: --production requires HEAD tagged freeze-v1 "
+                f"ERROR: --production requires HEAD tagged {freeze_tag} "
                 f"(git tag --points-at HEAD failed: {e})"
             ) from e
     else:
         tags = git_points_at()
 
-    if "freeze-v1" not in tags:
+    if freeze_tag not in tags:
         raise SystemExit(
-            f"ERROR: --production requires freeze-v1 in git tag --points-at HEAD; got {tags!r}"
+            f"ERROR: --production requires {freeze_tag!r} in git tag --points-at HEAD; "
+            f"got {tags!r}"
         )
 
     if git_status_tracked is None:
@@ -196,7 +204,6 @@ def production_guard(
 
     if not env.get("HF_TOKEN"):
         raise SystemExit("ERROR: --production requires HF_TOKEN to be set")
-
 
 def _timestamp_dirs(cell: Cell) -> List[Path]:
     base = cell.run_glob()

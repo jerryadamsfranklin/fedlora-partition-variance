@@ -227,3 +227,349 @@ seeds with >=2 LLaMA zero-step active clients: [2008]
 
 PASS: global category histogram has 8 categories and sums to 3000
 PASS: minimum active_clients=9 >= 3
+
+Phase N5b partition preview: TinyLlama alpha 0.5 (seeds 2001-2010)
+dataset: databricks/databricks-dolly-15k
+train slice: train[0:3000]
+holdout slice: train[3000:3500]
+partition: label_skew alpha=0.5 label_column=category num_clients=10
+data seeds: 2001 to 2010 (10 seeds)
+TinyLlama train hparams from config/vp/vp_tl_flora_a01.yaml: batch=4 grad_accum=4 local_epochs=1
+LLaMA train hparams from config/vp/vp_l3_flora_a01.yaml: batch=2 grad_accum=8 local_epochs=1
+optimizer_steps = floor(ceil(n/batch) / grad_accum) * local_epochs (matches client.py: step only on complete accumulation blocks)
+
+Global category histogram (train[0:3000]):
+  brainstorming: 334
+  classification: 401
+  closed_qa: 370
+  creative_writing: 139
+  general_qa: 464
+  information_extraction: 305
+  open_qa: 749
+  summarization: 238
+  categories=8  sum=3000
+
+Held-out overlap check (row indices):
+  train indices: 0..2999 (n=3000)
+  holdout indices: 3000..3499 (n=500)
+  overlap count: 0
+  PASS: no index overlap
+
+label_source=column
+
+=== data_seed=2001  active_clients=10  total=3000 ===
+client_sizes: [286, 349, 318, 306, 92, 320, 294, 695, 175, 165]
+active sizes ascending: [92, 165, 175, 286, 294, 306, 318, 320, 349, 695]  min=92  median=300.0  max=695
+  client 0: size=286  tl_steps=18  l3_steps=17  tl_discarded=0  l3_discarded=14  hist={'classification': 18, 'closed_qa': 7, 'creative_writing': 8, 'information_extraction': 2, 'open_qa': 251}
+  client 1: size=349  tl_steps=22  l3_steps=21  tl_discarded=0  l3_discarded=13  hist={'brainstorming': 14, 'classification': 39, 'closed_qa': 24, 'creative_writing': 46, 'general_qa': 112, 'information_extraction': 6, 'open_qa': 77, 'summarization': 31}
+  client 2: size=318  tl_steps=20  l3_steps=19  tl_discarded=0  l3_discarded=14  hist={'brainstorming': 114, 'classification': 38, 'closed_qa': 38, 'creative_writing': 20, 'general_qa': 7, 'information_extraction': 93, 'summarization': 8}
+  client 3: size=306  tl_steps=19  l3_steps=19  tl_discarded=2  l3_discarded=2  hist={'brainstorming': 5, 'classification': 36, 'closed_qa': 8, 'creative_writing': 6, 'general_qa': 11, 'information_extraction': 38, 'open_qa': 201, 'summarization': 1}
+  client 4: size=92  tl_steps=5  l3_steps=5  tl_discarded=12  l3_discarded=12  hist={'brainstorming': 14, 'classification': 5, 'closed_qa': 17, 'creative_writing': 1, 'general_qa': 32, 'summarization': 23}
+  client 5: size=320  tl_steps=20  l3_steps=20  tl_discarded=0  l3_discarded=0  hist={'brainstorming': 65, 'classification': 11, 'closed_qa': 22, 'general_qa': 57, 'information_extraction': 21, 'open_qa': 102, 'summarization': 42}
+  client 6: size=294  tl_steps=18  l3_steps=18  tl_discarded=6  l3_discarded=6  hist={'brainstorming': 43, 'classification': 127, 'closed_qa': 2, 'general_qa': 48, 'information_extraction': 69, 'open_qa': 5}
+  client 7: size=695  tl_steps=43  l3_steps=43  tl_discarded=7  l3_discarded=7  hist={'brainstorming': 57, 'classification': 103, 'closed_qa': 189, 'creative_writing': 14, 'general_qa': 181, 'information_extraction': 68, 'open_qa': 83}
+  client 8: size=175  tl_steps=11  l3_steps=11  tl_discarded=0  l3_discarded=0  hist={'brainstorming': 13, 'classification': 18, 'closed_qa': 18, 'creative_writing': 25, 'open_qa': 23, 'summarization': 78}
+  client 9: size=165  tl_steps=10  l3_steps=10  tl_discarded=5  l3_discarded=5  hist={'brainstorming': 9, 'classification': 6, 'closed_qa': 45, 'creative_writing': 19, 'general_qa': 16, 'information_extraction': 8, 'open_qa': 7, 'summarization': 55}
+TinyLlama: effective_clients=10  zero_step_active=0  discarded_total=32
+LLaMA: effective_clients=10  zero_step_active=0  discarded_total=73
+global_label_hist: {'brainstorming': 334, 'classification': 401, 'closed_qa': 370, 'creative_writing': 139, 'general_qa': 464, 'information_extraction': 305, 'open_qa': 749, 'summarization': 238}
+
+=== data_seed=2002  active_clients=10  total=3000 ===
+client_sizes: [192, 77, 461, 491, 504, 54, 322, 298, 240, 361]
+active sizes ascending: [54, 77, 192, 240, 298, 322, 361, 461, 491, 504]  min=54  median=310.0  max=504
+  client 0: size=192  tl_steps=12  l3_steps=12  tl_discarded=0  l3_discarded=0  hist={'brainstorming': 18, 'classification': 4, 'closed_qa': 73, 'creative_writing': 9, 'general_qa': 2, 'information_extraction': 6, 'open_qa': 5, 'summarization': 75}
+  client 1: size=77  tl_steps=5  l3_steps=4  tl_discarded=0  l3_discarded=13  hist={'brainstorming': 16, 'classification': 1, 'closed_qa': 4, 'creative_writing': 12, 'general_qa': 4, 'information_extraction': 1, 'open_qa': 36, 'summarization': 3}
+  client 2: size=461  tl_steps=29  l3_steps=28  tl_discarded=0  l3_discarded=13  hist={'brainstorming': 3, 'classification': 134, 'closed_qa': 68, 'creative_writing': 16, 'information_extraction': 6, 'open_qa': 228, 'summarization': 6}
+  client 3: size=491  tl_steps=30  l3_steps=30  tl_discarded=11  l3_discarded=11  hist={'brainstorming': 147, 'classification': 37, 'closed_qa': 2, 'general_qa': 1, 'information_extraction': 24, 'open_qa': 250, 'summarization': 30}
+  client 4: size=504  tl_steps=31  l3_steps=31  tl_discarded=8  l3_discarded=8  hist={'brainstorming': 7, 'classification': 16, 'closed_qa': 64, 'creative_writing': 5, 'general_qa': 339, 'information_extraction': 9, 'open_qa': 61, 'summarization': 3}
+  client 5: size=54  tl_steps=3  l3_steps=3  tl_discarded=6  l3_discarded=6  hist={'brainstorming': 2, 'classification': 1, 'closed_qa': 2, 'creative_writing': 10, 'general_qa': 15, 'information_extraction': 3, 'open_qa': 17, 'summarization': 4}
+  client 6: size=322  tl_steps=20  l3_steps=20  tl_discarded=2  l3_discarded=2  hist={'brainstorming': 79, 'classification': 14, 'creative_writing': 35, 'general_qa': 3, 'information_extraction': 140, 'open_qa': 8, 'summarization': 43}
+  client 7: size=298  tl_steps=18  l3_steps=18  tl_discarded=10  l3_discarded=10  hist={'brainstorming': 4, 'classification': 38, 'closed_qa': 24, 'creative_writing': 24, 'general_qa': 57, 'information_extraction': 16, 'open_qa': 92, 'summarization': 43}
+  client 8: size=240  tl_steps=15  l3_steps=15  tl_discarded=0  l3_discarded=0  hist={'brainstorming': 31, 'classification': 96, 'closed_qa': 10, 'creative_writing': 17, 'general_qa': 35, 'information_extraction': 32, 'summarization': 19}
+  client 9: size=361  tl_steps=22  l3_steps=22  tl_discarded=9  l3_discarded=9  hist={'brainstorming': 27, 'classification': 60, 'closed_qa': 123, 'creative_writing': 11, 'general_qa': 8, 'information_extraction': 68, 'open_qa': 52, 'summarization': 12}
+TinyLlama: effective_clients=10  zero_step_active=0  discarded_total=46
+LLaMA: effective_clients=10  zero_step_active=0  discarded_total=72
+global_label_hist: {'brainstorming': 334, 'classification': 401, 'closed_qa': 370, 'creative_writing': 139, 'general_qa': 464, 'information_extraction': 305, 'open_qa': 749, 'summarization': 238}
+
+=== data_seed=2003  active_clients=10  total=3000 ===
+client_sizes: [477, 279, 218, 211, 197, 110, 172, 424, 481, 431]
+active sizes ascending: [110, 172, 197, 211, 218, 279, 424, 431, 477, 481]  min=110  median=248.5  max=481
+  client 0: size=477  tl_steps=30  l3_steps=29  tl_discarded=0  l3_discarded=13  hist={'brainstorming': 5, 'classification': 28, 'closed_qa': 29, 'creative_writing': 1, 'general_qa': 85, 'information_extraction': 5, 'open_qa': 324}
+  client 1: size=279  tl_steps=17  l3_steps=17  tl_discarded=7  l3_discarded=7  hist={'brainstorming': 6, 'classification': 21, 'closed_qa': 61, 'creative_writing': 1, 'general_qa': 163, 'open_qa': 25, 'summarization': 2}
+  client 2: size=218  tl_steps=13  l3_steps=13  tl_discarded=10  l3_discarded=10  hist={'brainstorming': 59, 'closed_qa': 3, 'creative_writing': 4, 'general_qa': 52, 'information_extraction': 24, 'open_qa': 40, 'summarization': 36}
+  client 3: size=211  tl_steps=13  l3_steps=13  tl_discarded=3  l3_discarded=3  hist={'brainstorming': 43, 'classification': 5, 'closed_qa': 23, 'creative_writing': 1, 'general_qa': 67, 'information_extraction': 71, 'open_qa': 1}
+  client 4: size=197  tl_steps=12  l3_steps=12  tl_discarded=5  l3_discarded=5  hist={'brainstorming': 37, 'classification': 10, 'closed_qa': 41, 'general_qa': 32, 'information_extraction': 18, 'open_qa': 52, 'summarization': 7}
+  client 5: size=110  tl_steps=7  l3_steps=6  tl_discarded=0  l3_discarded=14  hist={'classification': 38, 'closed_qa': 9, 'creative_writing': 38, 'general_qa': 21, 'information_extraction': 4}
+  client 6: size=172  tl_steps=10  l3_steps=10  tl_discarded=12  l3_discarded=12  hist={'brainstorming': 14, 'classification': 23, 'closed_qa': 1, 'creative_writing': 9, 'information_extraction': 9, 'open_qa': 13, 'summarization': 103}
+  client 7: size=424  tl_steps=26  l3_steps=26  tl_discarded=8  l3_discarded=8  hist={'brainstorming': 7, 'classification': 119, 'closed_qa': 52, 'creative_writing': 28, 'general_qa': 1, 'information_extraction': 85, 'open_qa': 58, 'summarization': 74}
+  client 8: size=481  tl_steps=30  l3_steps=30  tl_discarded=1  l3_discarded=1  hist={'brainstorming': 16, 'classification': 126, 'closed_qa': 55, 'creative_writing': 43, 'general_qa': 28, 'information_extraction': 60, 'open_qa': 148, 'summarization': 5}
+  client 9: size=431  tl_steps=27  l3_steps=27  tl_discarded=0  l3_discarded=0  hist={'brainstorming': 147, 'classification': 31, 'closed_qa': 96, 'creative_writing': 14, 'general_qa': 15, 'information_extraction': 29, 'open_qa': 88, 'summarization': 11}
+TinyLlama: effective_clients=10  zero_step_active=0  discarded_total=46
+LLaMA: effective_clients=10  zero_step_active=0  discarded_total=73
+global_label_hist: {'brainstorming': 334, 'classification': 401, 'closed_qa': 370, 'creative_writing': 139, 'general_qa': 464, 'information_extraction': 305, 'open_qa': 749, 'summarization': 238}
+
+=== data_seed=2004  active_clients=10  total=3000 ===
+client_sizes: [86, 238, 826, 200, 434, 221, 174, 350, 260, 211]
+active sizes ascending: [86, 174, 200, 211, 221, 238, 260, 350, 434, 826]  min=86  median=229.5  max=826
+  client 0: size=86  tl_steps=5  l3_steps=5  tl_discarded=6  l3_discarded=6  hist={'brainstorming': 9, 'classification': 11, 'closed_qa': 3, 'creative_writing': 41, 'general_qa': 4, 'open_qa': 7, 'summarization': 11}
+  client 1: size=238  tl_steps=15  l3_steps=14  tl_discarded=0  l3_discarded=14  hist={'brainstorming': 57, 'classification': 6, 'creative_writing': 10, 'general_qa': 6, 'information_extraction': 1, 'open_qa': 154, 'summarization': 4}
+  client 2: size=826  tl_steps=51  l3_steps=51  tl_discarded=10  l3_discarded=10  hist={'brainstorming': 120, 'classification': 246, 'closed_qa': 11, 'creative_writing': 11, 'general_qa': 2, 'information_extraction': 83, 'open_qa': 268, 'summarization': 85}
+  client 3: size=200  tl_steps=12  l3_steps=12  tl_discarded=8  l3_discarded=8  hist={'brainstorming': 63, 'classification': 3, 'closed_qa': 29, 'creative_writing': 1, 'general_qa': 10, 'information_extraction': 91, 'open_qa': 1, 'summarization': 2}
+  client 4: size=434  tl_steps=27  l3_steps=27  tl_discarded=2  l3_discarded=2  hist={'brainstorming': 27, 'classification': 82, 'closed_qa': 6, 'creative_writing': 15, 'general_qa': 190, 'information_extraction': 78, 'open_qa': 23, 'summarization': 13}
+  client 5: size=221  tl_steps=14  l3_steps=13  tl_discarded=0  l3_discarded=13  hist={'brainstorming': 2, 'classification': 16, 'closed_qa': 153, 'creative_writing': 8, 'general_qa': 22, 'information_extraction': 5, 'open_qa': 4, 'summarization': 11}
+  client 6: size=174  tl_steps=11  l3_steps=10  tl_discarded=0  l3_discarded=14  hist={'brainstorming': 6, 'classification': 5, 'creative_writing': 1, 'information_extraction': 4, 'open_qa': 114, 'summarization': 44}
+  client 7: size=350  tl_steps=22  l3_steps=21  tl_discarded=0  l3_discarded=14  hist={'brainstorming': 5, 'classification': 20, 'closed_qa': 159, 'general_qa': 58, 'information_extraction': 6, 'open_qa': 88, 'summarization': 14}
+  client 8: size=260  tl_steps=16  l3_steps=16  tl_discarded=4  l3_discarded=4  hist={'brainstorming': 14, 'classification': 2, 'closed_qa': 1, 'creative_writing': 41, 'general_qa': 83, 'information_extraction': 5, 'open_qa': 83, 'summarization': 31}
+  client 9: size=211  tl_steps=13  l3_steps=13  tl_discarded=3  l3_discarded=3  hist={'brainstorming': 31, 'classification': 10, 'closed_qa': 8, 'creative_writing': 11, 'general_qa': 89, 'information_extraction': 32, 'open_qa': 7, 'summarization': 23}
+TinyLlama: effective_clients=10  zero_step_active=0  discarded_total=33
+LLaMA: effective_clients=10  zero_step_active=0  discarded_total=88
+global_label_hist: {'brainstorming': 334, 'classification': 401, 'closed_qa': 370, 'creative_writing': 139, 'general_qa': 464, 'information_extraction': 305, 'open_qa': 749, 'summarization': 238}
+
+=== data_seed=2005  active_clients=10  total=3000 ===
+client_sizes: [86, 424, 192, 266, 226, 242, 620, 320, 263, 361]
+active sizes ascending: [86, 192, 226, 242, 263, 266, 320, 361, 424, 620]  min=86  median=264.5  max=620
+  client 0: size=86  tl_steps=5  l3_steps=5  tl_discarded=6  l3_discarded=6  hist={'brainstorming': 5, 'closed_qa': 2, 'general_qa': 6, 'information_extraction': 9, 'open_qa': 10, 'summarization': 54}
+  client 1: size=424  tl_steps=26  l3_steps=26  tl_discarded=8  l3_discarded=8  hist={'brainstorming': 45, 'classification': 247, 'closed_qa': 36, 'creative_writing': 15, 'general_qa': 32, 'open_qa': 26, 'summarization': 23}
+  client 2: size=192  tl_steps=12  l3_steps=12  tl_discarded=0  l3_discarded=0  hist={'brainstorming': 105, 'classification': 45, 'closed_qa': 4, 'creative_writing': 1, 'general_qa': 2, 'information_extraction': 21, 'open_qa': 13, 'summarization': 1}
+  client 3: size=266  tl_steps=16  l3_steps=16  tl_discarded=10  l3_discarded=10  hist={'brainstorming': 2, 'classification': 19, 'closed_qa': 18, 'creative_writing': 47, 'general_qa': 6, 'information_extraction': 144, 'open_qa': 30}
+  client 4: size=226  tl_steps=14  l3_steps=14  tl_discarded=2  l3_discarded=2  hist={'brainstorming': 10, 'classification': 39, 'closed_qa': 22, 'creative_writing': 19, 'general_qa': 52, 'information_extraction': 6, 'open_qa': 26, 'summarization': 52}
+  client 5: size=242  tl_steps=15  l3_steps=15  tl_discarded=2  l3_discarded=2  hist={'brainstorming': 39, 'classification': 21, 'closed_qa': 100, 'creative_writing': 20, 'general_qa': 1, 'information_extraction': 4, 'open_qa': 21, 'summarization': 36}
+  client 6: size=620  tl_steps=38  l3_steps=38  tl_discarded=12  l3_discarded=12  hist={'classification': 1, 'closed_qa': 98, 'creative_writing': 12, 'general_qa': 151, 'information_extraction': 35, 'open_qa': 297, 'summarization': 26}
+  client 7: size=320  tl_steps=20  l3_steps=20  tl_discarded=0  l3_discarded=0  hist={'brainstorming': 3, 'classification': 7, 'closed_qa': 4, 'creative_writing': 4, 'general_qa': 90, 'open_qa': 207, 'summarization': 5}
+  client 8: size=263  tl_steps=16  l3_steps=16  tl_discarded=7  l3_discarded=7  hist={'brainstorming': 27, 'classification': 11, 'closed_qa': 50, 'general_qa': 118, 'information_extraction': 7, 'open_qa': 50}
+  client 9: size=361  tl_steps=22  l3_steps=22  tl_discarded=9  l3_discarded=9  hist={'brainstorming': 98, 'classification': 11, 'closed_qa': 36, 'creative_writing': 21, 'general_qa': 6, 'information_extraction': 79, 'open_qa': 69, 'summarization': 41}
+TinyLlama: effective_clients=10  zero_step_active=0  discarded_total=56
+LLaMA: effective_clients=10  zero_step_active=0  discarded_total=56
+global_label_hist: {'brainstorming': 334, 'classification': 401, 'closed_qa': 370, 'creative_writing': 139, 'general_qa': 464, 'information_extraction': 305, 'open_qa': 749, 'summarization': 238}
+
+=== data_seed=2006  active_clients=10  total=3000 ===
+client_sizes: [289, 250, 222, 482, 169, 487, 366, 207, 139, 389]
+active sizes ascending: [139, 169, 207, 222, 250, 289, 366, 389, 482, 487]  min=139  median=269.5  max=487
+  client 0: size=289  tl_steps=18  l3_steps=18  tl_discarded=1  l3_discarded=1  hist={'brainstorming': 2, 'classification': 32, 'closed_qa': 27, 'creative_writing': 5, 'general_qa': 211, 'information_extraction': 10, 'open_qa': 2}
+  client 1: size=250  tl_steps=15  l3_steps=15  tl_discarded=10  l3_discarded=10  hist={'brainstorming': 4, 'classification': 76, 'closed_qa': 10, 'creative_writing': 24, 'general_qa': 58, 'open_qa': 50, 'summarization': 28}
+  client 2: size=222  tl_steps=14  l3_steps=13  tl_discarded=0  l3_discarded=14  hist={'brainstorming': 1, 'classification': 12, 'closed_qa': 26, 'creative_writing': 2, 'general_qa': 8, 'information_extraction': 7, 'open_qa': 166}
+  client 3: size=482  tl_steps=30  l3_steps=30  tl_discarded=2  l3_discarded=2  hist={'brainstorming': 12, 'classification': 178, 'closed_qa': 110, 'creative_writing': 77, 'general_qa': 2, 'information_extraction': 21, 'open_qa': 73, 'summarization': 9}
+  client 4: size=169  tl_steps=10  l3_steps=10  tl_discarded=9  l3_discarded=9  hist={'brainstorming': 56, 'classification': 2, 'closed_qa': 20, 'creative_writing': 6, 'general_qa': 10, 'open_qa': 75}
+  client 5: size=487  tl_steps=30  l3_steps=30  tl_discarded=7  l3_discarded=7  hist={'brainstorming': 79, 'classification': 14, 'closed_qa': 110, 'creative_writing': 2, 'general_qa': 6, 'information_extraction': 93, 'open_qa': 121, 'summarization': 62}
+  client 6: size=366  tl_steps=23  l3_steps=22  tl_discarded=0  l3_discarded=14  hist={'brainstorming': 123, 'classification': 1, 'closed_qa': 1, 'creative_writing': 1, 'general_qa': 68, 'information_extraction': 23, 'open_qa': 47, 'summarization': 102}
+  client 7: size=207  tl_steps=13  l3_steps=13  tl_discarded=0  l3_discarded=0  hist={'brainstorming': 1, 'classification': 48, 'closed_qa': 11, 'creative_writing': 6, 'general_qa': 10, 'information_extraction': 74, 'open_qa': 43, 'summarization': 14}
+  client 8: size=139  tl_steps=8  l3_steps=8  tl_discarded=11  l3_discarded=11  hist={'brainstorming': 5, 'classification': 3, 'closed_qa': 21, 'creative_writing': 12, 'general_qa': 5, 'information_extraction': 15, 'open_qa': 61, 'summarization': 17}
+  client 9: size=389  tl_steps=24  l3_steps=24  tl_discarded=5  l3_discarded=5  hist={'brainstorming': 51, 'classification': 35, 'closed_qa': 34, 'creative_writing': 4, 'general_qa': 86, 'information_extraction': 62, 'open_qa': 111, 'summarization': 6}
+TinyLlama: effective_clients=10  zero_step_active=0  discarded_total=45
+LLaMA: effective_clients=10  zero_step_active=0  discarded_total=73
+global_label_hist: {'brainstorming': 334, 'classification': 401, 'closed_qa': 370, 'creative_writing': 139, 'general_qa': 464, 'information_extraction': 305, 'open_qa': 749, 'summarization': 238}
+
+=== data_seed=2007  active_clients=10  total=3000 ===
+client_sizes: [414, 187, 363, 309, 220, 202, 312, 220, 343, 430]
+active sizes ascending: [187, 202, 220, 220, 309, 312, 343, 363, 414, 430]  min=187  median=310.5  max=430
+  client 0: size=414  tl_steps=26  l3_steps=25  tl_discarded=0  l3_discarded=14  hist={'brainstorming': 96, 'classification': 50, 'closed_qa': 173, 'creative_writing': 11, 'general_qa': 49, 'information_extraction': 1, 'open_qa': 1, 'summarization': 33}
+  client 1: size=187  tl_steps=11  l3_steps=11  tl_discarded=11  l3_discarded=11  hist={'brainstorming': 3, 'classification': 34, 'closed_qa': 5, 'creative_writing': 2, 'general_qa': 2, 'information_extraction': 12, 'open_qa': 103, 'summarization': 26}
+  client 2: size=363  tl_steps=22  l3_steps=22  tl_discarded=11  l3_discarded=11  hist={'brainstorming': 4, 'classification': 54, 'closed_qa': 49, 'general_qa': 81, 'information_extraction': 1, 'open_qa': 123, 'summarization': 51}
+  client 3: size=309  tl_steps=19  l3_steps=19  tl_discarded=5  l3_discarded=5  hist={'brainstorming': 11, 'closed_qa': 24, 'general_qa': 104, 'information_extraction': 156, 'open_qa': 2, 'summarization': 12}
+  client 4: size=220  tl_steps=13  l3_steps=13  tl_discarded=12  l3_discarded=12  hist={'brainstorming': 15, 'classification': 98, 'closed_qa': 35, 'creative_writing': 68, 'information_extraction': 1, 'open_qa': 1, 'summarization': 2}
+  client 5: size=202  tl_steps=12  l3_steps=12  tl_discarded=10  l3_discarded=10  hist={'brainstorming': 23, 'classification': 52, 'closed_qa': 9, 'creative_writing': 29, 'general_qa': 3, 'information_extraction': 9, 'open_qa': 71, 'summarization': 6}
+  client 6: size=312  tl_steps=19  l3_steps=19  tl_discarded=8  l3_discarded=8  hist={'brainstorming': 67, 'classification': 17, 'closed_qa': 47, 'creative_writing': 5, 'general_qa': 81, 'information_extraction': 17, 'open_qa': 77, 'summarization': 1}
+  client 7: size=220  tl_steps=13  l3_steps=13  tl_discarded=12  l3_discarded=12  hist={'brainstorming': 7, 'classification': 20, 'closed_qa': 1, 'creative_writing': 2, 'general_qa': 66, 'information_extraction': 35, 'open_qa': 46, 'summarization': 43}
+  client 8: size=343  tl_steps=21  l3_steps=21  tl_discarded=7  l3_discarded=7  hist={'brainstorming': 15, 'classification': 48, 'closed_qa': 14, 'creative_writing': 17, 'general_qa': 73, 'information_extraction': 63, 'open_qa': 109, 'summarization': 4}
+  client 9: size=430  tl_steps=27  l3_steps=26  tl_discarded=0  l3_discarded=14  hist={'brainstorming': 93, 'classification': 28, 'closed_qa': 13, 'creative_writing': 5, 'general_qa': 5, 'information_extraction': 10, 'open_qa': 216, 'summarization': 60}
+TinyLlama: effective_clients=10  zero_step_active=0  discarded_total=76
+LLaMA: effective_clients=10  zero_step_active=0  discarded_total=104
+global_label_hist: {'brainstorming': 334, 'classification': 401, 'closed_qa': 370, 'creative_writing': 139, 'general_qa': 464, 'information_extraction': 305, 'open_qa': 749, 'summarization': 238}
+
+=== data_seed=2008  active_clients=10  total=3000 ===
+client_sizes: [311, 312, 68, 215, 250, 198, 136, 392, 638, 480]
+active sizes ascending: [68, 136, 198, 215, 250, 311, 312, 392, 480, 638]  min=68  median=280.5  max=638
+  client 0: size=311  tl_steps=19  l3_steps=19  tl_discarded=7  l3_discarded=7  hist={'brainstorming': 233, 'classification': 17, 'closed_qa': 17, 'creative_writing': 3, 'general_qa': 6, 'information_extraction': 23, 'summarization': 12}
+  client 1: size=312  tl_steps=19  l3_steps=19  tl_discarded=8  l3_discarded=8  hist={'classification': 72, 'closed_qa': 4, 'creative_writing': 7, 'general_qa': 2, 'information_extraction': 80, 'open_qa': 146, 'summarization': 1}
+  client 2: size=68  tl_steps=4  l3_steps=4  tl_discarded=4  l3_discarded=4  hist={'classification': 20, 'closed_qa': 18, 'general_qa': 15, 'information_extraction': 14, 'summarization': 1}
+  client 3: size=215  tl_steps=13  l3_steps=13  tl_discarded=7  l3_discarded=7  hist={'classification': 1, 'closed_qa': 19, 'creative_writing': 24, 'general_qa': 4, 'information_extraction': 112, 'open_qa': 2, 'summarization': 53}
+  client 4: size=250  tl_steps=15  l3_steps=15  tl_discarded=10  l3_discarded=10  hist={'classification': 3, 'closed_qa': 154, 'creative_writing': 7, 'general_qa': 34, 'information_extraction': 6, 'summarization': 46}
+  client 5: size=198  tl_steps=12  l3_steps=12  tl_discarded=6  l3_discarded=6  hist={'brainstorming': 16, 'classification': 15, 'closed_qa': 22, 'creative_writing': 6, 'general_qa': 47, 'information_extraction': 25, 'open_qa': 67}
+  client 6: size=136  tl_steps=8  l3_steps=8  tl_discarded=8  l3_discarded=8  hist={'brainstorming': 1, 'classification': 11, 'closed_qa': 1, 'creative_writing': 2, 'general_qa': 68, 'information_extraction': 18, 'open_qa': 35}
+  client 7: size=392  tl_steps=24  l3_steps=24  tl_discarded=8  l3_discarded=8  hist={'brainstorming': 33, 'classification': 81, 'closed_qa': 64, 'creative_writing': 61, 'general_qa': 106, 'open_qa': 13, 'summarization': 34}
+  client 8: size=638  tl_steps=40  l3_steps=39  tl_discarded=0  l3_discarded=14  hist={'brainstorming': 10, 'classification': 141, 'closed_qa': 62, 'general_qa': 177, 'information_extraction': 11, 'open_qa': 179, 'summarization': 58}
+  client 9: size=480  tl_steps=30  l3_steps=30  tl_discarded=0  l3_discarded=0  hist={'brainstorming': 41, 'classification': 40, 'closed_qa': 9, 'creative_writing': 29, 'general_qa': 5, 'information_extraction': 16, 'open_qa': 307, 'summarization': 33}
+TinyLlama: effective_clients=10  zero_step_active=0  discarded_total=58
+LLaMA: effective_clients=10  zero_step_active=0  discarded_total=72
+global_label_hist: {'brainstorming': 334, 'classification': 401, 'closed_qa': 370, 'creative_writing': 139, 'general_qa': 464, 'information_extraction': 305, 'open_qa': 749, 'summarization': 238}
+
+=== data_seed=2009  active_clients=10  total=3000 ===
+client_sizes: [220, 175, 125, 195, 291, 750, 114, 653, 191, 286]
+active sizes ascending: [114, 125, 175, 191, 195, 220, 286, 291, 653, 750]  min=114  median=207.5  max=750
+  client 0: size=220  tl_steps=13  l3_steps=13  tl_discarded=12  l3_discarded=12  hist={'classification': 10, 'closed_qa': 48, 'general_qa': 3, 'information_extraction': 78, 'open_qa': 81}
+  client 1: size=175  tl_steps=11  l3_steps=11  tl_discarded=0  l3_discarded=0  hist={'classification': 21, 'closed_qa': 36, 'information_extraction': 30, 'open_qa': 81, 'summarization': 7}
+  client 2: size=125  tl_steps=8  l3_steps=7  tl_discarded=0  l3_discarded=13  hist={'brainstorming': 10, 'closed_qa': 11, 'creative_writing': 28, 'general_qa': 27, 'information_extraction': 16, 'open_qa': 2, 'summarization': 31}
+  client 3: size=195  tl_steps=12  l3_steps=12  tl_discarded=3  l3_discarded=3  hist={'brainstorming': 14, 'classification': 4, 'closed_qa': 77, 'creative_writing': 4, 'general_qa': 33, 'information_extraction': 5, 'open_qa': 12, 'summarization': 46}
+  client 4: size=291  tl_steps=18  l3_steps=18  tl_discarded=3  l3_discarded=3  hist={'brainstorming': 45, 'closed_qa': 11, 'creative_writing': 44, 'general_qa': 46, 'information_extraction': 117, 'open_qa': 26, 'summarization': 2}
+  client 5: size=750  tl_steps=47  l3_steps=46  tl_discarded=0  l3_discarded=14  hist={'brainstorming': 196, 'classification': 250, 'closed_qa': 25, 'creative_writing': 6, 'general_qa': 199, 'information_extraction': 9, 'open_qa': 42, 'summarization': 23}
+  client 6: size=114  tl_steps=7  l3_steps=7  tl_discarded=2  l3_discarded=2  hist={'brainstorming': 1, 'classification': 17, 'closed_qa': 8, 'creative_writing': 1, 'information_extraction': 4, 'open_qa': 1, 'summarization': 82}
+  client 7: size=653  tl_steps=41  l3_steps=40  tl_discarded=0  l3_discarded=13  hist={'brainstorming': 39, 'closed_qa': 51, 'creative_writing': 5, 'general_qa': 67, 'information_extraction': 30, 'open_qa': 443, 'summarization': 18}
+  client 8: size=191  tl_steps=12  l3_steps=12  tl_discarded=0  l3_discarded=0  hist={'classification': 36, 'closed_qa': 22, 'creative_writing': 13, 'general_qa': 82, 'open_qa': 16, 'summarization': 22}
+  client 9: size=286  tl_steps=18  l3_steps=17  tl_discarded=0  l3_discarded=14  hist={'brainstorming': 29, 'classification': 63, 'closed_qa': 81, 'creative_writing': 38, 'general_qa': 7, 'information_extraction': 16, 'open_qa': 45, 'summarization': 7}
+TinyLlama: effective_clients=10  zero_step_active=0  discarded_total=20
+LLaMA: effective_clients=10  zero_step_active=0  discarded_total=74
+global_label_hist: {'brainstorming': 334, 'classification': 401, 'closed_qa': 370, 'creative_writing': 139, 'general_qa': 464, 'information_extraction': 305, 'open_qa': 749, 'summarization': 238}
+
+=== data_seed=2010  active_clients=10  total=3000 ===
+client_sizes: [120, 201, 315, 238, 390, 327, 433, 296, 229, 451]
+active sizes ascending: [120, 201, 229, 238, 296, 315, 327, 390, 433, 451]  min=120  median=305.5  max=451
+  client 0: size=120  tl_steps=7  l3_steps=7  tl_discarded=8  l3_discarded=8  hist={'brainstorming': 1, 'classification': 2, 'closed_qa': 40, 'creative_writing': 9, 'information_extraction': 10, 'open_qa': 42, 'summarization': 16}
+  client 1: size=201  tl_steps=12  l3_steps=12  tl_discarded=9  l3_discarded=9  hist={'brainstorming': 42, 'classification': 2, 'general_qa': 3, 'information_extraction': 44, 'open_qa': 83, 'summarization': 27}
+  client 2: size=315  tl_steps=19  l3_steps=19  tl_discarded=11  l3_discarded=11  hist={'brainstorming': 2, 'classification': 16, 'closed_qa': 33, 'creative_writing': 39, 'information_extraction': 4, 'open_qa': 188, 'summarization': 33}
+  client 3: size=238  tl_steps=15  l3_steps=14  tl_discarded=0  l3_discarded=14  hist={'brainstorming': 55, 'classification': 7, 'closed_qa': 132, 'creative_writing': 5, 'information_extraction': 1, 'open_qa': 38}
+  client 4: size=390  tl_steps=24  l3_steps=24  tl_discarded=6  l3_discarded=6  hist={'brainstorming': 50, 'classification': 57, 'closed_qa': 7, 'creative_writing': 12, 'general_qa': 4, 'information_extraction': 76, 'open_qa': 182, 'summarization': 2}
+  client 5: size=327  tl_steps=20  l3_steps=20  tl_discarded=7  l3_discarded=7  hist={'brainstorming': 20, 'classification': 51, 'closed_qa': 3, 'creative_writing': 32, 'general_qa': 82, 'information_extraction': 8, 'open_qa': 4, 'summarization': 127}
+  client 6: size=433  tl_steps=27  l3_steps=27  tl_discarded=1  l3_discarded=1  hist={'classification': 2, 'closed_qa': 2, 'creative_writing': 4, 'general_qa': 310, 'information_extraction': 109, 'open_qa': 1, 'summarization': 5}
+  client 7: size=296  tl_steps=18  l3_steps=18  tl_discarded=8  l3_discarded=8  hist={'brainstorming': 7, 'classification': 215, 'closed_qa': 13, 'general_qa': 2, 'information_extraction': 31, 'open_qa': 27, 'summarization': 1}
+  client 8: size=229  tl_steps=14  l3_steps=14  tl_discarded=5  l3_discarded=5  hist={'brainstorming': 3, 'classification': 1, 'closed_qa': 71, 'creative_writing': 35, 'general_qa': 56, 'information_extraction': 10, 'open_qa': 32, 'summarization': 21}
+  client 9: size=451  tl_steps=28  l3_steps=28  tl_discarded=3  l3_discarded=3  hist={'brainstorming': 154, 'classification': 48, 'closed_qa': 69, 'creative_writing': 3, 'general_qa': 7, 'information_extraction': 12, 'open_qa': 152, 'summarization': 6}
+TinyLlama: effective_clients=10  zero_step_active=0  discarded_total=58
+LLaMA: effective_clients=10  zero_step_active=0  discarded_total=72
+global_label_hist: {'brainstorming': 334, 'classification': 401, 'closed_qa': 370, 'creative_writing': 139, 'general_qa': 464, 'information_extraction': 305, 'open_qa': 749, 'summarization': 238}
+
+Summary active_clients by seed:
+  2001: 10
+  2002: 10
+  2003: 10
+  2004: 10
+  2005: 10
+  2006: 10
+  2007: 10
+  2008: 10
+  2009: 10
+  2010: 10
+minimum active_clients across seeds: 10 (seeds [2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010])
+
+Per-seed effective-client / discarded-sample table:
+seed  active  sizes_asc (min/med/max)  tl_zero  tl_eff  tl_disc  l3_zero  l3_eff  l3_disc
+2001  10  [92, 165, 175, 286, 294, 306, 318, 320, 349, 695] (92/300.0/695)  0  10  32  0  10  73
+2002  10  [54, 77, 192, 240, 298, 322, 361, 461, 491, 504] (54/310.0/504)  0  10  46  0  10  72
+2003  10  [110, 172, 197, 211, 218, 279, 424, 431, 477, 481] (110/248.5/481)  0  10  46  0  10  73
+2004  10  [86, 174, 200, 211, 221, 238, 260, 350, 434, 826] (86/229.5/826)  0  10  33  0  10  88
+2005  10  [86, 192, 226, 242, 263, 266, 320, 361, 424, 620] (86/264.5/620)  0  10  56  0  10  56
+2006  10  [139, 169, 207, 222, 250, 289, 366, 389, 482, 487] (139/269.5/487)  0  10  45  0  10  73
+2007  10  [187, 202, 220, 220, 309, 312, 343, 363, 414, 430] (187/310.5/430)  0  10  76  0  10  104
+2008  10  [68, 136, 198, 215, 250, 311, 312, 392, 480, 638] (68/280.5/638)  0  10  58  0  10  72
+2009  10  [114, 125, 175, 191, 195, 220, 286, 291, 653, 750] (114/207.5/750)  0  10  20  0  10  74
+2010  10  [120, 201, 229, 238, 296, 315, 327, 390, 433, 451] (120/305.5/451)  0  10  58  0  10  72
+seeds with >=2 TinyLlama zero-step active clients: []
+seeds with >=2 LLaMA zero-step active clients: []
+
+PASS: global category histogram has 8 categories and sums to 3000
+PASS: minimum active_clients=10 >= 3
+
+Phase N5b partition preview: LLaMA extension alpha 0.1 (seeds 2007-2010)
+dataset: databricks/databricks-dolly-15k
+train slice: train[0:3000]
+holdout slice: train[3000:3500]
+partition: label_skew alpha=0.1 label_column=category num_clients=10
+data seeds: 2007 to 2010 (4 seeds)
+TinyLlama train hparams from config/vp/vp_tl_flora_a01.yaml: batch=4 grad_accum=4 local_epochs=1
+LLaMA train hparams from config/vp/vp_l3_flora_a01.yaml: batch=2 grad_accum=8 local_epochs=1
+optimizer_steps = floor(ceil(n/batch) / grad_accum) * local_epochs (matches client.py: step only on complete accumulation blocks)
+
+Global category histogram (train[0:3000]):
+  brainstorming: 334
+  classification: 401
+  closed_qa: 370
+  creative_writing: 139
+  general_qa: 464
+  information_extraction: 305
+  open_qa: 749
+  summarization: 238
+  categories=8  sum=3000
+
+Held-out overlap check (row indices):
+  train indices: 0..2999 (n=3000)
+  holdout indices: 3000..3499 (n=500)
+  overlap count: 0
+  PASS: no index overlap
+
+label_source=column
+
+=== data_seed=2007  active_clients=10  total=3000 ===
+client_sizes: [163, 381, 412, 427, 93, 377, 326, 21, 34, 766]
+active sizes ascending: [21, 34, 93, 163, 326, 377, 381, 412, 427, 766]  min=21  median=351.5  max=766
+  client 0: size=163  tl_steps=10  l3_steps=10  tl_discarded=3  l3_discarded=3  hist={'brainstorming': 2, 'classification': 48, 'closed_qa': 111, 'summarization': 2}
+  client 1: size=381  tl_steps=24  l3_steps=23  tl_discarded=0  l3_discarded=13  hist={'brainstorming': 4, 'general_qa': 87, 'open_qa': 247, 'summarization': 43}
+  client 2: size=412  tl_steps=25  l3_steps=25  tl_discarded=12  l3_discarded=12  hist={'brainstorming': 18, 'classification': 16, 'closed_qa': 248, 'creative_writing': 103, 'information_extraction': 1, 'summarization': 26}
+  client 3: size=427  tl_steps=26  l3_steps=26  tl_discarded=11  l3_discarded=11  hist={'classification': 59, 'closed_qa': 1, 'creative_writing': 26, 'general_qa': 341}
+  client 4: size=93  tl_steps=6  l3_steps=5  tl_discarded=0  l3_discarded=13  hist={'brainstorming': 1, 'closed_qa': 3, 'open_qa': 89}
+  client 5: size=377  tl_steps=23  l3_steps=23  tl_discarded=9  l3_discarded=9  hist={'classification': 175, 'open_qa': 113, 'summarization': 89}
+  client 6: size=326  tl_steps=20  l3_steps=20  tl_discarded=6  l3_discarded=6  hist={'brainstorming': 171, 'classification': 52, 'closed_qa': 4, 'creative_writing': 6, 'open_qa': 19, 'summarization': 74}
+  client 7: size=21  tl_steps=1  l3_steps=1  tl_discarded=5  l3_discarded=5  hist={'classification': 1, 'general_qa': 11, 'open_qa': 9}
+  client 8: size=34  tl_steps=2  l3_steps=2  tl_discarded=2  l3_discarded=2  hist={'classification': 2, 'creative_writing': 1, 'information_extraction': 8, 'open_qa': 23}
+  client 9: size=766  tl_steps=48  l3_steps=47  tl_discarded=0  l3_discarded=14  hist={'brainstorming': 138, 'classification': 48, 'closed_qa': 3, 'creative_writing': 3, 'general_qa': 25, 'information_extraction': 296, 'open_qa': 249, 'summarization': 4}
+TinyLlama: effective_clients=10  zero_step_active=0  discarded_total=48
+LLaMA: effective_clients=10  zero_step_active=0  discarded_total=88
+global_label_hist: {'brainstorming': 334, 'classification': 401, 'closed_qa': 370, 'creative_writing': 139, 'general_qa': 464, 'information_extraction': 305, 'open_qa': 749, 'summarization': 238}
+
+=== data_seed=2008  active_clients=9  total=3000 ===
+client_sizes: [2, 409, 0, 308, 327, 11, 229, 825, 758, 131]
+active sizes ascending: [2, 11, 131, 229, 308, 327, 409, 758, 825]  min=2  median=308  max=825
+  client 0: size=2  tl_steps=0  l3_steps=0  tl_discarded=2  l3_discarded=2  hist={'information_extraction': 1, 'summarization': 1}
+  client 1: size=409  tl_steps=25  l3_steps=25  tl_discarded=9  l3_discarded=9  hist={'brainstorming': 136, 'classification': 13, 'creative_writing': 129, 'information_extraction': 97, 'open_qa': 34}
+  client 2: size=0  tl_steps=0  l3_steps=0  tl_discarded=0  l3_discarded=0  hist={}
+  client 3: size=308  tl_steps=19  l3_steps=19  tl_discarded=4  l3_discarded=4  hist={'brainstorming': 13, 'information_extraction': 204, 'summarization': 91}
+  client 4: size=327  tl_steps=20  l3_steps=20  tl_discarded=7  l3_discarded=7  hist={'closed_qa': 253, 'general_qa': 2, 'summarization': 72}
+  client 5: size=11  tl_steps=0  l3_steps=0  tl_discarded=11  l3_discarded=11  hist={'closed_qa': 1, 'general_qa': 7, 'information_extraction': 1, 'open_qa': 2}
+  client 6: size=229  tl_steps=14  l3_steps=14  tl_discarded=5  l3_discarded=5  hist={'brainstorming': 183, 'closed_qa': 8, 'creative_writing': 8, 'general_qa': 30}
+  client 7: size=825  tl_steps=51  l3_steps=51  tl_discarded=9  l3_discarded=9  hist={'classification': 24, 'general_qa': 107, 'open_qa': 653, 'summarization': 41}
+  client 8: size=758  tl_steps=47  l3_steps=47  tl_discarded=6  l3_discarded=6  hist={'classification': 361, 'closed_qa': 54, 'general_qa': 316, 'summarization': 27}
+  client 9: size=131  tl_steps=8  l3_steps=8  tl_discarded=3  l3_discarded=3  hist={'brainstorming': 2, 'classification': 3, 'closed_qa': 54, 'creative_writing': 2, 'general_qa': 2, 'information_extraction': 2, 'open_qa': 60, 'summarization': 6}
+TinyLlama: effective_clients=7  zero_step_active=2  discarded_total=56
+LLaMA: effective_clients=7  zero_step_active=2  discarded_total=56
+global_label_hist: {'brainstorming': 334, 'classification': 401, 'closed_qa': 370, 'creative_writing': 139, 'general_qa': 464, 'information_extraction': 305, 'open_qa': 749, 'summarization': 238}
+
+=== data_seed=2009  active_clients=10  total=3000 ===
+client_sizes: [489, 56, 118, 285, 389, 126, 2, 23, 1218, 294]
+active sizes ascending: [2, 23, 56, 118, 126, 285, 294, 389, 489, 1218]  min=2  median=205.5  max=1218
+  client 0: size=489  tl_steps=30  l3_steps=30  tl_discarded=9  l3_discarded=9  hist={'brainstorming': 101, 'classification': 45, 'closed_qa': 72, 'general_qa': 265, 'open_qa': 6}
+  client 1: size=56  tl_steps=3  l3_steps=3  tl_discarded=8  l3_discarded=8  hist={'classification': 8, 'closed_qa': 36, 'information_extraction': 6, 'open_qa': 6}
+  client 2: size=118  tl_steps=7  l3_steps=7  tl_discarded=6  l3_discarded=6  hist={'brainstorming': 1, 'general_qa': 13, 'summarization': 104}
+  client 3: size=285  tl_steps=18  l3_steps=17  tl_discarded=0  l3_discarded=13  hist={'closed_qa': 160, 'creative_writing': 125}
+  client 4: size=389  tl_steps=24  l3_steps=24  tl_discarded=5  l3_discarded=5  hist={'general_qa': 104, 'information_extraction': 285}
+  client 5: size=126  tl_steps=8  l3_steps=7  tl_discarded=0  l3_discarded=14  hist={'brainstorming': 7, 'classification': 107, 'closed_qa': 12}
+  client 6: size=2  tl_steps=0  l3_steps=0  tl_discarded=2  l3_discarded=2  hist={'creative_writing': 2}
+  client 7: size=23  tl_steps=1  l3_steps=1  tl_discarded=7  l3_discarded=7  hist={'classification': 14, 'general_qa': 1, 'information_extraction': 4, 'summarization': 4}
+  client 8: size=1218  tl_steps=76  l3_steps=76  tl_discarded=2  l3_discarded=2  hist={'brainstorming': 208, 'closed_qa': 79, 'creative_writing': 10, 'general_qa': 78, 'information_extraction': 7, 'open_qa': 735, 'summarization': 101}
+  client 9: size=294  tl_steps=18  l3_steps=18  tl_discarded=6  l3_discarded=6  hist={'brainstorming': 17, 'classification': 227, 'closed_qa': 11, 'creative_writing': 2, 'general_qa': 3, 'information_extraction': 3, 'open_qa': 2, 'summarization': 29}
+TinyLlama: effective_clients=9  zero_step_active=1  discarded_total=45
+LLaMA: effective_clients=9  zero_step_active=1  discarded_total=72
+global_label_hist: {'brainstorming': 334, 'classification': 401, 'closed_qa': 370, 'creative_writing': 139, 'general_qa': 464, 'information_extraction': 305, 'open_qa': 749, 'summarization': 238}
+
+=== data_seed=2010  active_clients=10  total=3000 ===
+client_sizes: [449, 288, 253, 430, 211, 470, 376, 96, 83, 344]
+active sizes ascending: [83, 96, 211, 253, 288, 344, 376, 430, 449, 470]  min=83  median=316.0  max=470
+  client 0: size=449  tl_steps=28  l3_steps=28  tl_discarded=1  l3_discarded=1  hist={'general_qa': 444, 'open_qa': 5}
+  client 1: size=288  tl_steps=18  l3_steps=18  tl_discarded=0  l3_discarded=0  hist={'brainstorming': 230, 'closed_qa': 16, 'creative_writing': 24, 'general_qa': 15, 'information_extraction': 3}
+  client 2: size=253  tl_steps=16  l3_steps=15  tl_discarded=0  l3_discarded=13  hist={'closed_qa': 208, 'information_extraction': 15, 'open_qa': 24, 'summarization': 6}
+  client 3: size=430  tl_steps=27  l3_steps=26  tl_discarded=0  l3_discarded=14  hist={'creative_writing': 12, 'general_qa': 3, 'open_qa': 373, 'summarization': 42}
+  client 4: size=211  tl_steps=13  l3_steps=13  tl_discarded=3  l3_discarded=3  hist={'classification': 211}
+  client 5: size=470  tl_steps=29  l3_steps=29  tl_discarded=6  l3_discarded=6  hist={'brainstorming': 2, 'classification': 125, 'open_qa': 343}
+  client 6: size=376  tl_steps=23  l3_steps=23  tl_discarded=8  l3_discarded=8  hist={'brainstorming': 100, 'classification': 3, 'creative_writing': 4, 'information_extraction': 269}
+  client 7: size=96  tl_steps=6  l3_steps=6  tl_discarded=0  l3_discarded=0  hist={'closed_qa': 76, 'creative_writing': 20}
+  client 8: size=83  tl_steps=5  l3_steps=5  tl_discarded=3  l3_discarded=3  hist={'closed_qa': 67, 'information_extraction': 16}
+  client 9: size=344  tl_steps=21  l3_steps=21  tl_discarded=8  l3_discarded=8  hist={'brainstorming': 2, 'classification': 62, 'closed_qa': 3, 'creative_writing': 79, 'general_qa': 2, 'information_extraction': 2, 'open_qa': 4, 'summarization': 190}
+TinyLlama: effective_clients=10  zero_step_active=0  discarded_total=29
+LLaMA: effective_clients=10  zero_step_active=0  discarded_total=56
+global_label_hist: {'brainstorming': 334, 'classification': 401, 'closed_qa': 370, 'creative_writing': 139, 'general_qa': 464, 'information_extraction': 305, 'open_qa': 749, 'summarization': 238}
+
+Summary active_clients by seed:
+  2007: 10
+  2008: 9
+  2009: 10
+  2010: 10
+minimum active_clients across seeds: 9 (seeds [2008])
+
+Per-seed effective-client / discarded-sample table:
+seed  active  sizes_asc (min/med/max)  tl_zero  tl_eff  tl_disc  l3_zero  l3_eff  l3_disc
+2007  10  [21, 34, 93, 163, 326, 377, 381, 412, 427, 766] (21/351.5/766)  0  10  48  0  10  88
+2008  9  [2, 11, 131, 229, 308, 327, 409, 758, 825] (2/308/825)  2  7  56  2  7  56
+2009  10  [2, 23, 56, 118, 126, 285, 294, 389, 489, 1218] (2/205.5/1218)  1  9  45  1  9  72
+2010  10  [83, 96, 211, 253, 288, 344, 376, 430, 449, 470] (83/316.0/470)  0  10  29  0  10  56
+seeds with >=2 TinyLlama zero-step active clients: [2008]
+seeds with >=2 LLaMA zero-step active clients: [2008]
+
+PASS: global category histogram has 8 categories and sums to 3000
+PASS: minimum active_clients=9 >= 3
