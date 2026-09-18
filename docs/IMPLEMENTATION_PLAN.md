@@ -1015,6 +1015,18 @@ Independent of prod_v2 GPU runs. Do not touch grids or `analysis/`. Every new ci
 
 **O2c-4.** DONE. `refs.bib` count 27; STATUS.md updated; verification reported; commit on phase-n.
 
+**O2c-5 (correction, 18 Sep).** Cho venue matched to FLoRA's bibliography (workshop NeurIPS 2023), not arXiv-only; LoRA ICLR venue confirmed in-session via Semantic Scholar (`venue` + DBLP `conf/iclr/HuSWALWWC22`), not assumed from a blocked OpenReview fetch.
+
+Verification log (field → source):
+
+| Entry | Field | Confirmed by |
+|---|---|---|
+| `cho2024hetlora` | title, authors (incl. Matt Barnes), booktitle, year 2023 | FLoRA PDF arXiv:2409.05976 References [3] (same NeurIPS-published paper cited adjacent in our Related Work) |
+| `cho2024hetlora` | arXiv twin 2401.06432 | arXiv API (identity check only; bib venue follows FLoRA, not arXiv) |
+| `hu2022lora` | title, authors | arXiv API 2106.09685 |
+| `hu2022lora` | venue ICLR | Semantic Scholar API `ARXIV:2106.09685` → `venue`/`publicationVenue` = International Conference on Learning Representations; `externalIds.DBLP` = `conf/iclr/HuSWALWWC22` |
+| `hu2022lora` | year 2022 | DBLP key suffix `22` from that same S2 payload (S2 `year` field was 2021 = arXiv year) |
+
 ### O3. IEEE Access template and de-anonymization
 
 Convert the manuscript to the IEEE Access template. Single-anonymized review: restore author name, affiliation "Independent Researcher", real email, and ORCID.
