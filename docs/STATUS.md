@@ -6,25 +6,24 @@ Replace this file in the Claude Project whenever the state changes. Keep only on
 
 ## Current phase
 
-Phase L drafting on phase-l. Full prose draft complete (Abstract through Discussion). Phase M next after Abstract review.
+Phase M on phase-m, paused after step 3 (assembly + V9 + verifier). Awaiting review before anonymization / typography / overlap.
 
 ## Done
 
-- Phases B to E on main; freeze-v1 at 0812fcf; freeze-v2 at 4f9fcf8
-- Phase F gates passed; Phase G complete (tl 75/75, l3 45/45); Phase H verifier exits 0
-- Phase I complete with pair-level flip and observed-gap power addendum; Phase J figures 505 pt, 8 pt minimum fonts
-- Setup, Results, Related Work, Discussion drafted, verified, revised
-- All external citations verified against primary sources
-- Introduction revised: softened absence claims; held-out loss scale; recommendation in contributions; byte-accounting cite logged
-- Abstract drafted (180--200 words): question, design, three headlines, recommendation, no method recommendation
-- DECISIONS: cite arXiv:2609.13512 (Franklin) in third person in Setup Communication because measured-payload accounting follows that preprint
+- phase-l fast-forwarded into main (8031a74); Phase M continues on phase-m
+- Abstract finalized (3B interaction share; Dolly category partition; IEEEkeywords)
+- manuscript/main.tex assembled in SAI IEEEtran template (from thesai.org ZipFileHandler); Sections 1-6; Figs 1-3; Tabs 1-3; refs.bib
+- Conclusion drafted (~120 words) from existing claims only
+- V9 CLAIMS populated (25 entries: analysis-checked + external-verified); verify_varpart.py exits 0
 
 ## Next
 
-1. Review Abstract; then Phase M: SAI template, anonymization, V9 claims list, overlap check, typography, final verifier run
-2. Destroy M3 after syncing available adapters; revoke the GitHub and HF tokens
-3. Jerry: JCR impact factor; attorney questions; AI disclosure version choice
-4. Mon 21 Sep go/no-go; target submission Tue 22 Sep
+1. Review page count / V9 / verifier report
+2. Phase M step 4: anonymize review copy
+3. Step 5: typography + overlap check (OLD=federated-lora-experiments)
+4. Step 6: re-verify every reference against primary sources
+5. Jerry: AI disclosure version (b); attorney on IJACSA; destroy M3; revoke tokens
+6. Mon 21 Sep go/no-go; target submission Tue 22 Sep
 
 ## Framing rules for the manuscript
 
@@ -36,28 +35,25 @@ Phase L drafting on phase-l. Full prose draft complete (Abstract through Discuss
 - Communication as measured, within method; no efficiency ranking
 - No method recommendation
 - MixedLM cross-check partial; moment estimates primary
-- Position against FFA-LoRA's across-run SDs: prior work reports run variance; this paper decomposes it
-- Cross-scale comparisons are confounded (instruction-tuned versus base model; float32 versus float16 base weights)
+- Position against FFA-LoRA's across-run SDs
+- Cross-scale comparisons are confounded (instruction-tuned versus base; float32 versus float16)
 - Where the interaction dominates, pairing on partitions buys little
-- No prevalence claims about the literature: cite specific papers, never "usually" or "most papers"
+- No prevalence claims about the literature
 
 ## Decisions made
 
 - Venue: IJACSA October cycle, target submission Tue 22 Sep; November fallback if go/no-go fails 21 Sep
-- Two scales on RTX 4090, --workers 1; l3 holdout float16, tl float32
-- freeze-v2 for the eval-only change; --max-retries 5 because of host instability
-- Phase K literature audit dropped; motivate from cited published practice; no audit-derived counts
+- Cite arXiv:2609.13512 in third person where measured-payload byte accounting is used
+- Phase K literature audit dropped; no audit-derived counts
 - Release statement covers results and metadata, not adapter weights
 - Do not pay the IJACSA APC until the attorney confirms the venue counts
-- Cite arXiv:2609.13512 in third person where measured-payload byte accounting is used (Setup)
 
 ## Open items
 
-- JCR impact factor; attorney questions (IJACSA weight, IEEE Early Access)
-- AI disclosure: drafting support applies
+- AI disclosure: version (b) (drafting support)
+- Attorney: whether IJACSA counts before APC
 - M3 still up; destroy and revoke tokens
-- Overlap check (Phase M): OLD is the local folder federated-lora-experiments
-- V9 claims list unfilled until manuscript numbers are final
+- Anonymization, typography, overlap (Phase M steps 4-5)
 - Local tooling: use .venv/bin/python
 
 ## Run progress

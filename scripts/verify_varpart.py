@@ -53,8 +53,305 @@ PROD_EVAL_SHA256 = "201b79752f63ccc06aab8c612c8fb450e9c7f18ee04fff2a31aaf6808458
 DOLLY = "databricks/databricks-dolly-15k"
 MB = 1024 * 1024
 
-# V9 filled in Phase L
-CLAIMS: List[Dict[str, Any]] = []
+# V9 filled in Phase L / Phase M: every manuscript number maps to a source.
+# kind: "analysis" (value checked against analysis/*.csv) or "external-verified"
+# or "design" (frozen design constant, not from analysis CSV).
+def _csv_rows(name: str) -> List[Dict[str, str]]:
+    import csv
+
+    path = REPO_ROOT / "analysis" / name
+    with path.open(encoding="utf-8") as f:
+        return list(csv.DictReader(f))
+
+
+def _row(name: str, **pred: str) -> Dict[str, str]:
+    rows = _csv_rows(name)
+    for r in rows:
+        if all(str(r.get(k)) == str(v) for k, v in pred.items()):
+            return r
+    raise KeyError(f"no row in {name} matching {pred}")
+
+
+CLAIMS: List[Dict[str, Any]] = [
+    # --- Headline / abstract / intro (analysis) ---
+    {
+        "id": "tl_share_P",
+        "text": "TinyLlama partition share 0.508",
+        "value": 0.508,
+        "source": "analysis/variance_components.csv share_P model=tl",
+        "kind": "analysis",
+        "check": lambda: abs(float(_row("variance_components.csv", model="tl")["share_P"]) - 0.508) < 5e-4,
+    },
+    {
+        "id": "tl_share_PM",
+        "text": "TinyLlama interaction share 0.469",
+        "value": 0.469,
+        "source": "analysis/variance_components.csv share_PM model=tl",
+        "kind": "analysis",
+        "check": lambda: abs(float(_row("variance_components.csv", model="tl")["share_PM"]) - 0.469) < 5e-4,
+    },
+    {
+        "id": "tl_share_E",
+        "text": "TinyLlama residual share 0.023",
+        "value": 0.023,
+        "source": "analysis/variance_components.csv share_E model=tl",
+        "kind": "analysis",
+        "check": lambda: abs(float(_row("variance_components.csv", model="tl")["share_E"]) - 0.023) < 5e-4,
+    },
+    {
+        "id": "l3_share_PM",
+        "text": "LLaMA interaction share 0.764",
+        "value": 0.764,
+        "source": "analysis/variance_components.csv share_PM model=l3",
+        "kind": "analysis",
+        "check": lambda: abs(float(_row("variance_components.csv", model="l3")["share_PM"]) - 0.764) < 5e-4,
+    },
+    {
+        "id": "l3_share_P_ci_includes_0",
+        "text": "LLaMA partition share CI includes 0",
+        "value": 0.0,
+        "source": "analysis/variance_components.csv share_P_ci_lo model=l3",
+        "kind": "analysis",
+        "check": lambda: float(_row("variance_components.csv", model="l3")["share_P_ci_lo"]) == 0.0,
+    },
+    {
+        "id": "tl_flip_k3_paired",
+        "text": "TinyLlama 3-draw paired flip probability 0.377",
+        "value": 0.377,
+        "source": "analysis/rank_flip.csv model=tl k=3 protocol=paired event=best",
+        "kind": "analysis",
+        "check": lambda: abs(
+            float(
+                _row(
+                    "rank_flip.csv",
+                    model="tl",
+                    k="3",
+                    protocol="paired",
+                    event="best",
+                )["prob"]
+            )
+            - 0.377
+        )
+        < 5e-4,
+    },
+    {
+        "id": "tl_near_tie_n_paired",
+        "text": "Near-tie needs 206 paired draws (tl)",
+        "value": 206,
+        "source": "analysis/power.csv model=tl pair=fedit-flora kind=observed_gap",
+        "kind": "analysis",
+        "check": lambda: int(
+            float(
+                _row(
+                    "power.csv",
+                    model="tl",
+                    pair="fedit-flora",
+                    kind="observed_gap",
+                )["n_paired"]
+            )
+        )
+        == 206,
+    },
+    {
+        "id": "l3_near_tie_n_paired",
+        "text": "Near-tie needs 46 paired draws (l3)",
+        "value": 46,
+        "source": "analysis/power.csv model=l3 pair=fedit-flora kind=observed_gap",
+        "kind": "analysis",
+        "check": lambda: int(
+            float(
+                _row(
+                    "power.csv",
+                    model="l3",
+                    pair="fedit-flora",
+                    kind="observed_gap",
+                )["n_paired"]
+            )
+        )
+        == 46,
+    },
+    {
+        "id": "separable_n_paired_3",
+        "text": "Separable pairs need 3 paired draws",
+        "value": 3,
+        "source": "analysis/power.csv observed_gap fedit-ffa_lora / ffa_lora-flora",
+        "kind": "analysis",
+        "check": lambda: all(
+            int(float(r["n_paired"])) == 3
+            for r in _csv_rows("power.csv")
+            if r["kind"] == "observed_gap" and r["pair"] != "fedit-flora"
+        ),
+    },
+    {
+        "id": "base_loss_tl",
+        "text": "TinyLlama base loss 2.121 (rounded)",
+        "value": 2.120666,
+        "source": "analysis/runs.csv base_loss model=tl",
+        "kind": "analysis",
+        "check": lambda: abs(
+            float(next(r["base_loss"] for r in _csv_rows("runs.csv") if r["model"] == "tl"))
+            - 2.120666
+        )
+        < 1e-5,
+    },
+    {
+        "id": "base_loss_l3",
+        "text": "LLaMA base loss 2.169 (rounded)",
+        "value": 2.168946,
+        "source": "analysis/runs.csv base_loss model=l3",
+        "kind": "analysis",
+        "check": lambda: abs(
+            float(next(r["base_loss"] for r in _csv_rows("runs.csv") if r["model"] == "l3"))
+            - 2.168946
+        )
+        < 1e-5,
+    },
+    {
+        "id": "tuned_loss_range",
+        "text": "Fine-tuned held-out loss between 1.69 and 1.84",
+        "value": (1.69, 1.84),
+        "source": "analysis/runs.csv heldout_loss min/max",
+        "kind": "analysis",
+        "check": lambda: (
+            min(float(r["heldout_loss"]) for r in _csv_rows("runs.csv")) >= 1.69
+            and max(float(r["heldout_loss"]) for r in _csv_rows("runs.csv")) <= 1.84
+        ),
+    },
+    {
+        "id": "sd_pair_tl",
+        "text": "Paired SD 0.00282 (tl)",
+        "value": 0.00282,
+        "source": "analysis/power.csv sd_pair_model model=tl",
+        "kind": "analysis",
+        "check": lambda: abs(
+            float(_row("power.csv", model="tl", kind="preregistered_delta", delta="0.005")["sd_pair_model"])
+            - 0.002817
+        )
+        < 5e-6,
+    },
+    {
+        "id": "sd_pair_l3",
+        "text": "Paired SD 0.00473 (l3)",
+        "value": 0.00473,
+        "source": "analysis/power.csv sd_pair_model model=l3",
+        "kind": "analysis",
+        "check": lambda: abs(
+            float(_row("power.csv", model="l3", kind="preregistered_delta", delta="0.005")["sd_pair_model"])
+            - 0.00473
+        )
+        < 5e-5,
+    },
+    {
+        "id": "tl_near_tie_unpaired",
+        "text": "Near-tie unpaired n 416 (tl)",
+        "value": 416,
+        "source": "analysis/power.csv n_unpaired_per_method model=tl pair=fedit-flora",
+        "kind": "analysis",
+        "check": lambda: int(
+            float(
+                _row(
+                    "power.csv",
+                    model="tl",
+                    pair="fedit-flora",
+                    kind="observed_gap",
+                )["n_unpaired_per_method"]
+            )
+        )
+        == 416,
+    },
+    {
+        "id": "l3_near_tie_unpaired",
+        "text": "Near-tie unpaired n 57 (l3)",
+        "value": 57,
+        "source": "analysis/power.csv n_unpaired_per_method model=l3 pair=fedit-flora",
+        "kind": "analysis",
+        "check": lambda: int(
+            float(
+                _row(
+                    "power.csv",
+                    model="l3",
+                    pair="fedit-flora",
+                    kind="observed_gap",
+                )["n_unpaired_per_method"]
+            )
+        )
+        == 57,
+    },
+    {
+        "id": "method_means_tl_flora",
+        "text": "TinyLlama FLoRA mean 1.6957",
+        "value": 1.6957,
+        "source": "analysis/method_means.csv model=tl method=flora het=a01",
+        "kind": "analysis",
+        "check": lambda: abs(
+            float(_row("method_means.csv", model="tl", method="flora", het="a01")["mean"]) - 1.6957
+        )
+        < 5e-5,
+    },
+    {
+        "id": "comm_v6_match",
+        "text": "Communication matches V6 formula (max abs err 0)",
+        "value": 0.0,
+        "source": "analysis/comm.csv max_abs_err_vs_v6",
+        "kind": "analysis",
+        "check": lambda: all(float(r["max_abs_err_vs_v6"]) == 0.0 for r in _csv_rows("comm.csv")),
+    },
+    {
+        "id": "ffa_slope_tl",
+        "text": "FFA-LoRA TinyLlama MB/client slope 98.3125",
+        "value": 98.3125,
+        "source": "analysis/comm.csv fit_slope_per_active model=tl method=ffa_lora",
+        "kind": "analysis",
+        "check": lambda: abs(
+            float(_row("comm.csv", model="tl", method="ffa_lora")["fit_slope_per_active"]) - 98.3125
+        )
+        < 1e-6,
+    },
+    {
+        "id": "n_runs_120",
+        "text": "120 production cells",
+        "value": 120,
+        "source": "analysis/runs.csv row count",
+        "kind": "analysis",
+        "check": lambda: len(_csv_rows("runs.csv")) == 120,
+    },
+    # --- External citation figures (verified against primary sources; not analysis) ---
+    {
+        "id": "ext_ffa_mnli",
+        "text": "FFA-LoRA non-private MNLI-m 85.05+/-1.1 vs LoRA 82.03+/-10.7",
+        "value": (85.05, 82.03, 10.7),
+        "source": "Sun et al. ICLR 2024 Table 1 (external-verified)",
+        "kind": "external-verified",
+    },
+    {
+        "id": "ext_ffa_qqp",
+        "text": "FFA-LoRA non-private QQP 84.35+/-0.6 vs LoRA 83.51+/-3.3",
+        "value": (84.35, 83.51),
+        "source": "Sun et al. ICLR 2024 Table 1 (external-verified)",
+        "kind": "external-verified",
+    },
+    {
+        "id": "ext_flora_alpaca",
+        "text": "FLoRA vs FedIT Llama Alpaca MMLU 29.85 vs 29.41",
+        "value": (29.85, 29.41),
+        "source": "Wang et al. NeurIPS 2024 Table 1 (external-verified)",
+        "kind": "external-verified",
+    },
+    {
+        "id": "ext_picard_cifar",
+        "text": "Picard CIFAR-10 range 89.01 to 90.83 = 1.82 pp over 10000 seeds",
+        "value": 1.82,
+        "source": "Picard arXiv:2109.08203 (external-verified)",
+        "kind": "external-verified",
+    },
+    {
+        "id": "ext_hsu_dirichlet",
+        "text": "Hsu et al. Dirichlet Dir(alpha p) non-IID construction",
+        "value": None,
+        "source": "Hsu et al. arXiv:1909.06335 (external-verified)",
+        "kind": "external-verified",
+    },
+]
 
 
 class CheckResult:
@@ -391,7 +688,32 @@ def v8(cells: Sequence[Cell]) -> CheckResult:
 def v9() -> CheckResult:
     r = CheckResult("V9")
     if not CLAIMS:
-        r.note("CLAIMS empty (Phase L); not required for Phase H exit")
+        r.fail("CLAIMS empty; every manuscript number must be registered")
+        return r
+    n_ok = 0
+    for claim in CLAIMS:
+        cid = claim["id"]
+        kind = claim.get("kind", "analysis")
+        src = claim.get("source", "")
+        if kind == "analysis":
+            check = claim.get("check")
+            if check is None:
+                r.fail(f"{cid}: analysis claim missing check()")
+                continue
+            try:
+                ok = bool(check())
+            except Exception as exc:  # noqa: BLE001
+                r.fail(f"{cid}: check error: {exc}")
+                continue
+            if not ok:
+                r.fail(f"{cid}: value mismatch ({claim.get('text')}; {src})")
+            else:
+                n_ok += 1
+                r.note(f"OK {cid}: {claim.get('text')} <- {src}")
+        else:
+            n_ok += 1
+            r.note(f"OK {cid} [{kind}]: {claim.get('text')} <- {src}")
+    r.note(f"{n_ok}/{len(CLAIMS)} claims registered")
     return r
 
 
@@ -600,16 +922,16 @@ def main() -> None:
             print(f"       FAIL: {f}")
         all_results.append(res)
 
-    # Exit criteria: V1-V8 and V11 must pass; V9 unfilled OK; V10 informational
+    # Exit criteria: V1-V8, V9 (populated), and V11 must pass; V10 informational
     blocking = [
         res
         for res in all_results
-        if res.vid not in ("V9", "V10") and not res.ok
+        if res.vid not in ("V10",) and not res.ok
     ]
     if blocking:
         print(f"\nVERIFY FAILED: {len(blocking)} blocking check(s)")
         sys.exit(1)
-    print("\nVERIFY OK: V1-V8 and V11 passed (V9 deferred, V10 informational)")
+    print("\nVERIFY OK: V1-V8, V9, and V11 passed (V10 informational)")
     sys.exit(0)
 
 
