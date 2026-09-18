@@ -1,0 +1,152 @@
+[
+  {
+    "round": 1,
+    "avg_loss": 1.8405536716357176,
+    "round_time": 98.94197010993958,
+    "communication_mb": 154.6875,
+    "upload_mb": 77.34375,
+    "download_mb": 77.34375,
+    "broadcast_b_only": false,
+    "broadcast_bytes_per_client": 9011200
+  },
+  {
+    "round": 2,
+    "avg_loss": 1.7643944288475608,
+    "round_time": 98.94468426704407,
+    "communication_mb": 309.375,
+    "upload_mb": 154.6875,
+    "download_mb": 154.6875,
+    "broadcast_b_only": false,
+    "broadcast_bytes_per_client": 9011200
+  },
+  {
+    "round": 3,
+    "avg_loss": 1.7610895439239445,
+    "round_time": 99.17979311943054,
+    "communication_mb": 464.0625,
+    "upload_mb": 232.03125,
+    "download_mb": 232.03125,
+    "broadcast_b_only": false,
+    "broadcast_bytes_per_client": 9011200
+  },
+  {
+    "round": 4,
+    "avg_loss": 1.7505627917146258,
+    "round_time": 99.10648894309998,
+    "communication_mb": 618.75,
+    "upload_mb": 309.375,
+    "download_mb": 309.375,
+    "broadcast_b_only": false,
+    "broadcast_bytes_per_client": 9011200
+  },
+  {
+    "round": 5,
+    "avg_loss": 1.7526161545322485,
+    "round_time": 99.13666534423828,
+    "communication_mb": 773.4375,
+    "upload_mb": 386.71875,
+    "download_mb": 386.71875,
+    "broadcast_b_only": false,
+    "broadcast_bytes_per_client": 9011200
+  },
+  {
+    "round": 6,
+    "avg_loss": 1.7410556609033634,
+    "round_time": 99.21304035186768,
+    "communication_mb": 928.125,
+    "upload_mb": 464.0625,
+    "download_mb": 464.0625,
+    "broadcast_b_only": false,
+    "broadcast_bytes_per_client": 9011200
+  },
+  {
+    "round": 7,
+    "avg_loss": 1.7382341971512583,
+    "round_time": 99.26041340827942,
+    "communication_mb": 1082.8125,
+    "upload_mb": 541.40625,
+    "download_mb": 541.40625,
+    "broadcast_b_only": false,
+    "broadcast_bytes_per_client": 9011200
+  },
+  {
+    "round": 8,
+    "avg_loss": 1.7391542561284068,
+    "round_time": 99.26873326301575,
+    "communication_mb": 1237.5,
+    "upload_mb": 618.75,
+    "download_mb": 618.75,
+    "broadcast_b_only": false,
+    "broadcast_bytes_per_client": 9011200
+  },
+  {
+    "round": 9,
+    "avg_loss": 1.7347575332710283,
+    "round_time": 99.42041301727295,
+    "communication_mb": 1392.1875,
+    "upload_mb": 696.09375,
+    "download_mb": 696.09375,
+    "broadcast_b_only": false,
+    "broadcast_bytes_per_client": 9011200
+  },
+  {
+    "round": 10,
+    "avg_loss": 1.736091124723668,
+    "round_time": 99.45889186859131,
+    "communication_mb": 1546.875,
+    "upload_mb": 773.4375,
+    "download_mb": 773.4375,
+    "broadcast_b_only": false,
+    "broadcast_bytes_per_client": 9011200
+  },
+  {
+    "round": 11,
+    "avg_loss": 1.7359312751225286,
+    "round_time": 99.25032353401184,
+    "communication_mb": 1701.5625,
+    "upload_mb": 850.78125,
+    "download_mb": 850.78125,
+    "broadcast_b_only": false,
+    "broadcast_bytes_per_client": 9011200
+  },
+  {
+    "round": 12,
+    "avg_loss": 1.7322596351209991,
+    "round_time": 99.31846380233765,
+    "communication_mb": 1856.25,
+    "upload_mb": 928.125,
+    "download_mb": 928.125,
+    "broadcast_b_only": false,
+    "broadcast_bytes_per_client": 9011200
+  },
+  {
+    "round": 13,
+    "avg_loss": 1.7364596017676919,
+    "round_time": 99.90477395057678,
+    "communication_mb": 2010.9375,
+    "upload_mb": 1005.46875,
+    "download_mb": 1005.46875,
+    "broadcast_b_only": false,
+    "broadcast_bytes_per_client": 9011200
+  },
+  {
+    "round": 14,
+    "avg_loss": 1.7301190399053072,
+    "round_time": 99.8131856918335,
+    "communication_mb": 2165.625,
+    "upload_mb": 1082.8125,
+    "download_mb": 1082.8125,
+    "broadcast_b_only": false,
+    "broadcast_bytes_per_client": 9011200
+  },
+  {
+    "round": 15,
+    "avg_loss": 1.7262393143375498,
+    "round_time": 99.37558484077454,
+    "communication_mb": 2320.3125,
+    "upload_mb": 1160.15625,
+    "download_mb": 1160.15625,
+    "broadcast_b_only": false,
+    "broadcast_bytes_per_client": 9011200
+  }
+]

@@ -1,0 +1,152 @@
+[
+  {
+    "round": 1,
+    "avg_loss": 1.895443632984204,
+    "round_time": 154.0468680858612,
+    "communication_mb": 110.25,
+    "upload_mb": 78.75,
+    "download_mb": 31.5,
+    "broadcast_b_only": true,
+    "broadcast_bytes_per_client": 3670016
+  },
+  {
+    "round": 2,
+    "avg_loss": 1.8424492424997523,
+    "round_time": 144.783376455307,
+    "communication_mb": 173.25,
+    "upload_mb": 110.25,
+    "download_mb": 63.0,
+    "broadcast_b_only": true,
+    "broadcast_bytes_per_client": 3670016
+  },
+  {
+    "round": 3,
+    "avg_loss": 1.8325992168150442,
+    "round_time": 143.42104840278625,
+    "communication_mb": 236.25,
+    "upload_mb": 141.75,
+    "download_mb": 94.5,
+    "broadcast_b_only": true,
+    "broadcast_bytes_per_client": 3670016
+  },
+  {
+    "round": 4,
+    "avg_loss": 1.8275850512441645,
+    "round_time": 140.76866579055786,
+    "communication_mb": 299.25,
+    "upload_mb": 173.25,
+    "download_mb": 126.0,
+    "broadcast_b_only": true,
+    "broadcast_bytes_per_client": 3670016
+  },
+  {
+    "round": 5,
+    "avg_loss": 1.8199738910182843,
+    "round_time": 142.1068263053894,
+    "communication_mb": 362.25,
+    "upload_mb": 204.75,
+    "download_mb": 157.5,
+    "broadcast_b_only": true,
+    "broadcast_bytes_per_client": 3670016
+  },
+  {
+    "round": 6,
+    "avg_loss": 1.8162328504542689,
+    "round_time": 141.74372053146362,
+    "communication_mb": 425.25,
+    "upload_mb": 236.25,
+    "download_mb": 189.0,
+    "broadcast_b_only": true,
+    "broadcast_bytes_per_client": 3670016
+  },
+  {
+    "round": 7,
+    "avg_loss": 1.8050528032459754,
+    "round_time": 142.18258476257324,
+    "communication_mb": 488.25,
+    "upload_mb": 267.75,
+    "download_mb": 220.5,
+    "broadcast_b_only": true,
+    "broadcast_bytes_per_client": 3670016
+  },
+  {
+    "round": 8,
+    "avg_loss": 1.8037183611735885,
+    "round_time": 143.46536111831665,
+    "communication_mb": 551.25,
+    "upload_mb": 299.25,
+    "download_mb": 252.0,
+    "broadcast_b_only": true,
+    "broadcast_bytes_per_client": 3670016
+  },
+  {
+    "round": 9,
+    "avg_loss": 1.7953890101278729,
+    "round_time": 143.4172465801239,
+    "communication_mb": 614.25,
+    "upload_mb": 330.75,
+    "download_mb": 283.5,
+    "broadcast_b_only": true,
+    "broadcast_bytes_per_client": 3670016
+  },
+  {
+    "round": 10,
+    "avg_loss": 1.800220836346212,
+    "round_time": 142.3606457710266,
+    "communication_mb": 677.25,
+    "upload_mb": 362.25,
+    "download_mb": 315.0,
+    "broadcast_b_only": true,
+    "broadcast_bytes_per_client": 3670016
+  },
+  {
+    "round": 11,
+    "avg_loss": 1.790696434669177,
+    "round_time": 143.1629033088684,
+    "communication_mb": 740.25,
+    "upload_mb": 393.75,
+    "download_mb": 346.5,
+    "broadcast_b_only": true,
+    "broadcast_bytes_per_client": 3670016
+  },
+  {
+    "round": 12,
+    "avg_loss": 1.792909210468218,
+    "round_time": 141.4844810962677,
+    "communication_mb": 803.25,
+    "upload_mb": 425.25,
+    "download_mb": 378.0,
+    "broadcast_b_only": true,
+    "broadcast_bytes_per_client": 3670016
+  },
+  {
+    "round": 13,
+    "avg_loss": 1.787185132330568,
+    "round_time": 143.0158441066742,
+    "communication_mb": 866.25,
+    "upload_mb": 456.75,
+    "download_mb": 409.5,
+    "broadcast_b_only": true,
+    "broadcast_bytes_per_client": 3670016
+  },
+  {
+    "round": 14,
+    "avg_loss": 1.7863479542618295,
+    "round_time": 142.60207390785217,
+    "communication_mb": 929.25,
+    "upload_mb": 488.25,
+    "download_mb": 441.0,
+    "broadcast_b_only": true,
+    "broadcast_bytes_per_client": 3670016
+  },
+  {
+    "round": 15,
+    "avg_loss": 1.7740469140404047,
+    "round_time": 144.0200080871582,
+    "communication_mb": 992.25,
+    "upload_mb": 519.75,
+    "download_mb": 472.5,
+    "broadcast_b_only": true,
+    "broadcast_bytes_per_client": 3670016
+  }
+]

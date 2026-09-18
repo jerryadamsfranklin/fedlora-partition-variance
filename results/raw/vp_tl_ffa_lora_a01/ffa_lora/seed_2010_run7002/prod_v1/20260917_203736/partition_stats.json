@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "data_seed": 2010,
+  "partition_method": "label_skew",
+  "partition_alpha": 0.1,
+  "label_column": "category",
+  "label_source": "column",
+  "num_clients_configured": 10,
+  "active_clients": 10,
+  "client_sizes": [
+    449,
+    288,
+    253,
+    430,
+    211,
+    470,
+    376,
+    96,
+    83,
+    344
+  ],
+  "total_samples": 3000,
+  "per_client_label_hist": [
+    {
+      "general_qa": 444,
+      "open_qa": 5
+    },
+    {
+      "brainstorming": 230,
+      "closed_qa": 16,
+      "creative_writing": 24,
+      "general_qa": 15,
+      "information_extraction": 3
+    },
+    {
+      "closed_qa": 208,
+      "information_extraction": 15,
+      "open_qa": 24,
+      "summarization": 6
+    },
+    {
+      "creative_writing": 12,
+      "general_qa": 3,
+      "open_qa": 373,
+      "summarization": 42
+    },
+    {
+      "classification": 211
+    },
+    {
+      "brainstorming": 2,
+      "classification": 125,
+      "open_qa": 343
+    },
+    {
+      "brainstorming": 100,
+      "classification": 3,
+      "creative_writing": 4,
+      "information_extraction": 269
+    },
+    {
+      "closed_qa": 76,
+      "creative_writing": 20
+    },
+    {
+      "closed_qa": 67,
+      "information_extraction": 16
+    },
+    {
+      "brainstorming": 2,
+      "classification": 62,
+      "closed_qa": 3,
+      "creative_writing": 79,
+      "general_qa": 2,
+      "information_extraction": 2,
+      "open_qa": 4,
+      "summarization": 190
+    }
+  ],
+  "global_label_hist": {
+    "brainstorming": 334,
+    "classification": 401,
+    "closed_qa": 370,
+    "creative_writing": 139,
+    "general_qa": 464,
+    "information_extraction": 305,
+    "open_qa": 749,
+    "summarization": 238
+  }
+}
