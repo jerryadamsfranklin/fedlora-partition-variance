@@ -1,0 +1,4 @@
+tl: row1 (partition share>=0.508 or 3-draw paired flip>=0.377)
+l3: row1 (partition share>=0.227 or 3-draw paired flip>=0.287)
+l3: row4 interaction s2_PM large relative to s2_P
+cross-scale: row6 overlapping CIs across scales

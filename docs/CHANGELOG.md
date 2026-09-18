@@ -33,3 +33,6 @@ Baseline test count at v0-import: 28 passed
   loading the base (sequential load); TinyLlama holdouts remain float32.
 - H: `scripts/verify_varpart.py` (V1-V11); V4 scoped by het; V7 records eval_dtype;
   V10 resume/retry census; V11 eval-script provenance vs freeze-v2.
+- H close: float32 spot-check evidence committed; Phase K audit dropped in DECISIONS.
+- I: `scripts/analysis/build_runs_table.py` and `analyze_variance.py` (I0 to I6);
+  outputs under `analysis/*.csv`.

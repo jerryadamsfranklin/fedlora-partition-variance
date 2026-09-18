@@ -6,7 +6,7 @@ Replace this file in the Claude Project whenever the state changes. Keep only on
 
 ## Current phase
 
-Phase H complete (verifier exits 0 on V1 to V8 and V11; V9 pending Phase L). Phase I starting on branch phase-i.
+Phase I complete on branch phase-i (I0 to I6). Phase J figures next. V9 pending Phase L.
 
 ## Done
 
@@ -19,11 +19,10 @@ Phase H complete (verifier exits 0 on V1 to V8 and V11; V9 pending Phase L). Pha
 
 ## Next
 
-1. Commit the float32 spot-check artifacts; add the float16 DECISIONS row; resume-cell range check into phase_h_report; fast-forward phase-h into main
-2. Phase I on branch phase-i per ANALYSIS_PLAN.md (I0 to I6), then report which I7 row the results select
-3. Destroy M3 after the spot-check files are committed and all 120 adapters are confirmed on the Mac
-4. Phase J figures and tables; Phase L manuscript (Setup and Related Work can start now)
-5. Jerry: JCR impact factor figure; attorney question on IJACSA weight; choose the AI disclosure version
+1. Phase J figures and tables; Phase L manuscript (Setup and Related Work can start now)
+2. Do not destroy M3 yet: only 25/120 final_adapter_state.pt on Mac and M3 (M1/M2 gone); Phase I did not need adapters
+3. Jerry: JCR impact factor figure; attorney question on IJACSA weight; choose the AI disclosure version
+4. Introduction motivation from cited published practice (Phase K audit dropped)
 
 ## Decisions made
 
