@@ -1,4 +1,4 @@
-tl: row1 (partition share>=0.508 or 3-draw paired flip>=0.377)
-l3: row1 (partition share>=0.227 or 3-draw paired flip>=0.287)
-l3: row4 interaction s2_PM large relative to s2_P
+tl: row1 on partition share (0.508; CI [0.202, 0.663]); 3-draw paired flip also 0.377
+l3: row1 on 3-draw paired flip probability only (0.287); share_P=0.227 is below the 0.30 threshold and its CI includes 0 ([0.000, 0.551]); flip is the near-tied fedit-flora pair
+l3: row4 interaction (share_PM=0.764 > share_P=0.227)
 cross-scale: row6 overlapping CIs across scales
