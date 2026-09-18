@@ -803,6 +803,192 @@ IJACSA treats undeclared or inaccurately declared AI use as misconduct, so accur
 
 ---
 
+## Phase N. Eighty-four-run addendum (freeze-v3, prod_v2)
+
+Venue target is now IEEE Access (see Phase O and `DECISIONS.md`). This phase adds a pre-registered 84-run addendum under `freeze-v3` / tag `prod_v2` without changing the training path, so new cells pool with `prod_v1`.
+
+Standing rule: every subsequent change request is added here as a numbered phase with acceptance checks before execution. No ad-hoc execution outside the plan. If a request conflicts with this plan, stop and report.
+
+### N1. TinyLlama alpha 0.5 configs
+
+Create three configs identical to the corresponding `a01` files except `partition_alpha: 0.5` and `experiment.name`:
+
+- `config/vp/vp_tl_fedit_a05.yaml`
+- `config/vp/vp_tl_ffa_lora_a05.yaml`
+- `config/vp/vp_tl_flora_a05.yaml`
+
+Extend `scripts/make_vp_configs.py` with het `a05` (alpha 0.5) so regeneration stays consistent. Extend `tests/test_vp_configs.py` to cover all 15 configs (tl/l3 × three methods × a01/a05/iid for tl; tl a05 only for the new het; l3 keeps a01/iid only, so 12 + 3 = 15 files).
+
+Acceptance: all 15 config files exist; pytest config tests pass; merged `partition_alpha` is 0.5 for `a05` and 0.1 for `a01`.
+
+### N2. New grids (do not edit `grids/tl.yaml` or `grids/l3.yaml`)
+
+`grids/tl_a05.yaml`:
+
+```yaml
+name: tl_a05
+tag: prod_v2
+methods: [fedit, ffa_lora, flora]
+config_pattern: "config/vp/vp_tl_{method}_{het}.yaml"
+cells:
+  - het: a05
+    data_seeds: [2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010]
+    run_seeds: [7001, 7002]
+expected_runs: 60
+```
+
+`grids/l3_ext.yaml`:
+
+```yaml
+name: l3_ext
+tag: prod_v2
+methods: [fedit, ffa_lora, flora]
+config_pattern: "config/vp/vp_l3_{method}_{het}.yaml"
+cells:
+  - het: a01
+    data_seeds: [2007, 2008, 2009, 2010]
+    run_seeds: [7001, 7002]
+expected_runs: 24
+```
+
+Uses existing `vp_l3_*_a01.yaml` configs. Add `a05` to `HET_ORDER` in `scripts/run_grid.py` so enumeration stays stable.
+
+Tests in `tests/test_run_grid.py`:
+
+- Enumeration counts: `tl_a05` = 60, `l3_ext` = 24
+- Same-shard groups (all methods for a (het, data_seed, run_seed) share a shard) for both grids at N in {1, 3, 6}
+- Per-shard counts at 3 shards: `tl_a05` → 21/21/18; `l3_ext` → 9/9/6
+
+Acceptance: those tests pass; `grids/tl.yaml` and `grids/l3.yaml` unchanged.
+
+### N3. Pre-registered analysis extension
+
+Append to `docs/ANALYSIS_PLAN.md` (and keep this file's Phase I section in sync where needed):
+
+**I8. Variance components at alpha 0.5** (`analysis/variance_components_a05.csv` or equivalent keyed by het)
+
+TinyLlama only: p = 10, r = 2, m = 3. Same method-of-moments estimators and cluster bootstrap as I1 (B = 2000, seed 12345).
+
+**I9. Heterogeneity gradient** (`analysis/het_gradient.csv`)
+
+Compare `share_P`, `share_PM`, `share_E` between alpha 0.1 and alpha 0.5 on TinyLlama. Bootstrap CIs on the differences (B = 2000, seed 12345).
+
+**I10. LLaMA at p = 10**
+
+Pool `prod_v1` and `prod_v2` LLaMA alpha 0.1 cells (data seeds 2001 to 2010). Recompute I1, I3, and I4 at p = 10. Report the original p = 6 analysis as a sensitivity analysis. State whether the partition main-effect interval still includes zero.
+
+**I8 to I10 outcome-to-claim rows** (pre-registered):
+
+| Result | Claim the paper makes |
+|---|---|
+| Gradient present: at least one of the differences in `share_P`, `share_PM`, or `share_E` (alpha 0.5 minus alpha 0.1) has a bootstrap CI that excludes zero | Heterogeneity level changes the variance decomposition; report both alphas and the gradient |
+| Gradient absent: all three difference CIs include zero | Across alpha 0.1 to 0.5, variance shares do not detectably change at this design; the alpha 0.1 findings generalize over this range |
+| At p = 10, the LLaMA partition-share CI excludes zero | Partition main effect is identifiable at 3B with ten draws; update claims accordingly and keep p = 6 as sensitivity |
+| At p = 10, the LLaMA partition-share CI still includes zero | Keep the 3B story as interaction-dominated; p = 6 remains a sensitivity analysis |
+
+Acceptance: I8 to I10 and the four rows appear in `ANALYSIS_PLAN.md` before any `prod_v2` analysis runs.
+
+### N4. V12 training-path freeze check
+
+Add V12 to `scripts/verify_varpart.py`. Purpose: prove `prod_v2` pools with `prod_v1`.
+
+- `git diff --name-only freeze-v1..freeze-v3 -- src scripts/run_experiment.py` must be empty (training path unchanged since freeze-v1).
+- `scripts/evaluate_instruction_holdout.py` was amended at freeze-v2 (LLaMA float16 holdout). V12 therefore requires `git diff --name-only freeze-v2..freeze-v3 -- scripts/evaluate_instruction_holdout.py` to be empty (eval path pinned at freeze-v2).
+
+Hard stop if either diff is non-empty: do not launch `prod_v2`.
+
+Tag `freeze-v3` on the commit that contains N1 to N4 (configs, grids, analysis-plan extension, V12) with a clean tracked tree for those paths. Report grid enumeration tests and V12 before any instance launch.
+
+Acceptance: V12 passes; freeze-v3 tagged and pushed; pytest for N1/N2 green.
+
+### N5. Launch (three instances, same GPU model)
+
+After N4 report and Jerry approval to launch:
+
+```bash
+# per instance i in {0,1,2}, after vast_setup on freeze-v3:
+python scripts/run_grid.py --grid grids/tl_a05.yaml --shard i --num-shards 3 \
+  --device cuda --production --max-retries 5
+python scripts/run_grid.py --grid grids/l3_ext.yaml --shard i --num-shards 3 \
+  --device cuda --production --max-retries 5
+```
+
+Update `production_guard` so `--production` accepts `freeze-v3` for `prod_v2` grids (do not weaken the freeze-v1 requirement for `prod_v1` grids).
+
+Sync must include `final_adapter_state.pt`. Confirm 84 adapters on the Mac before destroying any instance.
+
+Acceptance: `grid_status` shows 60/60 and 24/24 complete; 84 local adapters present.
+
+### N6. DECISIONS.md entries
+
+Append three rows (do not edit past rows):
+
+1. Venue change to IEEE Access (IJACSA remains fallback; never dual-submit).
+2. The 84-run addendum under freeze-v3 / prod_v2 (alpha 0.5 on TinyLlama; LLaMA partition extension to data seeds 2007 to 2010).
+3. Adapters retained for every prod_v2 cell (prod_v1 adapters may already be incomplete).
+
+### N7. MixedLM re-specification and refs expansion
+
+Re-specify the MixedLM cross-check so the partition component identifies (cross-check only; moment estimates stay primary). Expand `manuscript/refs.bib` toward about 25 verified entries; every new entry verified against its primary source.
+
+### Phase N acceptance
+
+- All tests pass
+- `freeze-v3` tagged
+- V12 passes
+- `grid_status` shows 60/60 (`tl_a05`) and 24/24 (`l3_ext`) complete
+- 84 adapters present locally
+
+### Phase N hard stop
+
+If both grids are not complete by end of Mon 22 Sep, drop the incomplete grid entirely rather than reporting partial cells, and move to Phase O.
+
+---
+
+## Phase O. IEEE Access rework
+
+Target venue: IEEE Access (single-anonymized review). Do not submit to IJACSA and Access at the same time.
+
+### O1. The Partition-Draw Reporting Protocol
+
+Name the contribution **the Partition-Draw Reporting Protocol**, spelled out, with no acronym (PDR, PDP, PVR, and PDA collide with common engineering terms). After first mention, use "the protocol".
+
+State it as three numbered steps in both the abstract and a dedicated discussion subsection:
+
+1. Report the number of partition draws, and the partition seeds, separately from training seeds.
+2. Pair method comparisons on the same partition draws.
+3. Report the minimum difference the design can detect, at the design's number of draws.
+
+### O2. Advance over the state of the art
+
+Add an explicit advance-over-the-state-of-the-art paragraph to the introduction (Access Stage 3 desk screening).
+
+### O3. IEEE Access template and de-anonymization
+
+Convert the manuscript to the IEEE Access template. Single-anonymized review: restore author name, affiliation "Independent Researcher", real email, and ORCID.
+
+### O4. Public artifacts
+
+Replace the code-availability statement with a public repository link plus a Zenodo DOI.
+
+### O5. Results update for I8 to I10
+
+Update results, discussion, abstract, and conclusion for I8 to I10 per the pre-registered outcome-to-claim rows. Lead with the protocol as the contribution.
+
+### O6. Pre-submission checks
+
+- Page and format compliance with the Access template
+- `check_typography.py` clean
+- `verify_varpart.py` exits 0 with V9 refreshed for every new number
+- Overlap check re-run against the OJ-CS body and supplement
+- Every reference verified against its primary source
+
+### Phase O acceptance
+
+Verifier exit 0; all checks clean; final PDF reviewed in the Claude Project before submission.
+
+---
+
 ## 14. Go/no-go (Mon 21 Sep)
 
 Submit on 24 Sep only if all of these hold:
