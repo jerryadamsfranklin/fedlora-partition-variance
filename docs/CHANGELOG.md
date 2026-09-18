@@ -29,3 +29,7 @@ Baseline test count at v0-import: 28 passed
   FFA upload same, download B-only 3,244,032).
 - D fix: shard by (het, data_seed, run_seed) group so all methods share a GPU;
   tl counts 27/24/24 and l3 15/15/15 for three shards.
+- G/H: LLaMA holdout eval uses float16 on CUDA and frees the tuned model before
+  loading the base (sequential load); TinyLlama holdouts remain float32.
+- H: `scripts/verify_varpart.py` (V1-V11); V4 scoped by het; V7 records eval_dtype;
+  V10 resume/retry census; V11 eval-script provenance vs freeze-v2.

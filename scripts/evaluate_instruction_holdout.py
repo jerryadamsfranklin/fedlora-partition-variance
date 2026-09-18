@@ -326,9 +326,25 @@ def main() -> None:
         default="analysis/instruction_holdout_table.csv",
         help="Consolidated output CSV path (repo-relative or absolute).",
     )
+    parser.add_argument(
+        "--torch-dtype",
+        default="auto",
+        choices=["auto", "float16", "float32", "bfloat16"],
+        help="Model dtype for holdout. auto: float16 on cuda, else float32.",
+    )
+    parser.add_argument(
+        "--output-root",
+        default=None,
+        help="Override downstream JSON root (default: results/downstream_instruction).",
+    )
     args = parser.parse_args()
 
     device = resolve_device(args.device)
+    output_root = (
+        Path(args.output_root).resolve()
+        if args.output_root
+        else DOWNSTREAM_INSTR_ROOT
+    )
     include_exps = set(args.include_exp or [])
     include_methods = set(args.include_method or [])
 
@@ -374,6 +390,10 @@ def main() -> None:
             print(f"[{i}/{len(specs)}] missing checkpoint: {spec.checkpoint}")
             continue
         out_path = out_path_for(spec)
+        if args.output_root:
+            # Mirror the usual layout under an alternate root (spot-checks).
+            rel = out_path.relative_to(DOWNSTREAM_INSTR_ROOT)
+            out_path = output_root / rel
         if args.skip_existing and out_path.is_file():
             print(f"[{i}/{len(specs)}] skip existing: {out_path}")
             with out_path.open("r", encoding="utf-8") as f:
@@ -409,8 +429,13 @@ def main() -> None:
             f"tag={spec.tag or '-'}"
         )
 
-        # float16 on CUDA: two float32 3B copies OOM on 24GB (holdout loads tuned then base).
-        eval_torch_dtype = "float16" if device == "cuda" else "float32"
+        # float16 on CUDA by default: two float32 3B copies OOM on 24GB unless sequential.
+        # --torch-dtype float32 keeps sequential load and forces full precision.
+        if args.torch_dtype == "auto":
+            eval_torch_dtype = "float16" if device == "cuda" else "float32"
+        else:
+            eval_torch_dtype = args.torch_dtype
+        print(f"eval_torch_dtype={eval_torch_dtype}")
 
         model = FederatedLoRAModel(
             model_name=base_model,
