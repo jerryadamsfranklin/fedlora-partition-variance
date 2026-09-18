@@ -266,17 +266,51 @@ def mixedlm_crosscheck(df: pd.DataFrame) -> Dict[str, Any]:
     }
 
 
+METHOD_PAIRS = [("fedit", "ffa_lora"), ("fedit", "flora"), ("ffa_lora", "flora")]
+
+
+def n_for_power(
+    delta: float,
+    sd: float,
+    *,
+    paired: bool,
+) -> Any:
+    if sd <= 0 or not math.isfinite(sd):
+        return "more than 1000"
+    es = abs(delta) / sd
+    if es <= 0:
+        return "more than 1000"
+    power_fn = TTestPower() if paired else TTestIndPower()
+    for cand in range(2, 1001):
+        if paired:
+            pow_ = power_fn.power(
+                effect_size=es, nobs=cand, alpha=0.05, alternative="two-sided"
+            )
+        else:
+            pow_ = power_fn.power(
+                effect_size=es,
+                nobs1=cand,
+                alpha=0.05,
+                ratio=1.0,
+                alternative="two-sided",
+            )
+        if pow_ >= 0.8:
+            return cand
+    return "more than 1000"
+
+
 def ranking_stability(
     df_a01: pd.DataFrame,
     k_values: Sequence[int],
     B: int = RANK_B,
     seed: int = RANK_SEED,
-) -> List[Dict[str, Any]]:
+) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
     methods = METHODS
     # reference ranking by mean heldout over all a01
     means = df_a01.groupby("method")["heldout_loss"].mean()
     ref_order = tuple(sorted(methods, key=lambda m: float(means[m])))
     ref_best = ref_order[0]
+    ref_gaps = {(a, b): float(means[a] - means[b]) for a, b in METHOD_PAIRS}
 
     partitions = sorted(df_a01["data_seed"].unique().tolist())
     seeds_by = {}
@@ -293,20 +327,37 @@ def ranking_stability(
         for r in df_a01.itertuples()
     }
 
-    rows = []
+    # Single-draw sign flips over all raw (partition, run_seed) cells
+    single_draw_flips: Dict[Tuple[str, str], Dict[str, int]] = {
+        (a, b): {"flips": 0, "n": 0} for a, b in METHOD_PAIRS
+    }
+    run_seeds_all = sorted(df_a01["run_seed"].unique().tolist())
+    for part in partitions:
+        for rs in run_seeds_all:
+            # only count cells that exist for all methods
+            if not all((int(part), meth, int(rs)) in loss_lookup for meth in methods):
+                continue
+            for a, b in METHOD_PAIRS:
+                gap = loss_lookup[(int(part), a, int(rs))] - loss_lookup[(int(part), b, int(rs))]
+                ref = ref_gaps[(a, b)]
+                single_draw_flips[(a, b)]["n"] += 1
+                if np.sign(gap) != np.sign(ref) and abs(ref) > 0:
+                    single_draw_flips[(a, b)]["flips"] += 1
+
+    agg_rows: List[Dict[str, Any]] = []
+    pair_rows: List[Dict[str, Any]] = []
     rng = np.random.default_rng(seed)
     for k in k_values:
         for protocol in ("paired", "unpaired"):
             best_flip = 0
             order_flip = 0
+            pair_flip_counts = {(a, b): 0 for a, b in METHOD_PAIRS}
             for _ in range(B):
-                method_means = {}
+                method_means: Dict[str, float] = {}
                 if protocol == "paired":
                     chosen_parts = rng.choice(partitions, size=k, replace=False)
-                    # shared (partition, run_seed) across methods
                     pairs = []
                     for part in chosen_parts:
-                        # run seeds are identical across methods in this design
                         seeds = seeds_by[(part, methods[0])]
                         rs = int(rng.choice(seeds))
                         pairs.append((int(part), rs))
@@ -327,9 +378,14 @@ def ranking_stability(
                     best_flip += 1
                 if order != ref_order:
                     order_flip += 1
+                for a, b in METHOD_PAIRS:
+                    gap = method_means[a] - method_means[b]
+                    ref = ref_gaps[(a, b)]
+                    if np.sign(gap) != np.sign(ref) and abs(ref) > 0:
+                        pair_flip_counts[(a, b)] += 1
             for name, count in (("best", best_flip), ("full_order", order_flip)):
                 lo, hi = wilson_ci(count, B)
-                rows.append(
+                agg_rows.append(
                     {
                         "k": k,
                         "protocol": protocol,
@@ -341,52 +397,66 @@ def ranking_stability(
                         "B": B,
                     }
                 )
-    return rows
+            for a, b in METHOD_PAIRS:
+                count = pair_flip_counts[(a, b)]
+                lo, hi = wilson_ci(count, B)
+                sd = single_draw_flips[(a, b)]
+                pair_rows.append(
+                    {
+                        "k": k,
+                        "protocol": protocol,
+                        "pair": f"{a}-{b}",
+                        "true_gap": ref_gaps[(a, b)],
+                        "prob_order_flip": count / B,
+                        "wilson_lo": lo,
+                        "wilson_hi": hi,
+                        "single_draw_sign_flips": sd["flips"],
+                        "single_draw_n": sd["n"],
+                        "B": B,
+                        "ref_order": ">".join(ref_order),
+                    }
+                )
+    return agg_rows, pair_rows
 
 
 def draws_needed(s2_p: float, s2_pm: float, s2_e: float) -> Tuple[List[Dict[str, Any]], float, float]:
     sd_pair = math.sqrt(2 * s2_pm + 2 * s2_e)
     sd_unpair = math.sqrt(s2_p + s2_pm + s2_e)
     rows = []
-    paired_power = TTestPower()
-    unpair_power = TTestIndPower()
     for delta in DELTAS:
-        # paired
-        if sd_pair <= 0:
-            n_pair = "more than 1000"
-        else:
-            es = delta / sd_pair
-            n = None
-            for cand in range(2, 1001):
-                pow_ = paired_power.power(effect_size=es, nobs=cand, alpha=0.05, alternative="two-sided")
-                if pow_ >= 0.8:
-                    n = cand
-                    break
-            n_pair = n if n is not None else "more than 1000"
-        # unpaired (n per method)
-        if sd_unpair <= 0:
-            n_un = "more than 1000"
-        else:
-            es = delta / sd_unpair
-            n = None
-            for cand in range(2, 1001):
-                pow_ = unpair_power.power(
-                    effect_size=es, nobs1=cand, alpha=0.05, ratio=1.0, alternative="two-sided"
-                )
-                if pow_ >= 0.8:
-                    n = cand
-                    break
-            n_un = n if n is not None else "more than 1000"
         rows.append(
             {
+                "kind": "preregistered_delta",
+                "pair": "",
                 "delta": delta,
-                "n_paired": n_pair,
-                "n_unpaired_per_method": n_un,
+                "n_paired": n_for_power(delta, sd_pair, paired=True),
+                "n_unpaired_per_method": n_for_power(delta, sd_unpair, paired=False),
                 "sd_pair_model": sd_pair,
                 "sd_unpair_model": sd_unpair,
             }
         )
     return rows, sd_pair, sd_unpair
+
+
+def observed_gap_power(
+    df_a01: pd.DataFrame, sd_pair: float, sd_unpair: float
+) -> List[Dict[str, Any]]:
+    means = df_a01.groupby("method")["heldout_loss"].mean()
+    rows = []
+    for a, b in METHOD_PAIRS:
+        gap = float(means[a] - means[b])
+        rows.append(
+            {
+                "kind": "observed_gap",
+                "pair": f"{a}-{b}",
+                "delta": gap,
+                "n_paired": n_for_power(gap, sd_pair, paired=True),
+                "n_unpaired_per_method": n_for_power(gap, sd_unpair, paired=False),
+                "sd_pair_model": sd_pair,
+                "sd_unpair_model": sd_unpair,
+            }
+        )
+    return rows
 
 
 def empirical_sd_pair(df_a01: pd.DataFrame) -> List[Dict[str, Any]]:
@@ -650,12 +720,15 @@ def analyze_model(df_all: pd.DataFrame, model: str, out_dir: Path) -> Dict[str, 
 
     # I3
     k_values = [1, 2, 3, 5] if model == "tl" else [1, 2, 3]
-    rank_rows = ranking_stability(a01, k_values)
+    rank_rows, pair_rows = ranking_stability(a01, k_values)
     for r in rank_rows:
+        r["model"] = model
+    for r in pair_rows:
         r["model"] = model
 
     # I4
     power_rows, sd_pair, sd_unpair = draws_needed(est["s2_P"], est["s2_PM"], est["s2_E"])
+    power_rows.extend(observed_gap_power(a01, sd_pair, sd_unpair))
     emp = empirical_sd_pair(a01)
     for r in power_rows:
         r["model"] = model
@@ -686,6 +759,7 @@ def analyze_model(df_all: pd.DataFrame, model: str, out_dir: Path) -> Dict[str, 
         "vc": vc_row,
         "iid": iid_row,
         "rank": rank_rows,
+        "pair_rank": pair_rows,
         "power": power_rows,
         "emp_sd": emp,
         "means": means,
@@ -753,7 +827,7 @@ def main() -> None:
 
     df = pd.read_csv(runs_path)
     results = {}
-    vc_rows, iid_rows, rank_rows, power_rows = [], [], [], []
+    vc_rows, iid_rows, rank_rows, pair_rows, power_rows = [], [], [], [], []
     emp_rows, mean_rows, test_rows = [], [], []
     part_rows, spear_rows, comm_rows = [], [], []
 
@@ -765,6 +839,7 @@ def main() -> None:
         vc_rows.append(res["vc"])
         iid_rows.append(res["iid"])
         rank_rows.extend(res["rank"])
+        pair_rows.extend(res["pair_rank"])
         power_rows.extend(res["power"])
         emp_rows.extend(res["emp_sd"])
         mean_rows.extend(res["means"])
@@ -776,6 +851,7 @@ def main() -> None:
     write_csv(out_dir / "variance_components.csv", vc_rows)
     write_csv(out_dir / "iid_noise.csv", iid_rows)
     write_csv(out_dir / "rank_flip.csv", rank_rows)
+    write_csv(out_dir / "rank_flip_pairs.csv", pair_rows)
     write_csv(out_dir / "power.csv", power_rows)
     write_csv(out_dir / "sd_pair_empirical.csv", emp_rows)
     write_csv(out_dir / "method_means.csv", mean_rows)
