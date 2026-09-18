@@ -6,33 +6,23 @@ Replace this file in the Claude Project whenever the state changes. Keep only on
 
 ## Current phase
 
-Phase L drafting on phase-l. Setup, Results, and Related Work reviewed with citation fixes applied. Discussion drafted; Introduction and Abstract next.
+Phase L drafting on phase-l. Setup, Results, Related Work done. Discussion revised; Introduction drafted for review; Abstract next.
 
 ## Done
 
 - Phases B to E on main; freeze-v1 at 0812fcf; freeze-v2 at 4f9fcf8
 - Phase F gates passed; Phase G complete (tl 75/75, l3 45/45); Phase H verifier exits 0
-- Phase I complete with pair-level flip and observed-gap power addendum; Phase J figures 505 pt with 8 pt fonts
+- Phase I complete with pair-level flip and observed-gap power addendum; Phase J figures 505 pt, 8 pt minimum fonts
 - Setup and Results drafted, verified, revised
-- Related Work revised: QQP not QNLI; FFA SD>gap positioning; NIID-Bench; FLoRA 1-3 rounds / 1444 MMLU / 10 clients; Hsu alpha-degradation; To our knowledge; bib corrections; source comments
-- Discussion drafted (~500 words): reporting recommendations, pairing limits, cross-scale, limitations, no method recommendation
-
-## Citation verification (18 Sep 2026)
-
-- Picard: 89.01% to 90.83% over 10,000 seeds = 1.82 pp; ImageNet about 0.5%. arXiv:2109.08203
-- Hsu et al.: Dirichlet alpha degradation (30.1% to 76.9% figure verified but not used in prose). arXiv:1909.06335 (preprint only)
-- LEAF: arXiv:1812.01097, 2018 (preprint)
-- Bouthillier et al.: MLSys vol 3, pages 747 to 769
-- NIID-Bench: Li, Diao, Chen, He, ICDE 2022, pages 965 to 978, DOI 10.1109/ICDE53745.2022.00077
-- FLoRA: NeurIPS 2024, vol 37, pages 22513 to 22533; Alpaca MMLU 29.85 vs 29.41; "marginal" and "at least 0.2"; 1 to 3 rounds, no seed replication; MMLU on 1,444 samples; 10 clients
-- FFA-LoRA: ICLR 2024; MNLI-m 85.05 +/- 1.1 vs 82.03 +/- 10.7; QQP 84.35 +/- 0.6 vs 83.51 +/- 3.3; 20 runs; 3-client fixed proportions; no Dolly
-- FedIT Dolly "synthetic shard" claim: cut (unverified)
+- Related Work drafted and corrected; all external citations verified against primary sources
+- Discussion revised: unpaired power correction (206 vs 416; 46 vs 57; interaction enters paired difference twice), limitations (two scales, 10 clients, 15 rounds, accumulation blocks), cross-scale confounds, wording
+- Introduction drafted (~600 words): FFA/FLoRA motivating practice, RQ1--RQ3, contributions, roadmap
 
 ## Next
 
-1. Draft Introduction and Abstract
+1. Review Introduction; then draft Abstract (180 to 200 words)
 2. Phase M: SAI template, anonymization, V9 claims list, overlap check, typography
-3. Destroy M3 after syncing what adapters exist; revoke the GitHub and HF tokens
+3. Destroy M3 after syncing available adapters; revoke the GitHub and HF tokens
 4. Jerry: JCR impact factor; attorney questions; AI disclosure version choice
 5. Mon 21 Sep go/no-go; target submission Tue 22 Sep
 
@@ -45,8 +35,10 @@ Phase L drafting on phase-l. Setup, Results, and Related Work reviewed with cita
 - RQ4 exploratory, uncorrected, not replicated at 3B
 - Communication as measured, within method; no efficiency ranking
 - No method recommendation
-- MixedLM cross-check is partial; moment estimates primary
-- Position the contribution against FFA-LoRA's across-run SDs: prior work reports run variance; this paper decomposes it into partition and training-seed components
+- MixedLM cross-check partial; moment estimates primary
+- Position against FFA-LoRA's across-run SDs: prior work reports run variance; this paper decomposes it
+- Cross-scale comparisons are confounded: TinyLlama-1.1B-Chat is instruction-tuned while LLaMA-3.2-3B is a base model, and base weights are float32 versus float16
+- Where the interaction dominates, pairing on partitions buys little
 
 ## Decisions made
 
