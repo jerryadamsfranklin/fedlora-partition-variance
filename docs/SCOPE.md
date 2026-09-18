@@ -1,5 +1,9 @@
 # Frozen scope
 
+The freeze-v1 block below is historical and unchanged. The freeze-v3 addendum follows; cross-reference `docs/DECISIONS.md` for the venue change and the 84-run addendum.
+
+## freeze-v1 design (unchanged)
+
 Copy this section verbatim into `docs/SCOPE.md` in Phase B. Nothing in it changes after the `freeze-v1` tag.
 
 **Research questions**
@@ -42,3 +46,15 @@ Copy this section verbatim into `docs/SCOPE.md` in Phase B. Nothing in it change
 4. Production runs only from the `freeze-v1` commit with a clean tracked tree.
 5. The analysis follows `docs/ANALYSIS_PLAN.md` exactly. Any deviation is logged in `docs/DECISIONS.md` with the reason, and reported in the paper.
 6. No em dashes and no curly quotes in any text file written for the manuscript.
+
+## freeze-v3 addendum (Phase N)
+
+Added after the freeze-v1 design completed, under tag `freeze-v3` / run tag `prod_v2`. The training path (`src/`, `scripts/run_experiment.py`) is unchanged from freeze-v1; holdout eval remains pinned at freeze-v2. See `DECISIONS.md` for venue change (IEEE Access) and adapter retention.
+
+| Element | Value |
+|---|---|
+| TinyLlama heterogeneity | Second Dirichlet level: alpha = 0.5 (`het: a05`), data seeds 2001 to 2010, run seeds 7001/7002 (60 runs) |
+| LLaMA partition extension | Same alpha 0.1 configs; additional data seeds 2007 to 2010, run seeds 7001/7002 (24 runs), pooling with prod_v1 for p = 10 |
+| **Addendum total** | **84** |
+
+Analysis extensions I8 to I10 and their outcome-to-claim rows are pre-registered in `docs/ANALYSIS_PLAN.md` before any prod_v2 analysis.
