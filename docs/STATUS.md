@@ -19,7 +19,7 @@ Every change request goes into docs/IMPLEMENTATION_PLAN.md as a numbered phase w
 - Partition preview: alpha 0.5 keeps 10 active clients in every seed; alpha 0.1 seeds 2007 to 2010 minimum 9 (seed 2008); both blocks 8 categories summing to 3000
 - V7 pooling: base_loss 2.120666 (tl, 75 holdouts) and 2.168946 (l3, 45 holdouts) within 1e-6
 - Phase O2b: gap claim narrowed; five new references verified (unlearning ICC, SAE benchmark, recommender seeds, JII non-IID assessment, FlowerTune)
-- Phase O2c: thirteen foundation/context/stats references added with home sentences; refs.bib at 27
+- Phase O2c: thirteen foundation/context/stats references added with home sentences; refs.bib at 27; O2c-5 corrected Cho (FLoRA bib venue) and LoRA (S2/DBLP ICLR confirmation)
 
 ## Next
 
