@@ -991,6 +991,20 @@ State it as three numbered steps in both the abstract and a dedicated discussion
 
 Add an explicit advance-over-the-state-of-the-art paragraph to the introduction (Access Stage 3 desk screening).
 
+### O2b. Novelty positioning (literature check, 18 Sep)
+
+Independent of prod_v2 GPU runs. Do not touch grids or `analysis/` while prod_v2 is in flight.
+
+**O2b-1.** Rewrite the Gap paragraph in `manuscript/sections/02_related_work.tex`. Narrow the claim: variance decomposition exists for other seed pairs and benchmark factors; federated work nearest to this paper aggregates across runs rather than decomposing the partition draw; the federated partition draw has not been treated as a variance component for LoRA instruction tuning.
+
+Cite: machine-unlearning training/unlearning-seed variance decomposition (arXiv:2510.26714); sparse-autoencoder benchmark variance shares and crowned-variant flips (arXiv:2605.18229); recommender study fixing the data partition and varying the training seed (arXiv:2609.02499); "A Thorough Assessment of the Non-IID Data Impact in Federated Learning" (2025); NIID-Bench as already cited.
+
+**O2b-2.** One sentence in Setup: why not an existing federated LLM benchmark (e.g. FlowerTune, arXiv:2506.02961): leaderboards report single-configuration results, the practice under study, so the design needs seeds under the authors' control.
+
+**O2b-3.** Verify each new reference against its primary source; add to `refs.bib`; report running count toward about 25.
+
+**O2b-4.** DECISIONS row narrowing the Gap claim.
+
 ### O3. IEEE Access template and de-anonymization
 
 Convert the manuscript to the IEEE Access template. Single-anonymized review: restore author name, affiliation "Independent Researcher", real email, and ORCID.
