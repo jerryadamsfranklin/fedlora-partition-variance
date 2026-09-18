@@ -6,7 +6,7 @@ Replace this file in the Claude Project whenever the state changes. Keep only on
 
 ## Current phase
 
-Phase I complete and verified independently against runs.csv. Pair-level flip addendum in progress on phase-i, then Phase J (figures and tables).
+Phase J complete on branch phase-j (Figs 1 to 3, Tabs 1 to 3). Phase L manuscript next.
 
 ## Done
 
@@ -14,7 +14,8 @@ Phase I complete and verified independently against runs.csv. Pair-level flip ad
 - Phase F gates passed on RTX 4090; Phase G complete (tl 75/75, l3 45/45)
 - Phase H: verifier exits 0 on V1 to V8 and V11; V10 census; 3 resumed cells all inside their group range
 - Float16 holdout kept: max |fp16-fp32| 4.1e-5
-- Phase I (I0 to I6) computed; I1, I2, I4, I5 and the I3 simulation reproduced independently in the Claude Project
+- Phase I (I0 to I6) computed and independently verified; pair-level flip addendum on main
+- Phase J: fig1_heldout_loss.pdf, fig2_rank_flip.pdf (with per-pair panel), fig3_draws_needed.pdf; tab1 to tab3 LaTeX from CSVs
 
 ## Results (verified)
 
@@ -31,11 +32,9 @@ Phase I complete and verified independently against runs.csv. Pair-level flip ad
 
 ## Next
 
-1. Pair-level flip table and observed-gap power rows; two DECISIONS entries; fast-forward phase-i into main
-2. Phase J: Figs 1 to 3, Tabs 1 to 3, LaTeX tables from CSVs only
-3. Sync remaining adapters from M3, then destroy it and revoke the GitHub and HF tokens
-4. Phase L manuscript: Setup and Related Work can be drafted now
-5. Jerry: JCR impact factor; attorney question on venue weight; AI disclosure version
+1. Phase L manuscript: Setup and Related Work can be drafted now; condition flip claim on effect size
+2. Destroy M3 when ready; revoke GitHub and HF tokens (adapter sync complete: 25/120 only)
+3. Jerry: JCR impact factor; attorney question on venue weight; AI disclosure version
 
 ## Framing rules for the manuscript
 
@@ -53,6 +52,7 @@ Phase I complete and verified independently against runs.csv. Pair-level flip ad
 - Two scales on RTX 4090, --workers 1; l3 holdout float16, tl float32
 - freeze-v2 for the eval-only change; --max-retries 5 because of host instability
 - Phase K literature audit dropped; motivate from cited published practice; no audit-derived counts in the paper
+- Pair-level flip breakdown reported alongside the pre-registered ranking-flip metric
 - Do not pay the IJACSA APC until the attorney confirms the venue counts
 
 ## Findings to carry into the paper
@@ -64,13 +64,13 @@ Phase I complete and verified independently against runs.csv. Pair-level flip ad
 - Hardware: one RTX 4090 per run; production median wall 27 min (tl), 51 min (l3)
 - Base loss 2.120666 (tl), 2.168946 (l3)
 - Three cells resumed from checkpoint, all within their group range
+- Adapter release: 25 of 120 final_adapter_state.pt recovered (M3 shard only; M1/M2 destroyed). Artifact statement = results and metadata, not full adapter weights
 
 ## Open items
 
-- Adapter weights: only 25 of 120 on the Mac; sync from M3 before destroying, and note in the artifact statement if incomplete
 - JCR impact factor; attorney questions (IJACSA weight, IEEE Early Access)
 - AI disclosure version choice
-- Revoke GitHub and HF tokens after M3 is destroyed
+- Destroy M3; revoke GitHub and HF tokens
 - Overlap check (Phase M): OLD is the local folder federated-lora-experiments
 - Local tooling: use .venv/bin/python
 
