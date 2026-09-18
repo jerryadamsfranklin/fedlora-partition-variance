@@ -90,6 +90,27 @@ For communication: `comm_mb_total` versus `active_clients` for each method. Repo
 | TinyLlama and LLaMA shares differ in direction (non-overlapping CIs) | Report the scale difference with the 6-partition caveat |
 | Overlapping CIs across scales | State that the data cannot distinguish the two scales |
 
+**I8. Variance components at alpha 0.5** (TinyLlama; `analysis/variance_components.csv` keyed by het, or `analysis/variance_components_a05.csv`)
+
+Design: m = 3 methods (fixed), p = 10 partitions (random), r = 2 seeds per cell. Same method-of-moments estimators and cluster bootstrap as I1 (B = 2000, seed 12345).
+
+**I9. Heterogeneity gradient** (`analysis/het_gradient.csv`)
+
+On TinyLlama, compare `share_P`, `share_PM`, and `share_E` between alpha 0.1 and alpha 0.5. Report each difference (alpha 0.5 minus alpha 0.1) with a cluster-bootstrap 95% CI (B = 2000, seed 12345).
+
+**I10. LLaMA at p = 10**
+
+Pool `prod_v1` and `prod_v2` LLaMA alpha 0.1 cells (data seeds 2001 to 2010). Recompute I1, I3, and I4 at p = 10. Report the original p = 6 analysis as a sensitivity analysis. State whether the partition main-effect interval still includes zero.
+
+**I8 to I10 outcome-to-claim table** (pre-registered)
+
+| Result | Claim the paper makes |
+|---|---|
+| Gradient present: at least one of the differences in `share_P`, `share_PM`, or `share_E` (alpha 0.5 minus alpha 0.1) has a bootstrap CI that excludes zero | Heterogeneity level changes the variance decomposition; report both alphas and the gradient |
+| Gradient absent: all three difference CIs include zero | Across alpha 0.1 to 0.5, variance shares do not detectably change at this design; the alpha 0.1 findings generalize over this range |
+| At p = 10, the LLaMA partition-share CI excludes zero | Partition main effect is identifiable at 3B with ten draws; update claims accordingly and keep p = 6 as sensitivity |
+| At p = 10, the LLaMA partition-share CI still includes zero | Keep the 3B story as interaction-dominated; p = 6 remains a sensitivity analysis |
+
 ---
 
 ## Phase J. Figures and tables

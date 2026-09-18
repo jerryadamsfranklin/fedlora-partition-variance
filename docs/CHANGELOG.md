@@ -41,3 +41,5 @@ Baseline test count at v0-import: 28 passed
 - J fix: figures at 505 pt full width with >=8 pt fonts; Tab1 LoRA alpha notation;
   Tab2 design p/m/r and no-truncation note; I7 claim wording for l3 near-tie.
 - L: draft Setup section (`manuscript/sections/03_setup.tex`).
+- N1-N4: TinyLlama alpha 0.5 configs (15 total); grids `tl_a05` and `l3_ext`;
+  ANALYSIS_PLAN I8 to I10; V12 training-path freeze check; tag `freeze-v3`.

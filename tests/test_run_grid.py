@@ -69,6 +69,43 @@ def test_l3_shard_run_counts_for_three_shards():
     assert counts == [15, 15, 15]
 
 
+def test_tl_a05_enumeration_count():
+    cells = enumerate_cells(load_grid(REPO / "grids" / "tl_a05.yaml"))
+    assert len(cells) == 60
+
+
+def test_l3_ext_enumeration_count():
+    cells = enumerate_cells(load_grid(REPO / "grids" / "l3_ext.yaml"))
+    assert len(cells) == 24
+
+
+@pytest.mark.parametrize("grid_name", ["tl_a05", "l3_ext"])
+@pytest.mark.parametrize("n", [1, 3, 6])
+def test_prod_v2_group_methods_share_shard(grid_name: str, n: int):
+    cells = enumerate_cells(load_grid(REPO / "grids" / f"{grid_name}.yaml"))
+    shard_by_cell = {}
+    for shard in range(n):
+        for cell in shard_cells(cells, shard, n):
+            shard_by_cell[cell.cell_id] = shard
+    by_group: dict[tuple, set[int]] = {}
+    for cell in cells:
+        by_group.setdefault(group_key(cell), set()).add(shard_by_cell[cell.cell_id])
+    for group, shards in by_group.items():
+        assert len(shards) == 1, f"group {group} split across shards {shards}"
+
+
+def test_tl_a05_shard_run_counts_for_three_shards():
+    cells = enumerate_cells(load_grid(REPO / "grids" / "tl_a05.yaml"))
+    counts = [len(shard_cells(cells, shard, 3)) for shard in range(3)]
+    assert counts == [21, 21, 18]
+
+
+def test_l3_ext_shard_run_counts_for_three_shards():
+    cells = enumerate_cells(load_grid(REPO / "grids" / "l3_ext.yaml"))
+    counts = [len(shard_cells(cells, shard, 3)) for shard in range(3)]
+    assert counts == [9, 9, 6]
+
+
 def test_first_three_a01_are_methods_for_2001_7001():
     cells = enumerate_cells(load_grid(REPO / "grids" / "tl.yaml"))
     a01 = [c for c in cells if c.het == "a01"]

@@ -1,0 +1,32 @@
+_inherit: ../base_config_4layers.yaml
+
+experiment:
+  name: "vp_tl_ffa_lora_a05"
+  description: "Partition-variance study | ffa_lora | TinyLlama-1.1B | Dolly-3k | alpha0.5"
+
+lora:
+  r: 16
+  lora_alpha: 32
+  lora_dropout: 0.1
+  target_modules: ["q_proj", "v_proj"]
+
+federated:
+  aggregation_method: "ffa_lora"
+  num_rounds: 15
+  num_clients: 10
+  clients_per_round: 10
+
+data:
+  dataset_name: "databricks/databricks-dolly-15k"
+  dataset_split: "train"
+  max_samples: 3000
+  partition_method: "label_skew"
+  partition_alpha: 0.5
+  label_column: "category"
+  require_label_column: true
+  eval_split: null
+  eval_samples: 300
+
+checkpointing:
+  save_every: 5
+  keep_last_n: 1
