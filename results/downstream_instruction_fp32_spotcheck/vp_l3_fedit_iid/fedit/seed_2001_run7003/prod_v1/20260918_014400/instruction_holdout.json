@@ -1,0 +1,48 @@
+{
+  "row": {
+    "exp_name": "vp_l3_fedit_iid",
+    "method": "fedit",
+    "seed": "2001_run7003",
+    "tag": "prod_v1",
+    "timestamp": "20260918_014400",
+    "checkpoint": "/workspace/fedlora-partition-variance/results/raw/vp_l3_fedit_iid/fedit/seed_2001_run7003/prod_v1/20260918_014400/final_adapter_state.pt",
+    "dataset": "databricks/databricks-dolly-15k",
+    "split": "train",
+    "heldout_start": 3000,
+    "heldout_examples": 500,
+    "max_seq_length": 256,
+    "base_model": "meta-llama/Llama-3.2-3B",
+    "target_modules": "q_proj,v_proj",
+    "lora_r": 16,
+    "lora_alpha": 32,
+    "device": "cuda",
+    "formatter_version": "v2-dolly-context",
+    "eval_dtype": "torch.float32",
+    "base_loss": 2.16897170565688,
+    "base_perplexity": 8.749282575677276,
+    "tuned_loss": 1.7898428486410276,
+    "tuned_perplexity": 5.988511289744052,
+    "delta_loss_tuned_minus_base": -0.3791288570158524,
+    "delta_ppl_tuned_minus_base": -2.760771285933224
+  },
+  "base_metrics": {
+    "loss": 2.16897170565688,
+    "perplexity": 8.749282575677276,
+    "tokens": 62698.0
+  },
+  "tuned_metrics": {
+    "loss": 1.7898428486410276,
+    "perplexity": 5.988511289744052,
+    "tokens": 62698.0
+  },
+  "meta": {
+    "checkpoint": "/workspace/fedlora-partition-variance/results/raw/vp_l3_fedit_iid/fedit/seed_2001_run7003/prod_v1/20260918_014400/final_adapter_state.pt",
+    "dataset": "databricks/databricks-dolly-15k",
+    "split": "train",
+    "heldout_start": 3000,
+    "heldout_examples": 500,
+    "max_seq_length": 256,
+    "formatter_version": "v2-dolly-context",
+    "eval_dtype": "torch.float32"
+  }
+}
