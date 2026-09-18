@@ -28,11 +28,12 @@ The Partition-Draw Reporting Protocol (no acronym). Three numbered steps in abst
 - N5b: partition preview appended (alpha 0.5 seeds 2001-2010, min active 10; alpha 0.1 seeds 2007-2010, min active 9); both PASS
 - N5c: V7 cross-tag base_loss pooling vs 2.120666 (tl) and 2.168946 (l3)
 - N5d: DECISIONS + PROVENANCE cite ed80372 for float32 spot-check CLI
+- O2b: Gap paragraph narrowed; FlowerTune setup sentence; five refs verified (refs.bib 14/~25); DECISIONS row
 
 ## Next
 
 1. Jerry: regenerate tokens; rent 3x RTX 4090 (exact name gate); follow PHASE_N_RUNBOOK
-2. Cursor: Mac sync every 2-3 hours after launch starts
+2. Cursor: Mac sync every 2-3 hours after launch starts; first-cell check (freeze-v3, gpu_name, base_loss 2.120666)
 3. N6 already logged in DECISIONS; N7 after runs
 
 ## Open items
