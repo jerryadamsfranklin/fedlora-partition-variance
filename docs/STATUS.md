@@ -1,12 +1,12 @@
 # STATUS
 
-Last updated: 17 Sep 2026
+Last updated: 18 Sep 2026
 
 Replace this file in the Claude Project whenever the state changes. Keep only one copy.
 
 ## Current phase
 
-Phase F complete (gates passed). Phase G started: `tl` shards 0 and 1 on two RTX 4090s (`--workers 1`). Shard 2 and LLaMA grid not started yet. Freeze tag `freeze-v1` at 0812fcf.
+**Phase G complete.** Production grids closed: TinyLlama **75/75**, LLaMA-3.2-3B **45/45** (`grid_status.py` on Mac after final M3 sync). Freeze tag `freeze-v1` at `0812fcf`. Report: `docs/phase_g_report.md`.
 
 ## Done
 
@@ -14,14 +14,14 @@ Phase F complete (gates passed). Phase G started: `tl` shards 0 and 1 on two RTX
 - Task 01 complete: v0-import (9cbc63e) verified clean
 - Phases B–E on main; `freeze-v1` at 0812fcf
 - Phase F timing on Vast RTX 4090s: F1 29.3 min; F2 65.2 min / ~9 GB peak; F3 concurrency ratio 1.06× → workers 1; bytes match (TL 9011200, L3 9175040). Report: `docs/phase_f_report.md`
-- Phase G launched: tl shard 0 (27 cells) and shard 1 (24 cells), `--production --workers 1`
+- Phase G production: tl 75 + l3 45 on 3× RTX 4090 (`--production --workers 1`); all `prod_v1`; Dolly holdouts present. Report: `docs/phase_g_report.md`
 
 ## Next
 
-1. Add Vast credits; keep both instances running; rent a third 4090 for `tl` shard 2
-2. Sync results to Mac every few hours; monitor `grid_status.py`
-3. After `tl` complete (or in parallel with spare GPUs), launch `grids/l3.yaml` on identical RTX 4090 `gpu_name`
-4. Phase H verification when grids complete
+1. Phase H: implement and run `scripts/verify_varpart.py` (V1–V9); must exit 0
+2. Phase I analysis (pre-registered) only after H passes
+3. Destroy remaining Vast instance (M3 `1.193.139.139:39647`) after any personal backup sync
+4. Phase J–M per plan (figures, lit audit, manuscript)
 
 ## Decisions made
 
@@ -30,6 +30,7 @@ Phase F complete (gates passed). Phase G started: `tl` shards 0 and 1 on two RTX
 - GPUs: Vast.ai on-demand RTX 4090; identical GPU model within a grid
 - Phase F: `--workers 1` for TinyLlama (F3 throughput 1.06× &lt; 1.6×)
 - Freeze authorized 16 Sep 2026; freeze-v1 tagged
+- L3 holdout eval uses float16 (and sequential model load) to fit 24 GB; training provenance remained freeze-v1 / dirty=false (see phase_g_report)
 
 ## Findings to carry into the paper
 
@@ -40,20 +41,20 @@ Phase F complete (gates passed). Phase G started: `tl` shards 0 and 1 on two RTX
 - client.py steps only on complete accumulation blocks (no drop_last)
 - As implemented, FFA-LoRA uploads A and B and downloads B only; state this in the setup section
 - RTX 4090 TinyLlama ~29 min/run; LLaMA-3.2-3B ~65 min/run; peak ~9 GB for 3B flora timing
+- Production medians: tl wall ~27 min; l3 wall ~51 min (run_meta); holdout dtype tl fp32 / l3 fp16
 
 ## Open items
 
-- Vast credits for full Phase G (~40 GPU-hours tl + ~51 l3 including holdout)
-- Third 4090 for tl shard 2
+- Phase H verifier not written yet
 - Attorney / AI disclosure / Phase M overlap path
-- Held-out eval adds ~2–3 GPU-min per production cell
+- Record L3 holdout dtype decision formally in `DECISIONS.md` if required
 
 ## Run progress
 
 | Grid | Complete | Failed | Total | Notes |
 |---|---|---|---|---|
-| tl | (in progress) | 0 | 75 | shards 0+1 running; shard 2 pending |
-| l3 | 0 | 0 | 45 | after tl capacity / third+ GPUs |
+| tl | **75** | 0 | 75 | G acceptance PASS |
+| l3 | **45** | 0 | 45 | G acceptance PASS |
 
 ## Measured constants
 
@@ -62,7 +63,7 @@ Phase F complete (gates passed). Phase G started: `tl` shards 0 and 1 on two RTX
 | TinyLlama per-client upload, FedIT / FLoRA | 9,011,200 bytes (Phase D + F1 confirm) |
 | TinyLlama per-client upload, FFA-LoRA | 9,011,200 upload; 3,244,032 download (Phase D) |
 | LLaMA-3B per-client upload, FedIT / FLoRA | 9,175,040 bytes (measured F2) |
-| TinyLlama minutes per run (4090) | ~29.3 train-only (F1); use ~32 with holdout |
-| LLaMA-3B minutes per run, and GPU used | ~65.2 train-only (F2) on RTX 4090; peak ~9 GB |
+| TinyLlama minutes per run (4090) | ~29.3 train-only (F1); production median wall ~27 min |
+| LLaMA-3B minutes per run, and GPU used | ~65.2 train-only (F2) on RTX 4090; peak ~9 GB; production median wall ~51 min |
 | Workers per GPU (TinyLlama) | **1** (F3 gate) |
 | Mac smoke cell (1 round, 300 samples, incl. holdout) | about 280 s; holdout-only about 136 s |

@@ -409,12 +409,16 @@ def main() -> None:
             f"tag={spec.tag or '-'}"
         )
 
+        # float16 on CUDA: two float32 3B copies OOM on 24GB (holdout loads tuned then base).
+        eval_torch_dtype = "float16" if device == "cuda" else "float32"
+
         model = FederatedLoRAModel(
             model_name=base_model,
             lora_r=lora_r,
             lora_alpha=lora_alpha,
             target_modules=list(target_modules),
             device=device,
+            torch_dtype=eval_torch_dtype,
         )
         model.load_model()
         loader = build_eval_loader(
@@ -444,12 +448,17 @@ def main() -> None:
             args.eval_batch_size,
         )
         if base_key not in base_cache:
+            # Never keep two full models resident; free tuned before base load.
+            del model
+            if device == "cuda" and torch.cuda.is_available():
+                torch.cuda.empty_cache()
             base_model_obj = FederatedLoRAModel(
                 model_name=base_model,
                 lora_r=lora_r,
                 lora_alpha=lora_alpha,
                 target_modules=list(target_modules),
                 device=device,
+                torch_dtype=eval_torch_dtype,
             )
             base_model_obj.load_model()
             base_loader = build_eval_loader(
@@ -461,7 +470,12 @@ def main() -> None:
                 max_seq_length=max_seq_length,
                 eval_batch_size=args.eval_batch_size,
             )
-            base_cache[base_key] = evaluate_loss(base_model_obj.model, base_loader, device=device)
+            base_cache[base_key] = evaluate_loss(
+                base_model_obj.model, base_loader, device=device
+            )
+            del base_model_obj
+            if device == "cuda" and torch.cuda.is_available():
+                torch.cuda.empty_cache()
         base = base_cache[base_key]
 
         row = {
