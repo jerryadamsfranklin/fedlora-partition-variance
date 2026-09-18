@@ -991,19 +991,17 @@ State it as three numbered steps in both the abstract and a dedicated discussion
 
 Add an explicit advance-over-the-state-of-the-art paragraph to the introduction (Access Stage 3 desk screening).
 
-### O2b. Novelty positioning (literature check, 18 Sep)
+### O2b. Novelty positioning (literature check, 18 Sep) — DONE 18 Sep 2026
 
 Independent of prod_v2 GPU runs. Do not touch grids or `analysis/` while prod_v2 is in flight.
 
-**O2b-1.** Rewrite the Gap paragraph in `manuscript/sections/02_related_work.tex`. Narrow the claim: variance decomposition exists for other seed pairs and benchmark factors; federated work nearest to this paper aggregates across runs rather than decomposing the partition draw; the federated partition draw has not been treated as a variance component for LoRA instruction tuning.
+**O2b-1.** DONE. Rewrote Gap in `02_related_work.tex`: cites adjacent variance decompositions (arXiv:2510.26714, 2605.18229, 2609.02499); FL nearest work aggregates across seeds (Jimenez-Gutierrez et al. 2025; NIID-Bench); concludes federated partition draw not treated as variance component for LoRA instruction tuning.
 
-Cite: machine-unlearning training/unlearning-seed variance decomposition (arXiv:2510.26714); sparse-autoencoder benchmark variance shares and crowned-variant flips (arXiv:2605.18229); recommender study fixing the data partition and varying the training seed (arXiv:2609.02499); "A Thorough Assessment of the Non-IID Data Impact in Federated Learning" (2025); NIID-Bench as already cited.
+**O2b-2.** DONE. Setup sentence on FlowerTune (arXiv:2506.02961): leaderboards report single-configuration results, so design needs author-controlled seeds.
 
-**O2b-2.** One sentence in Setup: why not an existing federated LLM benchmark (e.g. FlowerTune, arXiv:2506.02961): leaderboards report single-configuration results, the practice under study, so the design needs seeds under the authors' control.
+**O2b-3.** DONE. Five new refs verified against primary sources; `refs.bib` count 14 (target ~25).
 
-**O2b-3.** Verify each new reference against its primary source; add to `refs.bib`; report running count toward about 25.
-
-**O2b-4.** DECISIONS row narrowing the Gap claim.
+**O2b-4.** DONE. DECISIONS row 18 Sep 2026 narrowing Gap claim.
 
 ### O3. IEEE Access template and de-anonymization
 
