@@ -6,7 +6,7 @@ Replace this file in the Claude Project whenever the state changes. Keep only on
 
 ## Current phase
 
-Phase M on phase-m. Template verified against thesai.org ZIP (letterpaper confirmed), header fixed, step 6 reference check done. Awaiting PDF review before fast-forward and tag.
+Phase M complete. Manuscript tagged ijacsa-submitted-v1 on main. Awaiting attorney go/no-go, cover letter, signed copyright, email/ORCID, then thesai.org submission.
 
 ## Done
 
@@ -14,22 +14,22 @@ Phase M on phase-m. Template verified against thesai.org ZIP (letterpaper confir
 - Phase F gates passed; Phase G complete (tl 75/75, l3 45/45); Phase H verifier exits 0
 - Phase I complete; Phase J figures 505 pt, 8 pt minimum fonts
 - Phase L complete and merged into main (8031a74)
-- Phase M steps 1 to 5: SAI template assembly (7 pages), V9 complete (25 claims), verifier exit 0, seven review fixes, anonymization (author and title metadata empty, GenAI declaration version b, no username paths in figures), typography clean across 12 files, overlap 0.082% vs OJ-CS body and 0.000% vs supplement (target under 5%)
-- IJACSA format and submission requirements filed as docs/IJACSA_FORMAT_AND_SUBMISSION.md
-- Official LaTeX ZIP and copyright PDF stored under manuscript/template/; paper size matches (`conference, letterpaper`); left header now "(IJACSA) ..."; rebuild still 7 pages
-- Phase M checklist adds signed copyright form and non-Gmail email plus ORCID
-- Step 6: nine refs verified against primary sources; FFA-LoRA OpenReview ID corrected (DPIGDbSsbV to NLPzL6HWNl)
+- Phase M: SAI template (7 pages), V9 (25 claims), verifier exit 0, anonymization, typography clean, overlap 0.082%/0.000%, template ZIP pinned, refs verified, four PDF review fixes + FedIT author list matched to ICASSP
+- Tagged ijacsa-submitted-v1
 
 ## Next
 
-1. Review the final PDF here, then fast-forward phase-m into main and tag ijacsa-submitted-v1
-2. Mon 21 Sep go/no-go; target submission Tue 22 Sep
+1. Attorney confirmation that IJACSA carries weight (before APC)
+2. Cover letter: research domain + arXiv:2609.13512 related-work statement
+3. Submission form: signed copyright, ORCID, non-Gmail email (jerryadamsfranklin.com)
+4. Destroy M3; revoke GitHub and HF tokens
+5. Mon 21 Sep go/no-go; target submission Tue 22 Sep
 
 ## Blocking before submission
 
 - Attorney confirmation that an IJACSA publication carries weight, before the GBP 800 APC
-- Signed IJACSA copyright form (blank copy in manuscript/template/IJACSA_Copyright.pdf; complete and sign before send)
-- Real author email for the submission form; prefer an address on jerryadamsfranklin.com over Gmail, since IJACSA discourages Gmail; ORCID iD ready
+- Signed IJACSA copyright form
+- Real author email (prefer jerryadamsfranklin.com); ORCID iD ready
 - Affiliation stays "Independent Researcher"
 
 ## Framing rules for the manuscript
@@ -55,6 +55,7 @@ Phase M on phase-m. Template verified against thesai.org ZIP (letterpaper confir
 - Release statement covers results and metadata, not adapter weights
 - Byte accounting cites arXiv:2609.13512 in the third person, without naming the author in the text
 - Generative AI declaration: plan version (b)
+- FedIT bib matches ICASSP proceedings author list (eight authors; Zhou omitted)
 
 ## Open items
 
