@@ -44,3 +44,4 @@ Baseline test count at v0-import: 28 passed
 - N1-N4: TinyLlama alpha 0.5 configs (15 total); grids `tl_a05` and `l3_ext`;
   ANALYSIS_PLAN I8 to I10; V12 training-path freeze check; tag `freeze-v3`.
   Holdout eval restored to the freeze-v2 blob so V12 can pin prod_v2 eval.
+- N5 runbook: `docs/PHASE_N_RUNBOOK.md` (RTX 4090 name gate, stagger, tl then l3).
