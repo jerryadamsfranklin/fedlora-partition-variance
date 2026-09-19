@@ -889,7 +889,7 @@ def v11() -> CheckResult:
 
 
 def v12() -> CheckResult:
-    """Training path unchanged freeze-v1..freeze-v3; eval path pinned at freeze-v2."""
+    """Training path unchanged freeze-v1..freeze-v3; eval pinned at freeze-v2 until freeze-v3.1 TL fp32 hotfix."""
     r = CheckResult("V12")
     try:
         subprocess.check_output(
@@ -930,6 +930,37 @@ def v12() -> CheckResult:
             "holdout eval unchanged freeze-v2..freeze-v3 "
             "(evaluate_instruction_holdout.py)"
         )
+
+    # Optional freeze-v3.1: TinyLlama CUDA holdout stays float32 (V7 pooling).
+    try:
+        subprocess.check_output(
+            ["git", "rev-parse", "--verify", "freeze-v3.1"],
+            cwd=str(REPO_ROOT),
+            stderr=subprocess.DEVNULL,
+        )
+        has_v31 = True
+    except subprocess.CalledProcessError:
+        has_v31 = False
+    if has_v31:
+        train_v31 = _diff(
+            "freeze-v3", "freeze-v3.1", "src", "scripts/run_experiment.py"
+        )
+        if train_v31:
+            r.fail(
+                "training path changed freeze-v3..freeze-v3.1; not allowed:\n"
+                f"{train_v31}"
+            )
+        eval_v31 = _diff(
+            "freeze-v3",
+            "freeze-v3.1",
+            "scripts/evaluate_instruction_holdout.py",
+        )
+        if not eval_v31:
+            r.fail("freeze-v3.1 exists but evaluate_instruction_holdout.py unchanged")
+        else:
+            r.note(
+                "freeze-v3.1 hotfixes TinyLlama holdout dtype (float32) vs freeze-v3"
+            )
     return r
 
 
