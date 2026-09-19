@@ -954,7 +954,23 @@ Acceptance: re-holdout of the first TL adapter yields `base_loss` within 1e-6 of
 
 `grid_status` shows 60/60 and 24/24 complete; 84 local adapters present; tokens revoked after destroy.
 
-### N6. DECISIONS.md entries
+### N6. Post-run base_loss diagnosis, holdout repair, and I8–I10 (19 Sep)
+
+Blocking before destroy / analysis:
+
+**N6-1.** Diff failing LLaMA holdout JSON vs a passing prod_v2 peer (eval fields) and run_meta hardware.
+
+**N6-2.** On the surviving 4090 (torch 2.2.0+cu121), re-run the named cell's holdout twice under `freeze-v3.1` to scratch tags. If both match 2.1689459 within 1e-6, repair; if the two re-runs differ, STOP (nondeterminism). Extend repair to every prod_v2 LLaMA cell with the anomalous base_loss on non-2.2.0 stacks. Re-run verifier; V7 must PASS.
+
+**N6-3.** Rebuild `analysis/runs.csv` over prod_v1+prod_v2 (204 rows). Run I8, I9, I10; write `variance_components_a05.csv`, `het_gradient.csv`, `variance_components_l3_p10.csv`, and `i8_i10_selected_claims.txt`.
+
+**N6-4.** DECISIONS rows for freeze-v3.1 mid-grid counts and the LLaMA base_loss resolution.
+
+**N6-5.** Phase N report: retry census (tl_a05 38 failed attempts; l3_ext 19; all recovered) with causes from logs.
+
+Acceptance: V7 PASS; 204-row runs.csv; I8–I10 artifacts present; DECISIONS + phase_n_report updated.
+
+### N6-decisions (earlier). DECISIONS.md entries
 
 Append three rows (do not edit past rows):
 

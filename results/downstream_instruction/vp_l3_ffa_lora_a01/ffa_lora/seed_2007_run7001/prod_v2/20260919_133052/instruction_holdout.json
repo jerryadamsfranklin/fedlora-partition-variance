@@ -18,21 +18,21 @@
     "device": "cuda",
     "formatter_version": "v2-dolly-context",
     "eval_dtype": "torch.float16",
-    "base_loss": 2.1688484129405574,
-    "base_perplexity": 8.748203919359247,
-    "tuned_loss": 1.8316026293526784,
-    "tuned_perplexity": 6.243885278165545,
-    "delta_loss_tuned_minus_base": -0.33724578358787904,
-    "delta_ppl_tuned_minus_base": -2.5043186411937013
+    "base_loss": 2.168945952316856,
+    "base_perplexity": 8.749057255329525,
+    "tuned_loss": 1.831651556076032,
+    "tuned_perplexity": 6.244190778486706,
+    "delta_loss_tuned_minus_base": -0.3372943962408239,
+    "delta_ppl_tuned_minus_base": -2.5048664768428193
   },
   "base_metrics": {
-    "loss": 2.1688484129405574,
-    "perplexity": 8.748203919359247,
+    "loss": 2.168945952316856,
+    "perplexity": 8.749057255329525,
     "tokens": 62698.0
   },
   "tuned_metrics": {
-    "loss": 1.8316026293526784,
-    "perplexity": 6.243885278165545,
+    "loss": 1.831651556076032,
+    "perplexity": 6.244190778486706,
     "tokens": 62698.0
   },
   "meta": {
