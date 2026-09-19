@@ -1,0 +1,48 @@
+{
+  "row": {
+    "exp_name": "vp_tl_ffa_lora_a05",
+    "method": "ffa_lora",
+    "seed": "2007_run7002",
+    "tag": "prod_v2",
+    "timestamp": "20260919_092349",
+    "checkpoint": "/workspace/fedlora-partition-variance/results/raw/vp_tl_ffa_lora_a05/ffa_lora/seed_2007_run7002/prod_v2/20260919_092349/final_adapter_state.pt",
+    "dataset": "databricks/databricks-dolly-15k",
+    "split": "train",
+    "heldout_start": 3000,
+    "heldout_examples": 500,
+    "max_seq_length": 256,
+    "base_model": "TinyLlama/TinyLlama-1.1B-Chat-v1.0",
+    "target_modules": "q_proj,v_proj",
+    "lora_r": 16,
+    "lora_alpha": 32,
+    "device": "cuda",
+    "formatter_version": "v2-dolly-context",
+    "eval_dtype": "torch.float32",
+    "base_loss": 2.1206655930514597,
+    "base_perplexity": 8.33668448072548,
+    "tuned_loss": 1.7202107459849596,
+    "tuned_perplexity": 5.585705505251767,
+    "delta_loss_tuned_minus_base": -0.40045484706650014,
+    "delta_ppl_tuned_minus_base": -2.750978975473714
+  },
+  "base_metrics": {
+    "loss": 2.1206655930514597,
+    "perplexity": 8.33668448072548,
+    "tokens": 70268.0
+  },
+  "tuned_metrics": {
+    "loss": 1.7202107459849596,
+    "perplexity": 5.585705505251767,
+    "tokens": 70268.0
+  },
+  "meta": {
+    "checkpoint": "/workspace/fedlora-partition-variance/results/raw/vp_tl_ffa_lora_a05/ffa_lora/seed_2007_run7002/prod_v2/20260919_092349/final_adapter_state.pt",
+    "dataset": "databricks/databricks-dolly-15k",
+    "split": "train",
+    "heldout_start": 3000,
+    "heldout_examples": 500,
+    "max_seq_length": 256,
+    "formatter_version": "v2-dolly-context",
+    "eval_dtype": "torch.float32"
+  }
+}

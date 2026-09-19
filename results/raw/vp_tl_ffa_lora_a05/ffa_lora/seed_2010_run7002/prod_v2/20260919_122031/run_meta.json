@@ -1,0 +1,41 @@
+{
+  "experiment": "vp_tl_ffa_lora_a05",
+  "method": "ffa_lora",
+  "seed": 2010,
+  "data_seed": 2010,
+  "run_seed": 7002,
+  "timestamp": "20260919_122031",
+  "device": "cuda",
+  "output_dir": "results/raw/vp_tl_ffa_lora_a05/ffa_lora/seed_2010_run7002/prod_v2/20260919_122031",
+  "git_commit": "7cff2a4de03bb7e0ab4fecfb3601e278aabe7301",
+  "git_branch": "HEAD",
+  "git_dirty": true,
+  "git_dirty_tracked": false,
+  "git_describe": "freeze-v3.1",
+  "hardware": {
+    "torch": "2.2.0+cu121",
+    "transformers": "4.45.2",
+    "peft": "0.10.0",
+    "datasets": "2.18.0",
+    "hostname_hash": "3ad0c51ee34f",
+    "cuda_version": "12.1",
+    "gpu_name": "NVIDIA GeForce RTX 4090",
+    "gpu_count": 1,
+    "gpu_mem_total_bytes": 25241190400,
+    "peak_mem_allocated_bytes": 7694808576,
+    "nvidia_smi": "NVIDIA GeForce RTX 4090, 580.173.02, 24564 MiB"
+  },
+  "wall_clock_s": 1642.954307683045,
+  "python": "3.12.14",
+  "platform": "Linux-5.15.0-191-generic-x86_64-with-glibc2.39",
+  "overrides": {
+    "lora_r": null,
+    "num_clients": null,
+    "switch_threshold": null,
+    "data_seed": 2010,
+    "run_seed": 7002,
+    "device": "cuda",
+    "save_every": 5,
+    "resume": null
+  }
+}
