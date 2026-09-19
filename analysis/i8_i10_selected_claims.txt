@@ -1,0 +1,2 @@
+I8/I9: Gradient absent — all three difference CIs include zero; alpha 0.1 findings generalize over this range.
+I10: At p=10, LLaMA partition-share CI still includes zero; keep interaction-dominated 3B story; p=6 remains sensitivity.
