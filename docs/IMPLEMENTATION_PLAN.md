@@ -938,6 +938,14 @@ Extend V7: `base_loss` must be identical within 1e-6 across **all** runs of a mo
 
 Add to `DECISIONS.md` and `docs/PROVENANCE.md`: the holdout spot-check CLI was reverted to the freeze-v2 blob so prod_v2 pins the prod_v1 eval path; the code that produced the float32 spot-check (max |fp16-fp32| tuned_loss 4.1e-5) remains at commit `ed80372`. The manuscript limitations paragraph should cite that commit.
 
+#### N5e. TinyLlama holdout dtype hotfix (18 Sep, during prod_v2 launch)
+
+freeze-v2 CUDA default force-float16 applied to TinyLlama as well, so the first prod_v2 TL cell recorded `base_loss≈2.120368` (fp16) instead of `2.120666` (fp32). That breaks V7 pooling with prod_v1.
+
+Fix: `evaluate_instruction_holdout.py` uses float16 on CUDA only for Llama-3.2 / 3B-class models; TinyLlama stays float32. Tag `freeze-v3.1`; `tl_a05` / `l3_ext` `freeze_tag` point at it. Re-holdout any completed TL adapters before continuing the grid.
+
+Acceptance: re-holdout of the first TL adapter yields `base_loss` within 1e-6 of 2.120666 and `eval_dtype=torch.float32`.
+
 #### N5 acceptance (pre-launch)
 
 - N5a to N5d complete; production_guard and freeze_tag tests green; V12 empty diffs; partition preview appended and stop conditions pass; V7 extended; DECISIONS/PROVENANCE updated; runbook current.

@@ -409,8 +409,13 @@ def main() -> None:
             f"tag={spec.tag or '-'}"
         )
 
-        # float16 on CUDA: two float32 3B copies OOM on 24GB (holdout loads tuned then base).
-        eval_torch_dtype = "float16" if device == "cuda" else "float32"
+        # float16 on CUDA only for 3B-class models: two float32 3B copies OOM on 24GB
+        # (holdout loads tuned then base). TinyLlama stays float32 so base_loss pools with prod_v1.
+        base_l = str(base_model).lower()
+        needs_fp16 = device == "cuda" and (
+            "llama-3.2" in base_l or "llama3.2" in base_l or "3b" in base_l
+        )
+        eval_torch_dtype = "float16" if needs_fp16 else "float32"
 
         model = FederatedLoRAModel(
             model_name=base_model,
