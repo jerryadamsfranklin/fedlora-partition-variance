@@ -25,7 +25,7 @@ ffa_slope_tl,FFA-LoRA TinyLlama MB/client slope 98.3125,analysis,analysis/comm.c
 n_runs_204,204 production cells in runs.csv,analysis,analysis/runs.csv,row count,204
 design_204_setup,Setup design statement: 204 production cells,analysis,manuscript/sections/03_setup.tex;,analysis/runs.csv,204
 resumed_cells_9,Nine cells resumed from checkpoint,analysis,,run_meta overrides.resume across tl/l3/tl_a05/l3_ext,9
-zenodo_availability_dois,Availability statement cites Zenodo concept and v0.9.1 version DOIs,analysis,manuscript/main.tex,Declarations; Zenodo record 22861075,"[""10.5281/zenodo.22861074"",""10.5281/zenodo.22861075""]"
+zenodo_availability_dois,Availability statement cites Zenodo concept and v0.9.2 version DOIs,analysis,manuscript/main.tex,Declarations; Zenodo record 22862931,"[""10.5281/zenodo.22861074"",""10.5281/zenodo.22862931""]"
 ext_ffa_mnli,FFA-LoRA non-private MNLI-m 85.05+/-1.1 vs LoRA 82.03+/-10.7,external-verified,,Sun et al. ICLR 2024 Table 1 (external-verified),"[85.05,82.03,10.7]"
 ext_ffa_qqp,FFA-LoRA non-private QQP 84.35+/-0.6 vs LoRA 83.51+/-3.3,external-verified,,Sun et al. ICLR 2024 Table 1 (external-verified),"[84.35,83.51]"
 ext_flora_alpaca,FLoRA vs FedIT Llama Alpaca MMLU 29.85 vs 29.41,external-verified,,Wang et al. NeurIPS 2024 Table 1 (external-verified),"[29.85,29.41]"

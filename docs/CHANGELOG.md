@@ -62,3 +62,8 @@ Baseline test count at v0-import: 28 passed
   per-het rows (`het` column) and constant-active origin slopes. Fresh
   regeneration now reproduces the committed archive at manuscript precision.
   Document verified environment and numerical reproducibility in REPRODUCE.
+- O13: availability statement points at submitted snapshot `v0.9.2`
+  (10.5281/zenodo.22862931); V9 claim updated. Earlier tags
+  `ieee-access-submitted` / `ieee-access-submitted-v1` and Zenodo `v0.9.1`
+  predate this pointer fix (and the O12 analysis fixes); tip tagged
+  `ieee-access-submitted-final`. No new Zenodo release (code unchanged).
