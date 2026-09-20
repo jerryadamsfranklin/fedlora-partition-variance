@@ -1,0 +1,25 @@
+N7-1 Stack census
+Total run_meta rows: 204
+By torch: {'2.2.0+cu121': 150, '2.11.0+cu128': 24, '2.14.0+cu130': 30}
+
+Counts by model, het, tag, torch:
+  ('l3', 'a01', 'prod_v1', '2.2.0+cu121'): 36
+  ('l3', 'a01', 'prod_v2', '2.11.0+cu128'): 6
+  ('l3', 'a01', 'prod_v2', '2.14.0+cu130'): 9
+  ('l3', 'a01', 'prod_v2', '2.2.0+cu121'): 9
+  ('l3', 'iid', 'prod_v1', '2.2.0+cu121'): 9
+  ('tl', 'a01', 'prod_v1', '2.2.0+cu121'): 60
+  ('tl', 'a05', 'prod_v2', '2.11.0+cu128'): 18
+  ('tl', 'a05', 'prod_v2', '2.14.0+cu130'): 21
+  ('tl', 'a05', 'prod_v2', '2.2.0+cu121'): 21
+  ('tl', 'iid', 'prod_v1', '2.2.0+cu121'): 15
+
+Cells trained on stack other than 2.2.0+cu121: 54
+  tl_a05 (prod_v2): 39
+  l3_ext (prod_v2): 15
+  prod_v1: 0
+
+Host mapping (shard → torch):
+  M1 shard0: 2.14.0+cu130 (tl_a05 21 + l3_ext 9)
+  M2 shard1: 2.2.0+cu121 (tl_a05 21 + l3_ext 9) — correct
+  M3 shard2: 2.11.0+cu128 (tl_a05 18 + l3_ext 6)

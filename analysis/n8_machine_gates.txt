@@ -1,0 +1,13 @@
+N8-0 Machine gates (19 Sep 2026)
+
+M2 (78.44.170.162:53267) — PASS
+  gpu_name: NVIDIA GeForce RTX 4090
+  torch: 2.2.0+cu121
+  git: freeze-v3.1
+  disk: 113G free on /workspace
+
+M1 — NOT RENTED YET (await Jerry)
+M3 — NOT RENTED YET (await Jerry)
+
+Do not launch until M1 and M3 pass the same gates after vast_setup.sh with N7-5 assert.
+Do not use default --num-shards 3; use grids/*_n8_m{i}.yaml (see analysis/n8_balance_check.txt).

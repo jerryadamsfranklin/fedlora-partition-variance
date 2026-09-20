@@ -3,7 +3,7 @@
 
 Self-contained (does not import analyze_variance.py — MixedLM import can hang on
 some macOS Python builds). Reimplements the same moment estimators / cluster
-bootstrap as I1 (B=2000, seed=12345).
+bootstrap as I1 (B=2000, seed=12345). Ranking flips use B=10000 (pre-registered).
 """
 from __future__ import annotations
 
@@ -16,11 +16,16 @@ from typing import Any, Dict, List, Sequence, Tuple
 
 import numpy as np
 import pandas as pd
+from statsmodels.stats.power import TTestIndPower, TTestPower
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 BOOT_B = 2000
 BOOT_SEED = 12345
+RANK_B = 10000
+RANK_SEED = 12345
+DELTAS = [0.005, 0.01, 0.02, 0.05]
 METHODS = ("fedit", "ffa_lora", "flora")
+METHOD_PAIRS = [("fedit", "ffa_lora"), ("fedit", "flora"), ("ffa_lora", "flora")]
 
 
 def write_csv(path: Path, rows: Sequence[Dict[str, Any]]) -> None:
@@ -37,6 +42,16 @@ def write_csv(path: Path, rows: Sequence[Dict[str, Any]]) -> None:
         w = csv.DictWriter(f, fieldnames=keys)
         w.writeheader()
         w.writerows(rows)
+
+
+def wilson_ci(successes: int, n: int, z: float = 1.959963984540054) -> Tuple[float, float]:
+    if n <= 0:
+        return (float("nan"), float("nan"))
+    phat = successes / n
+    denom = 1 + z**2 / n
+    center = (phat + z**2 / (2 * n)) / denom
+    half = z * math.sqrt(phat * (1 - phat) / n + z**2 / (4 * n**2)) / denom
+    return (max(0.0, center - half), min(1.0, center + half))
 
 
 def anova_components(
@@ -227,87 +242,188 @@ def bootstrap_share_diff(
     return out
 
 
-def ranking_stability(df_a01: pd.DataFrame, k_values: Sequence[int]):
+def ranking_stability(
+    df_a01: pd.DataFrame,
+    k_values: Sequence[int],
+    B: int = RANK_B,
+    seed: int = RANK_SEED,
+) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
     """Paired/unpaired flip probs (I3) — same construction as analyze_variance."""
+    methods = list(METHODS)
     means = df_a01.groupby("method")["heldout_loss"].mean()
-    ref_order = list(means.sort_values().index)
+    ref_order = tuple(sorted(methods, key=lambda m: float(means[m])))
+    ref_best = ref_order[0]
+    ref_gaps = {(a, b): float(means[a] - means[b]) for a, b in METHOD_PAIRS}
+
     partitions = sorted(df_a01["data_seed"].unique().tolist())
-    run_seeds_all = sorted(df_a01["run_seed"].unique().tolist())
-    # cell lookup
-    cell = {
+    seeds_by = {}
+    for part in partitions:
+        for meth in methods:
+            seeds_by[(part, meth)] = sorted(
+                df_a01[(df_a01.data_seed == part) & (df_a01.method == meth)]["run_seed"]
+                .unique()
+                .tolist()
+            )
+
+    loss_lookup = {
         (int(r.data_seed), r.method, int(r.run_seed)): float(r.heldout_loss)
         for r in df_a01.itertuples()
     }
-    rng = np.random.default_rng(BOOT_SEED)
-    rank_rows = []
-    pair_rows = []
+
+    single_draw_flips: Dict[Tuple[str, str], Dict[str, int]] = {
+        (a, b): {"flips": 0, "n": 0} for a, b in METHOD_PAIRS
+    }
+    run_seeds_all = sorted(df_a01["run_seed"].unique().tolist())
+    for part in partitions:
+        for rs in run_seeds_all:
+            if not all((int(part), meth, int(rs)) in loss_lookup for meth in methods):
+                continue
+            for a, b in METHOD_PAIRS:
+                gap = loss_lookup[(int(part), a, int(rs))] - loss_lookup[(int(part), b, int(rs))]
+                ref = ref_gaps[(a, b)]
+                single_draw_flips[(a, b)]["n"] += 1
+                if np.sign(gap) != np.sign(ref) and abs(ref) > 0:
+                    single_draw_flips[(a, b)]["flips"] += 1
+
+    agg_rows: List[Dict[str, Any]] = []
+    pair_rows: List[Dict[str, Any]] = []
+    rng = np.random.default_rng(seed)
     for k in k_values:
-        # paired
-        flips_p = 0
-        n_p = 0
-        for _ in range(BOOT_B):
-            parts = rng.choice(partitions, size=k, replace=False) if k <= len(partitions) else rng.choice(partitions, size=k, replace=True)
-            scores = {}
-            for meth in METHODS:
-                vals = []
-                for part in parts:
-                    rs = rng.choice(run_seeds_all)
-                    vals.append(cell[(int(part), meth, int(rs))])
-                scores[meth] = float(np.mean(vals))
-            order = sorted(scores, key=scores.get)
-            n_p += 1
-            if order != ref_order:
-                flips_p += 1
-        # unpaired
-        flips_u = 0
-        n_u = 0
-        for _ in range(BOOT_B):
-            scores = {}
-            for meth in METHODS:
-                parts = rng.choice(partitions, size=k, replace=False) if k <= len(partitions) else rng.choice(partitions, size=k, replace=True)
-                vals = []
-                for part in parts:
-                    rs = rng.choice(run_seeds_all)
-                    vals.append(cell[(int(part), meth, int(rs))])
-                scores[meth] = float(np.mean(vals))
-            order = sorted(scores, key=scores.get)
-            n_u += 1
-            if order != ref_order:
-                flips_u += 1
-        for protocol, flips, n in (("paired", flips_p, n_p), ("unpaired", flips_u, n_u)):
-            phat = flips / n if n else float("nan")
-            # Wilson CI
-            z = 1.959963984540054
-            denom = 1 + z**2 / n
-            center = (phat + z**2 / (2 * n)) / denom
-            half = z * math.sqrt(phat * (1 - phat) / n + z**2 / (4 * n**2)) / denom
-            rank_rows.append(
-                {
-                    "k": k,
-                    "protocol": protocol,
-                    "event": "best",
-                    "p_hat": phat,
-                    "ci_lo": max(0.0, center - half),
-                    "ci_hi": min(1.0, center + half),
-                    "n": n,
-                }
+        for protocol in ("paired", "unpaired"):
+            best_flip = 0
+            order_flip = 0
+            pair_flip_counts = {(a, b): 0 for a, b in METHOD_PAIRS}
+            for _ in range(B):
+                method_means: Dict[str, float] = {}
+                if protocol == "paired":
+                    chosen_parts = rng.choice(partitions, size=k, replace=False)
+                    pairs = []
+                    for part in chosen_parts:
+                        seeds = seeds_by[(part, methods[0])]
+                        rs = int(rng.choice(seeds))
+                        pairs.append((int(part), rs))
+                    for meth in methods:
+                        vals = [loss_lookup[(part, meth, rs)] for part, rs in pairs]
+                        method_means[meth] = float(np.mean(vals))
+                else:
+                    for meth in methods:
+                        chosen_parts = rng.choice(partitions, size=k, replace=False)
+                        vals = []
+                        for part in chosen_parts:
+                            seeds = seeds_by[(int(part), meth)]
+                            rs = int(rng.choice(seeds))
+                            vals.append(loss_lookup[(int(part), meth, rs)])
+                        method_means[meth] = float(np.mean(vals))
+                order = tuple(sorted(methods, key=lambda m: method_means[m]))
+                if order[0] != ref_best:
+                    best_flip += 1
+                if order != ref_order:
+                    order_flip += 1
+                for a, b in METHOD_PAIRS:
+                    gap = method_means[a] - method_means[b]
+                    ref = ref_gaps[(a, b)]
+                    if np.sign(gap) != np.sign(ref) and abs(ref) > 0:
+                        pair_flip_counts[(a, b)] += 1
+            for name, count in (("best", best_flip), ("full_order", order_flip)):
+                lo, hi = wilson_ci(count, B)
+                agg_rows.append(
+                    {
+                        "k": k,
+                        "protocol": protocol,
+                        "event": name,
+                        "prob": count / B,
+                        "wilson_lo": lo,
+                        "wilson_hi": hi,
+                        "ref_order": ">".join(ref_order),
+                        "B": B,
+                    }
+                )
+            for a, b in METHOD_PAIRS:
+                count = pair_flip_counts[(a, b)]
+                lo, hi = wilson_ci(count, B)
+                sd = single_draw_flips[(a, b)]
+                pair_rows.append(
+                    {
+                        "k": k,
+                        "protocol": protocol,
+                        "pair": f"{a}-{b}",
+                        "true_gap": ref_gaps[(a, b)],
+                        "prob_order_flip": count / B,
+                        "wilson_lo": lo,
+                        "wilson_hi": hi,
+                        "single_draw_sign_flips": sd["flips"],
+                        "single_draw_n": sd["n"],
+                        "B": B,
+                        "ref_order": ">".join(ref_order),
+                    }
+                )
+    return agg_rows, pair_rows
+
+
+def n_for_power(delta: float, sd: float, *, paired: bool) -> Any:
+    if sd <= 0 or not math.isfinite(sd):
+        return "more than 1000"
+    es = abs(delta) / sd
+    if es <= 0:
+        return "more than 1000"
+    power_fn = TTestPower() if paired else TTestIndPower()
+    for cand in range(2, 1001):
+        if paired:
+            pow_ = power_fn.power(
+                effect_size=es, nobs=cand, alpha=0.05, alternative="two-sided"
             )
-    return rank_rows, pair_rows
+        else:
+            pow_ = power_fn.power(
+                effect_size=es,
+                nobs1=cand,
+                alpha=0.05,
+                ratio=1.0,
+                alternative="two-sided",
+            )
+        if pow_ >= 0.8:
+            return cand
+    return "more than 1000"
 
 
-def draws_needed(s2_p: float, s2_pm: float, s2_e: float):
-    """I4 power curve at selected deltas — simplified mirror of analyze_variance."""
-    rows = []
-    sd_pair = math.sqrt(2 * (s2_pm + s2_e / 2))  # r=2 cell means
-    sd_unpair = math.sqrt(2 * (s2_p + s2_pm + s2_e / 2))
-    for kind, sd in (("paired", sd_pair), ("unpaired", sd_unpair)):
-        for delta in (0.01, 0.005, 0.002, 0.001):
-            # n for two-sided alpha=0.05 power=0.8 approx
-            z_a = 1.959963984540054
-            z_b = 0.8416212335729143
-            n = math.ceil(((z_a + z_b) * sd / delta) ** 2)
-            rows.append({"kind": kind, "delta": delta, "n_draws": n, "sd": sd})
+def draws_needed(s2_p: float, s2_pm: float, s2_e: float) -> Tuple[List[Dict[str, Any]], float, float]:
+    """Pre-registered power curve: deltas 0.005/0.01/0.02/0.05; distinct paired/unpaired SDs."""
+    sd_pair = math.sqrt(2 * s2_pm + 2 * s2_e)
+    sd_unpair = math.sqrt(s2_p + s2_pm + s2_e)
+    rows: List[Dict[str, Any]] = []
+    for delta in DELTAS:
+        rows.append(
+            {
+                "kind": "preregistered_delta",
+                "pair": "",
+                "delta": delta,
+                "n_paired": n_for_power(delta, sd_pair, paired=True),
+                "n_unpaired_per_method": n_for_power(delta, sd_unpair, paired=False),
+                "sd_pair_model": sd_pair,
+                "sd_unpair_model": sd_unpair,
+            }
+        )
     return rows, sd_pair, sd_unpair
+
+
+def observed_gap_power(
+    df_a01: pd.DataFrame, sd_pair: float, sd_unpair: float
+) -> List[Dict[str, Any]]:
+    means = df_a01.groupby("method")["heldout_loss"].mean()
+    rows = []
+    for a, b in METHOD_PAIRS:
+        gap = float(means[a] - means[b])
+        rows.append(
+            {
+                "kind": "observed_gap",
+                "pair": f"{a}-{b}",
+                "delta": gap,
+                "n_paired": n_for_power(gap, sd_pair, paired=True),
+                "n_unpaired_per_method": n_for_power(gap, sd_unpair, paired=False),
+                "sd_pair_model": sd_pair,
+                "sd_unpair_model": sd_unpair,
+            }
+        )
+    return rows
 
 
 def main() -> None:
@@ -339,6 +455,48 @@ def main() -> None:
         flush=True,
     )
 
+    # N7-8 post hoc: absolute variance components side by side (not pre-registered).
+    abs_rows = [
+        {
+            "label": "post_hoc_absolute_variance_not_preregistered",
+            "model": "tl",
+            "het": "a01",
+            "alpha": 0.1,
+            "s2_P": vc_a01_ref["s2_P"],
+            "s2_PM": vc_a01_ref["s2_PM"],
+            "s2_E": vc_a01_ref["s2_E"],
+            "sd_pair": math.sqrt(2 * vc_a01_ref["s2_PM"] + 2 * vc_a01_ref["s2_E"]),
+        },
+        {
+            "label": "post_hoc_absolute_variance_not_preregistered",
+            "model": "tl",
+            "het": "a05",
+            "alpha": 0.5,
+            "s2_P": vc_a05["s2_P"],
+            "s2_PM": vc_a05["s2_PM"],
+            "s2_E": vc_a05["s2_E"],
+            "sd_pair": math.sqrt(2 * vc_a05["s2_PM"] + 2 * vc_a05["s2_E"]),
+        },
+    ]
+    ratio_row = {
+        "label": "post_hoc_absolute_variance_ratio_a01_over_a05_not_preregistered",
+        "model": "tl",
+        "het": "a01_over_a05",
+        "alpha": "",
+        "s2_P": vc_a01_ref["s2_P"] / vc_a05["s2_P"] if vc_a05["s2_P"] > 0 else float("nan"),
+        "s2_PM": vc_a01_ref["s2_PM"] / vc_a05["s2_PM"] if vc_a05["s2_PM"] > 0 else float("nan"),
+        "s2_E": vc_a01_ref["s2_E"] / vc_a05["s2_E"] if vc_a05["s2_E"] > 0 else float("nan"),
+        "sd_pair": abs_rows[0]["sd_pair"] / abs_rows[1]["sd_pair"]
+        if abs_rows[1]["sd_pair"] > 0
+        else float("nan"),
+    }
+    write_csv(out_dir / "absolute_variance_alpha_posthoc.csv", abs_rows + [ratio_row])
+    print(
+        f"N7-8 post hoc |s2_P a01/a05|={ratio_row['s2_P']:.2f} "
+        f"sd_pair a01={abs_rows[0]['sd_pair']:.5f} a05={abs_rows[1]['sd_pair']:.5f}",
+        flush=True,
+    )
+
     print("I9 gradient bootstrap…", flush=True)
     grad = bootstrap_share_diff(tl_a01, tl_a05)
     write_csv(out_dir / "het_gradient.csv", [{"model": "tl", "compare": "a05_minus_a01", **grad}])
@@ -361,21 +519,39 @@ def main() -> None:
     print(
         f"I10 p10 share_P={vc_p10['share_P']:.4f} "
         f"CI=[{vc_p10['share_P_ci_lo']:.4f},{vc_p10['share_P_ci_hi']:.4f}] "
-        f"includes0={vc_p10['share_P_ci_lo'] <= 0 <= vc_p10['share_P_ci_hi']}",
+        f"includes0={vc_p10['share_P_ci_lo'] <= 0 <= vc_p10['share_P_ci_hi']} "
+        f"trunc_P={vc_p10['trunc_P']}",
         flush=True,
     )
+    (out_dir / "l3_p10_truncation_flag.txt").write_text(
+        f"I10 l3 p=10: trunc_P={vc_p10['trunc_P']} trunc_PM={vc_p10['trunc_PM']}\n"
+        f"s2_P={vc_p10['s2_P']:.6e} (truncated at zero={vc_p10['trunc_P']})\n"
+        f"s2_PM={vc_p10['s2_PM']:.6e} s2_E={vc_p10['s2_E']:.6e}\n"
+        f"share_P={vc_p10['share_P']:.6f} CI=[{vc_p10['share_P_ci_lo']:.6f},{vc_p10['share_P_ci_hi']:.6f}]\n",
+        encoding="utf-8",
+    )
 
+    print(f"I10 ranking stability B={RANK_B}…", flush=True)
     rank_rows, pair_rows = ranking_stability(l3_p10, [1, 2, 3])
     for r in rank_rows:
         r["model"] = "l3"
         r["label"] = "I10_p10"
+    for r in pair_rows:
+        r["model"] = "l3"
+        r["label"] = "I10_p10"
     power_rows, sd_pair, sd_unpair = draws_needed(vc_p10["s2_P"], vc_p10["s2_PM"], vc_p10["s2_E"])
+    power_rows.extend(observed_gap_power(l3_p10, sd_pair, sd_unpair))
     for r in power_rows:
         r["model"] = "l3"
         r["label"] = "I10_p10"
     write_csv(out_dir / "rank_flip_l3_p10.csv", rank_rows)
     write_csv(out_dir / "rank_flip_pairs_l3_p10.csv", pair_rows)
     write_csv(out_dir / "power_l3_p10.csv", power_rows)
+    print(
+        f"power sd_pair={sd_pair:.5f} sd_unpair={sd_unpair:.5f}; "
+        f"observed_gap rows={sum(1 for r in power_rows if r['kind']=='observed_gap')}",
+        flush=True,
+    )
 
     claims: List[str] = []
     if any(grad[f"delta_{k}_excludes_0"] for k in ("share_P", "share_PM", "share_E")):
@@ -397,6 +573,11 @@ def main() -> None:
         claims.append(
             "I10: At p=10, LLaMA partition-share CI still includes zero; "
             "keep interaction-dominated 3B story; p=6 remains sensitivity."
+        )
+    if vc_p10["trunc_P"]:
+        claims.append(
+            "I10 note: s2_P truncated at zero at p=10 (MS_P < MS_PM); "
+            "report trunc_P=True alongside the share CI."
         )
     (out_dir / "i8_i10_selected_claims.txt").write_text("\n".join(claims) + "\n", encoding="utf-8")
     print("Selected outcome rows:", flush=True)

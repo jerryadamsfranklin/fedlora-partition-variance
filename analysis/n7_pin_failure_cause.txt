@@ -1,0 +1,15 @@
+N7-5 Pin failure cause (from shard→torch census + requirements.txt)
+
+Two of three prod_v2 hosts trained on drifted stacks:
+  M1 (shard0): image torch 2.14.0+cu130
+  M3 (shard2): image torch 2.11.0+cu128
+  M2 (shard1): torch 2.2.0+cu121 (pin took)
+
+Root cause: requirements.txt pinned `torch==2.2.0` without the cu121 wheel
+index (`https://download.pytorch.org/whl/cu121`). On Vast images that already
+ship a newer CUDA torch, `pip install -r requirements.txt` left 2.11/2.14 in
+place. vast_setup.sh only printed torch.__version__ and never asserted
+2.2.0+cu121, so the drift went unnoticed until N6/N7.
+
+Fix: install torch==2.2.0+cu121 from the cu121 index first, then requirements;
+assert torch.__version__ == "2.2.0+cu121" and exit non-zero otherwise.

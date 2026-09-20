@@ -435,15 +435,42 @@ def v1(cells: Sequence[Cell]) -> CheckResult:
     return r
 
 
-def v2(cells: Sequence[Cell], grid_name: str) -> CheckResult:
+def _lib_key(hw: Dict[str, Any]) -> Tuple[Any, ...]:
+    return (
+        hw.get("torch"),
+        hw.get("cuda_version"),
+        hw.get("transformers"),
+        hw.get("peft"),
+        hw.get("datasets"),
+    )
+
+
+def _allowed_git_describes(freeze_tag: Optional[str]) -> set:
+    """Accept mid-grid freeze-v3.1 hotfix cells that still carry freeze-v3."""
+    if freeze_tag in (None, "freeze-v1"):
+        return {"freeze-v1"}
+    if freeze_tag in ("freeze-v3", "freeze-v3.1"):
+        return {"freeze-v3", "freeze-v3.1"}
+    return {freeze_tag}
+
+
+def v2(
+    cells: Sequence[Cell],
+    grid_name: str,
+    freeze_tag: Optional[str] = None,
+) -> CheckResult:
     r = CheckResult("V2")
     lib_keys: set = set()
     gpu_names: set = set()
+    allowed_git = _allowed_git_describes(freeze_tag)
     for cell in cells:
         run_dir = _complete_run_dirs(cell)[0]
         meta = _load_json(run_dir / "run_meta.json")
-        if meta.get("git_describe") != "freeze-v1":
-            r.fail(f"{cell.cell_id}: git_describe={meta.get('git_describe')!r} != freeze-v1")
+        gd = meta.get("git_describe")
+        if gd not in allowed_git:
+            r.fail(
+                f"{cell.cell_id}: git_describe={gd!r} not in {sorted(allowed_git)}"
+            )
         if meta.get("git_dirty_tracked") is not False:
             r.fail(
                 f"{cell.cell_id}: git_dirty_tracked={meta.get('git_dirty_tracked')!r} (want false)"
@@ -454,20 +481,41 @@ def v2(cells: Sequence[Cell], grid_name: str) -> CheckResult:
         if not hw.get("gpu_name"):
             r.fail(f"{cell.cell_id}: hardware.gpu_name missing")
         gpu_names.add(hw.get("gpu_name"))
-        lib_keys.add(
-            (
-                hw.get("torch"),
-                hw.get("transformers"),
-                hw.get("peft"),
-                hw.get("datasets"),
-            )
-        )
+        lib_keys.add(_lib_key(hw))
     if len(lib_keys) != 1:
         r.fail(f"grid {grid_name}: library versions not identical: {lib_keys}")
     if len(gpu_names) != 1:
         r.fail(f"grid {grid_name}: gpu_name not identical: {gpu_names}")
     if r.ok:
         r.note(f"grid {grid_name}: libs={next(iter(lib_keys))} gpu={next(iter(gpu_names))}")
+    return r
+
+
+def v2_cross_tag(
+    cells_by_model: Dict[str, List[Cell]],
+) -> CheckResult:
+    """N7-2: library versions identical across every run of a model (all tags)."""
+    r = CheckResult("V2-cross-tag")
+    for model_key, cells in sorted(cells_by_model.items()):
+        lib_keys: set = set()
+        by_tag: Dict[str, set] = defaultdict(set)
+        for cell in cells:
+            completes = _complete_run_dirs(cell)
+            if not completes:
+                r.fail(f"{cell.cell_id}: no complete run for cross-tag V2")
+                continue
+            meta = _load_json(completes[0] / "run_meta.json")
+            hw = meta.get("hardware") or {}
+            key = _lib_key(hw)
+            lib_keys.add(key)
+            by_tag[cell.tag].add(key)
+        if len(lib_keys) != 1:
+            r.fail(
+                f"model {model_key}: library versions not identical across tags: "
+                f"{dict(by_tag)}"
+            )
+        else:
+            r.note(f"model {model_key}: libs identical across tags {sorted(by_tag)} -> {next(iter(lib_keys))}")
     return r
 
 
@@ -968,13 +1016,14 @@ def run_for_grid(grid_path: Path) -> Tuple[str, str, List[Cell], List[CheckResul
     grid = load_grid(grid_path)
     cells = enumerate_cells(grid)
     name = str(grid.get("name") or grid_path.stem)
+    freeze_tag = grid.get("freeze_tag")
     # infer model key
     from scripts.run_grid import model_from_pattern
 
     model_key = model_from_pattern(grid["config_pattern"])
     results = [
         v1(cells),
-        v2(cells, name),
+        v2(cells, name, freeze_tag=freeze_tag if isinstance(freeze_tag, str) else None),
         v3(cells, model_key),
         v4(cells),
         v5(cells),
@@ -997,6 +1046,7 @@ def main() -> None:
 
     all_results: List[CheckResult] = []
     grid_names: List[str] = []
+    cells_by_model: Dict[str, List[Cell]] = defaultdict(list)
 
     for g in args.grids:
         path = Path(g)
@@ -1004,6 +1054,7 @@ def main() -> None:
             path = REPO_ROOT / path
         name, model_key, cells, results = run_for_grid(path)
         grid_names.append(name)
+        cells_by_model[model_key].extend(cells)
         print(f"\n======== grid {name} ({model_key}, {len(cells)} cells) ========")
         for res in results:
             status = "PASS" if res.ok else "FAIL"
@@ -1015,12 +1066,16 @@ def main() -> None:
             all_results.append(res)
 
     print("\n======== cross-grid ========")
-    for res in (v9(), v10(grid_names), v11(), v12()):
+    cross_checks = [v2_cross_tag(dict(cells_by_model)), v9(), v10(grid_names), v11(), v12()]
+    for res in cross_checks:
         # V9 and V10 never fail the exit criteria for Phase H; V11/V12 must pass
+        # V2-cross-tag is informational until drifted cells are retrained (N7).
         if res.vid == "V9":
             status = "SKIP" if not CLAIMS else ("PASS" if res.ok else "FAIL")
-        elif res.vid == "V10":
-            status = "INFO"
+        elif res.vid in ("V10", "V2-cross-tag"):
+            status = "INFO" if res.vid == "V10" else ("PASS" if res.ok else "FAIL")
+            if res.vid == "V2-cross-tag" and not res.ok:
+                status = "FAIL"
         else:
             status = "PASS" if res.ok else "FAIL"
         print(f"[{status}] {res.vid}")
@@ -1030,11 +1085,12 @@ def main() -> None:
             print(f"       FAIL: {f}")
         all_results.append(res)
 
-    # Exit criteria: V1-V8, V9 (populated), V11, and V12 must pass; V10 informational
+    # Exit criteria: V1-V8, V9 (populated), V11, and V12 must pass; V10 informational.
+    # V2-cross-tag is reported but not blocking until N7 retrain completes (stack confound).
     blocking = [
         res
         for res in all_results
-        if res.vid not in ("V10",) and not res.ok
+        if res.vid not in ("V10", "V2-cross-tag") and not res.ok
     ]
     if blocking:
         print(f"\nVERIFY FAILED: {len(blocking)} blocking check(s)")

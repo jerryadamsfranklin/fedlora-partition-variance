@@ -1,0 +1,494 @@
+{
+  "n_drifted": 54,
+  "moved_raw": 54,
+  "moved_or_copied_holdout": 54,
+  "missing_holdout": [],
+  "cells": [
+    {
+      "model": "tl",
+      "het": "a05",
+      "method": "fedit",
+      "data_seed": 2002,
+      "run_seed": 7001,
+      "torch": "2.11.0+cu128",
+      "path": "results/raw/vp_tl_fedit_a05/fedit/seed_2002_run7001/prod_v2/20260919_031851"
+    },
+    {
+      "model": "tl",
+      "het": "a05",
+      "method": "fedit",
+      "data_seed": 2005,
+      "run_seed": 7002,
+      "torch": "2.14.0+cu130",
+      "path": "results/raw/vp_tl_fedit_a05/fedit/seed_2005_run7002/prod_v2/20260919_064757"
+    },
+    {
+      "model": "tl",
+      "het": "a05",
+      "method": "fedit",
+      "data_seed": 2010,
+      "run_seed": 7001,
+      "torch": "2.14.0+cu130",
+      "path": "results/raw/vp_tl_fedit_a05/fedit/seed_2010_run7001/prod_v2/20260919_111122"
+    },
+    {
+      "model": "tl",
+      "het": "a05",
+      "method": "fedit",
+      "data_seed": 2006,
+      "run_seed": 7002,
+      "torch": "2.11.0+cu128",
+      "path": "results/raw/vp_tl_fedit_a05/fedit/seed_2006_run7002/prod_v2/20260919_084224"
+    },
+    {
+      "model": "tl",
+      "het": "a05",
+      "method": "fedit",
+      "data_seed": 2008,
+      "run_seed": 7001,
+      "torch": "2.11.0+cu128",
+      "path": "results/raw/vp_tl_fedit_a05/fedit/seed_2008_run7001/prod_v2/20260919_100934"
+    },
+    {
+      "model": "tl",
+      "het": "a05",
+      "method": "fedit",
+      "data_seed": 2001,
+      "run_seed": 7001,
+      "torch": "2.14.0+cu130",
+      "path": "results/raw/vp_tl_fedit_a05/fedit/seed_2001_run7001/prod_v2/20260919_015527"
+    },
+    {
+      "model": "tl",
+      "het": "a05",
+      "method": "fedit",
+      "data_seed": 2004,
+      "run_seed": 7001,
+      "torch": "2.14.0+cu130",
+      "path": "results/raw/vp_tl_fedit_a05/fedit/seed_2004_run7001/prod_v2/20260919_052003"
+    },
+    {
+      "model": "tl",
+      "het": "a05",
+      "method": "fedit",
+      "data_seed": 2003,
+      "run_seed": 7002,
+      "torch": "2.11.0+cu128",
+      "path": "results/raw/vp_tl_fedit_a05/fedit/seed_2003_run7002/prod_v2/20260919_054541"
+    },
+    {
+      "model": "tl",
+      "het": "a05",
+      "method": "fedit",
+      "data_seed": 2002,
+      "run_seed": 7002,
+      "torch": "2.14.0+cu130",
+      "path": "results/raw/vp_tl_fedit_a05/fedit/seed_2002_run7002/prod_v2/20260919_033944"
+    },
+    {
+      "model": "tl",
+      "het": "a05",
+      "method": "fedit",
+      "data_seed": 2005,
+      "run_seed": 7001,
+      "torch": "2.11.0+cu128",
+      "path": "results/raw/vp_tl_fedit_a05/fedit/seed_2005_run7001/prod_v2/20260919_071453"
+    },
+    {
+      "model": "tl",
+      "het": "a05",
+      "method": "fedit",
+      "data_seed": 2007,
+      "run_seed": 7001,
+      "torch": "2.14.0+cu130",
+      "path": "results/raw/vp_tl_fedit_a05/fedit/seed_2007_run7001/prod_v2/20260919_081545"
+    },
+    {
+      "model": "tl",
+      "het": "a05",
+      "method": "fedit",
+      "data_seed": 2009,
+      "run_seed": 7002,
+      "torch": "2.11.0+cu128",
+      "path": "results/raw/vp_tl_fedit_a05/fedit/seed_2009_run7002/prod_v2/20260919_113625"
+    },
+    {
+      "model": "tl",
+      "het": "a05",
+      "method": "fedit",
+      "data_seed": 2008,
+      "run_seed": 7002,
+      "torch": "2.14.0+cu130",
+      "path": "results/raw/vp_tl_fedit_a05/fedit/seed_2008_run7002/prod_v2/20260919_094335"
+    },
+    {
+      "model": "l3",
+      "het": "a01",
+      "method": "flora",
+      "data_seed": 2010,
+      "run_seed": 7001,
+      "torch": "2.14.0+cu130",
+      "path": "results/raw/vp_l3_flora_a01/flora/seed_2010_run7001/prod_v2/20260919_183440"
+    },
+    {
+      "model": "l3",
+      "het": "a01",
+      "method": "flora",
+      "data_seed": 2008,
+      "run_seed": 7001,
+      "torch": "2.11.0+cu128",
+      "path": "results/raw/vp_l3_flora_a01/flora/seed_2008_run7001/prod_v2/20260919_153542"
+    },
+    {
+      "model": "l3",
+      "het": "a01",
+      "method": "flora",
+      "data_seed": 2007,
+      "run_seed": 7001,
+      "torch": "2.14.0+cu130",
+      "path": "results/raw/vp_l3_flora_a01/flora/seed_2007_run7001/prod_v2/20260919_193825"
+    },
+    {
+      "model": "l3",
+      "het": "a01",
+      "method": "flora",
+      "data_seed": 2009,
+      "run_seed": 7002,
+      "torch": "2.11.0+cu128",
+      "path": "results/raw/vp_l3_flora_a01/flora/seed_2009_run7002/prod_v2/20260919_183950"
+    },
+    {
+      "model": "l3",
+      "het": "a01",
+      "method": "flora",
+      "data_seed": 2008,
+      "run_seed": 7002,
+      "torch": "2.14.0+cu130",
+      "path": "results/raw/vp_l3_flora_a01/flora/seed_2008_run7002/prod_v2/20260919_161712"
+    },
+    {
+      "model": "tl",
+      "het": "a05",
+      "method": "ffa_lora",
+      "data_seed": 2002,
+      "run_seed": 7001,
+      "torch": "2.11.0+cu128",
+      "path": "results/raw/vp_tl_ffa_lora_a05/ffa_lora/seed_2002_run7001/prod_v2/20260919_034624"
+    },
+    {
+      "model": "tl",
+      "het": "a05",
+      "method": "ffa_lora",
+      "data_seed": 2005,
+      "run_seed": 7002,
+      "torch": "2.14.0+cu130",
+      "path": "results/raw/vp_tl_ffa_lora_a05/ffa_lora/seed_2005_run7002/prod_v2/20260919_071558"
+    },
+    {
+      "model": "tl",
+      "het": "a05",
+      "method": "ffa_lora",
+      "data_seed": 2010,
+      "run_seed": 7001,
+      "torch": "2.14.0+cu130",
+      "path": "results/raw/vp_tl_ffa_lora_a05/ffa_lora/seed_2010_run7001/prod_v2/20260919_113926"
+    },
+    {
+      "model": "tl",
+      "het": "a05",
+      "method": "ffa_lora",
+      "data_seed": 2006,
+      "run_seed": 7002,
+      "torch": "2.11.0+cu128",
+      "path": "results/raw/vp_tl_ffa_lora_a05/ffa_lora/seed_2006_run7002/prod_v2/20260919_090945"
+    },
+    {
+      "model": "tl",
+      "het": "a05",
+      "method": "ffa_lora",
+      "data_seed": 2008,
+      "run_seed": 7001,
+      "torch": "2.11.0+cu128",
+      "path": "results/raw/vp_tl_ffa_lora_a05/ffa_lora/seed_2008_run7001/prod_v2/20260919_103653"
+    },
+    {
+      "model": "tl",
+      "het": "a05",
+      "method": "ffa_lora",
+      "data_seed": 2001,
+      "run_seed": 7001,
+      "torch": "2.14.0+cu130",
+      "path": "results/raw/vp_tl_ffa_lora_a05/ffa_lora/seed_2001_run7001/prod_v2/20260919_023812"
+    },
+    {
+      "model": "tl",
+      "het": "a05",
+      "method": "ffa_lora",
+      "data_seed": 2004,
+      "run_seed": 7001,
+      "torch": "2.14.0+cu130",
+      "path": "results/raw/vp_tl_ffa_lora_a05/ffa_lora/seed_2004_run7001/prod_v2/20260919_054804"
+    },
+    {
+      "model": "tl",
+      "het": "a05",
+      "method": "ffa_lora",
+      "data_seed": 2003,
+      "run_seed": 7002,
+      "torch": "2.11.0+cu128",
+      "path": "results/raw/vp_tl_ffa_lora_a05/ffa_lora/seed_2003_run7002/prod_v2/20260919_061259"
+    },
+    {
+      "model": "tl",
+      "het": "a05",
+      "method": "ffa_lora",
+      "data_seed": 2002,
+      "run_seed": 7002,
+      "torch": "2.14.0+cu130",
+      "path": "results/raw/vp_tl_ffa_lora_a05/ffa_lora/seed_2002_run7002/prod_v2/20260919_040749"
+    },
+    {
+      "model": "tl",
+      "het": "a05",
+      "method": "ffa_lora",
+      "data_seed": 2005,
+      "run_seed": 7001,
+      "torch": "2.11.0+cu128",
+      "path": "results/raw/vp_tl_ffa_lora_a05/ffa_lora/seed_2005_run7001/prod_v2/20260919_074231"
+    },
+    {
+      "model": "tl",
+      "het": "a05",
+      "method": "ffa_lora",
+      "data_seed": 2007,
+      "run_seed": 7001,
+      "torch": "2.14.0+cu130",
+      "path": "results/raw/vp_tl_ffa_lora_a05/ffa_lora/seed_2007_run7001/prod_v2/20260919_084344"
+    },
+    {
+      "model": "tl",
+      "het": "a05",
+      "method": "ffa_lora",
+      "data_seed": 2009,
+      "run_seed": 7002,
+      "torch": "2.11.0+cu128",
+      "path": "results/raw/vp_tl_ffa_lora_a05/ffa_lora/seed_2009_run7002/prod_v2/20260919_120351"
+    },
+    {
+      "model": "tl",
+      "het": "a05",
+      "method": "ffa_lora",
+      "data_seed": 2008,
+      "run_seed": 7002,
+      "torch": "2.14.0+cu130",
+      "path": "results/raw/vp_tl_ffa_lora_a05/ffa_lora/seed_2008_run7002/prod_v2/20260919_101134"
+    },
+    {
+      "model": "l3",
+      "het": "a01",
+      "method": "ffa_lora",
+      "data_seed": 2010,
+      "run_seed": 7001,
+      "torch": "2.14.0+cu130",
+      "path": "results/raw/vp_l3_ffa_lora_a01/ffa_lora/seed_2010_run7001/prod_v2/20260919_175513"
+    },
+    {
+      "model": "l3",
+      "het": "a01",
+      "method": "ffa_lora",
+      "data_seed": 2008,
+      "run_seed": 7001,
+      "torch": "2.11.0+cu128",
+      "path": "results/raw/vp_l3_ffa_lora_a01/ffa_lora/seed_2008_run7001/prod_v2/20260919_135436"
+    },
+    {
+      "model": "l3",
+      "het": "a01",
+      "method": "ffa_lora",
+      "data_seed": 2007,
+      "run_seed": 7001,
+      "torch": "2.14.0+cu130",
+      "path": "results/raw/vp_l3_ffa_lora_a01/ffa_lora/seed_2007_run7001/prod_v2/20260919_133052"
+    },
+    {
+      "model": "l3",
+      "het": "a01",
+      "method": "ffa_lora",
+      "data_seed": 2009,
+      "run_seed": 7002,
+      "torch": "2.11.0+cu128",
+      "path": "results/raw/vp_l3_ffa_lora_a01/ffa_lora/seed_2009_run7002/prod_v2/20260919_175621"
+    },
+    {
+      "model": "l3",
+      "het": "a01",
+      "method": "ffa_lora",
+      "data_seed": 2008,
+      "run_seed": 7002,
+      "torch": "2.14.0+cu130",
+      "path": "results/raw/vp_l3_ffa_lora_a01/ffa_lora/seed_2008_run7002/prod_v2/20260919_153733"
+    },
+    {
+      "model": "l3",
+      "het": "a01",
+      "method": "fedit",
+      "data_seed": 2010,
+      "run_seed": 7001,
+      "torch": "2.14.0+cu130",
+      "path": "results/raw/vp_l3_fedit_a01/fedit/seed_2010_run7001/prod_v2/20260919_171440"
+    },
+    {
+      "model": "l3",
+      "het": "a01",
+      "method": "fedit",
+      "data_seed": 2008,
+      "run_seed": 7001,
+      "torch": "2.11.0+cu128",
+      "path": "results/raw/vp_l3_fedit_a01/fedit/seed_2008_run7001/prod_v2/20260919_131050"
+    },
+    {
+      "model": "l3",
+      "het": "a01",
+      "method": "fedit",
+      "data_seed": 2007,
+      "run_seed": 7001,
+      "torch": "2.14.0+cu130",
+      "path": "results/raw/vp_l3_fedit_a01/fedit/seed_2007_run7001/prod_v2/20260919_124954"
+    },
+    {
+      "model": "l3",
+      "het": "a01",
+      "method": "fedit",
+      "data_seed": 2009,
+      "run_seed": 7002,
+      "torch": "2.11.0+cu128",
+      "path": "results/raw/vp_l3_fedit_a01/fedit/seed_2009_run7002/prod_v2/20260919_171209"
+    },
+    {
+      "model": "l3",
+      "het": "a01",
+      "method": "fedit",
+      "data_seed": 2008,
+      "run_seed": 7002,
+      "torch": "2.14.0+cu130",
+      "path": "results/raw/vp_l3_fedit_a01/fedit/seed_2008_run7002/prod_v2/20260919_145714"
+    },
+    {
+      "model": "tl",
+      "het": "a05",
+      "method": "flora",
+      "data_seed": 2002,
+      "run_seed": 7001,
+      "torch": "2.11.0+cu128",
+      "path": "results/raw/vp_tl_flora_a05/flora/seed_2002_run7001/prod_v2/20260919_051253"
+    },
+    {
+      "model": "tl",
+      "het": "a05",
+      "method": "flora",
+      "data_seed": 2005,
+      "run_seed": 7002,
+      "torch": "2.14.0+cu130",
+      "path": "results/raw/vp_tl_flora_a05/flora/seed_2005_run7002/prod_v2/20260919_074343"
+    },
+    {
+      "model": "tl",
+      "het": "a05",
+      "method": "flora",
+      "data_seed": 2010,
+      "run_seed": 7001,
+      "torch": "2.14.0+cu130",
+      "path": "results/raw/vp_tl_flora_a05/flora/seed_2010_run7001/prod_v2/20260919_120717"
+    },
+    {
+      "model": "tl",
+      "het": "a05",
+      "method": "flora",
+      "data_seed": 2006,
+      "run_seed": 7002,
+      "torch": "2.11.0+cu128",
+      "path": "results/raw/vp_tl_flora_a05/flora/seed_2006_run7002/prod_v2/20260919_093650"
+    },
+    {
+      "model": "tl",
+      "het": "a05",
+      "method": "flora",
+      "data_seed": 2008,
+      "run_seed": 7001,
+      "torch": "2.11.0+cu128",
+      "path": "results/raw/vp_tl_flora_a05/flora/seed_2008_run7001/prod_v2/20260919_110353"
+    },
+    {
+      "model": "tl",
+      "het": "a05",
+      "method": "flora",
+      "data_seed": 2001,
+      "run_seed": 7001,
+      "torch": "2.14.0+cu130",
+      "path": "results/raw/vp_tl_flora_a05/flora/seed_2001_run7001/prod_v2/20260919_030604"
+    },
+    {
+      "model": "tl",
+      "het": "a05",
+      "method": "flora",
+      "data_seed": 2004,
+      "run_seed": 7001,
+      "torch": "2.14.0+cu130",
+      "path": "results/raw/vp_tl_flora_a05/flora/seed_2004_run7001/prod_v2/20260919_061551"
+    },
+    {
+      "model": "tl",
+      "het": "a05",
+      "method": "flora",
+      "data_seed": 2003,
+      "run_seed": 7002,
+      "torch": "2.11.0+cu128",
+      "path": "results/raw/vp_tl_flora_a05/flora/seed_2003_run7002/prod_v2/20260919_064202"
+    },
+    {
+      "model": "tl",
+      "het": "a05",
+      "method": "flora",
+      "data_seed": 2002,
+      "run_seed": 7002,
+      "torch": "2.14.0+cu130",
+      "path": "results/raw/vp_tl_flora_a05/flora/seed_2002_run7002/prod_v2/20260919_043540"
+    },
+    {
+      "model": "tl",
+      "het": "a05",
+      "method": "flora",
+      "data_seed": 2005,
+      "run_seed": 7001,
+      "torch": "2.11.0+cu128",
+      "path": "results/raw/vp_tl_flora_a05/flora/seed_2005_run7001/prod_v2/20260919_080932"
+    },
+    {
+      "model": "tl",
+      "het": "a05",
+      "method": "flora",
+      "data_seed": 2007,
+      "run_seed": 7001,
+      "torch": "2.14.0+cu130",
+      "path": "results/raw/vp_tl_flora_a05/flora/seed_2007_run7001/prod_v2/20260919_091129"
+    },
+    {
+      "model": "tl",
+      "het": "a05",
+      "method": "flora",
+      "data_seed": 2009,
+      "run_seed": 7002,
+      "torch": "2.11.0+cu128",
+      "path": "results/raw/vp_tl_flora_a05/flora/seed_2009_run7002/prod_v2/20260919_123103"
+    },
+    {
+      "model": "tl",
+      "het": "a05",
+      "method": "flora",
+      "data_seed": 2008,
+      "run_seed": 7002,
+      "torch": "2.14.0+cu130",
+      "path": "results/raw/vp_tl_flora_a05/flora/seed_2008_run7002/prod_v2/20260919_103917"
+    }
+  ]
+}

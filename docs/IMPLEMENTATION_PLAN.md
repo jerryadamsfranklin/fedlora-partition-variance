@@ -978,9 +978,62 @@ Append three rows (do not edit past rows):
 2. The 84-run addendum under freeze-v3 / prod_v2 (alpha 0.5 on TinyLlama; LLaMA partition extension to data seeds 2007 to 2010).
 3. Adapters retained for every prod_v2 cell (prod_v1 adapters may already be incomplete).
 
-### N7. MixedLM re-specification and refs expansion
+### N7. Torch-stack confound (19 Sep) — before any Phase O results text
+
+Opened after N6: holdouts were repaired on torch 2.2.0+cu121, but **training** on M1/M3 used drifted stacks. Resolve before writing results.
+
+**N7-1.** Stack census from every prod_v1 and prod_v2 `run_meta.json`: `hardware.torch`, `hardware.cuda_version`, transformers, peft, datasets. Report counts by model, het, tag, data_seed. State exactly which cells trained on a stack other than torch 2.2.0+cu121. → `analysis/stack_census.csv`, `analysis/stack_census_summary.txt`.
+
+**N7-2.** Extend V2 across all tags: library versions identical across every run of a model (prod_v1 + prod_v2 together). Report pass/fail (`V2-cross-tag`).
+
+**N7-3.** Sensitivity: if any partition group mixes stacks, estimate the stack offset vs `s2_PM`. If wholly within one stack, compare within-stack variance components. → `analysis/n7_stack_sensitivity.txt`.
+
+**N7-4.** DECISIONS: if any drifted-stack training cell exists, retrain those cells on torch 2.2.0+cu121 before analysis. Report cell count and GPU-hour estimate for Jerry approval. Keep M2 alive until the decision.
+
+**N7-5.** Harden `scripts/vast_setup.sh`: after pip install, assert `torch.__version__ == "2.2.0+cu121"` and exit non-zero otherwise. Install cu121 wheel from the official index first. Record pin-failure cause from shard logs. → `analysis/n7_pin_failure_cause.txt`.
+
+**N7-6.** Fix analysis bugs in I10 power/flip: distinct `sd_unpair`; restore pre-registered deltas 0.005/0.01/0.02/0.05; `B=10000` for flip simulation; add observed-gap rows per method pair at p=10 (paired and unpaired).
+
+**N7-7.** Report truncation flag for l3 p=10 (`s2_P` truncated at zero) and pair-level flip table at p=10 matching the p=6 presentation.
+
+**N7-8.** Post hoc (clearly labeled, not pre-registered): absolute variance components at alpha 0.1 vs 0.5 side by side with ratio. Pre-registered share comparison stays primary. → `analysis/absolute_variance_alpha_posthoc.csv`.
+
+Acceptance: census + sensitivity + DECISIONS retrain row; V2-cross-tag PASS after retrain; analysis bugfixes regenerated; STATUS replaced.
+
+### N7b. MixedLM re-specification and refs expansion (deferred)
 
 Re-specify the MixedLM cross-check so the partition component identifies (cross-check only; moment estimates stay primary). Expand `manuscript/refs.bib` toward about 25 verified entries; every new entry verified against its primary source.
+
+### N8. Retrain drifted-stack cells on torch 2.2.0+cu121 (19 Sep)
+
+3× RTX 4090. Do not write results text until N8-6. Phase O1–O4 may proceed on the Mac in parallel.
+
+**N8-0.** Verify each machine: `scripts/vast_setup.sh` with the N7-5 assert at `freeze-v3.1`; confirm torch exactly `2.2.0+cu121` and `gpu_name` exactly `NVIDIA GeForce RTX 4090`. Any machine failing either check is destroyed, not worked around. Record both per machine.
+
+**N8-1.** Quarantine, do not delete: move the 54 affected cells' run directories to `results/quarantine_stackdrift/raw/...` and their `instruction_holdout.json` files to `results/quarantine_stackdrift/downstream/...`, preserving relative paths. Commit. Confirm `grid_status` reports exactly 39 fresh for `tl_a05` and 15 fresh for `l3_ext`, with the rest complete.
+
+**N8-2.** Balance check before launch: print the fresh-cell count per shard for `--num-shards 3` on both grids, and the projected hours per machine using 28 minutes per TinyLlama cell and 70 per LLaMA cell, plus 3 and 6 minutes of held-out eval. If the projected spread between machines exceeds 20 percent, report it and propose a fix rather than launching.
+
+**N8-3.** Launch, staggered by 10 minutes, on machine i (i = 0, 1, 2):
+```
+python scripts/run_grid.py --grid grids/tl_a05.yaml --shard i --num-shards 3 \
+  --device cuda --production --workers 1 --max-retries 2
+```
+then, only after that grid reports complete on that machine:
+```
+python scripts/run_grid.py --grid grids/l3_ext.yaml --shard i --num-shards 3 \
+  --device cuda --production --workers 1 --max-retries 2
+```
+
+**N8-4.** First-cell gate on each machine: `run_meta` must show `git_describe` freeze-v3.1, `hardware.torch` 2.2.0+cu121, `gpu_name` exact, and held-out `base_loss` equal to 2.120665 (tl) or 2.168946 (l3) within 1e-6. Any mismatch: stop that machine and report.
+
+**N8-5.** Sync every 2 to 3 hours including `final_adapter_state.pt`. Before destroying anything: `grid_status` 60/60 and 24/24, 84 prod_v2 adapters present, V1, V2 (including cross-tag), V7 and V12 all pass, and every prod_v2 cell on torch 2.2.0+cu121.
+
+**N8-6.** Re-run I8, I9, I10 on the retrained data. Report the same table as before so the numbers can be compared against the drifted-stack versions, with the N7-3 stack effect size beside it.
+
+**N8-7.** DECISIONS.md: "19 Sep 2026 | 54 prod_v2 cells retrained on torch 2.2.0+cu121 | two hosts installed torch 2.11/2.14 despite the requirements pin, confounding training stack with partition draw | N7-1 census, V2 failures, results/quarantine_stackdrift preserved".
+
+**N8-8.** Record which statistical backend produced each analysis output, and confirm whether the pre-registered MixedLM cross-check still runs locally after the statsmodels failure. If it does not, say so in the paper rather than omitting it.
 
 ### Phase N acceptance
 

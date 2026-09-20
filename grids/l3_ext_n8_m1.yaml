@@ -1,0 +1,20 @@
+name: l3_ext_n8_m1
+tag: prod_v2
+freeze_tag: freeze-v3.1
+methods:
+- fedit
+- ffa_lora
+- flora
+config_pattern: config/vp/vp_l3_{method}_{het}.yaml
+cells:
+- het: a01
+  data_seeds:
+  - 2008
+  run_seeds:
+  - 7001
+- het: a01
+  data_seeds:
+  - 2010
+  run_seeds:
+  - 7001
+expected_runs: 6
