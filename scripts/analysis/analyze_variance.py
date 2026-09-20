@@ -44,6 +44,10 @@ BOOT_SEED = 12345
 RANK_B = 10000
 RANK_SEED = 12345
 DELTAS = [0.005, 0.01, 0.02, 0.05]
+# ANALYSIS_PLAN I1: TinyLlama p=10, LLaMA primary p=6 (seeds 2001–2006).
+# I10 (analyze_i8_i10.py) pools LLaMA to p=10 separately.
+L3_PRIMARY_SEEDS = frozenset(range(2001, 2007))
+HET_ORDER = ("a01", "a05", "iid")
 
 
 def wilson_ci(successes: int, n: int, z: float = 1.959963984540054) -> Tuple[float, float]:
@@ -490,9 +494,13 @@ def empirical_sd_pair(df_a01: pd.DataFrame) -> List[Dict[str, Any]]:
     return out
 
 
-def method_means_and_tests(df: pd.DataFrame) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
+def method_means_and_tests(
+    df: pd.DataFrame, a01_primary: pd.DataFrame
+) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
+    """I5: means over every het present; paired tests on primary a01 only."""
     mean_rows = []
-    for het in ("a01", "iid"):
+    hets = [h for h in HET_ORDER if (df.het == h).any()]
+    for het in hets:
         sub = df[df.het == het]
         for meth in METHODS:
             vals = sub[sub.method == meth]["heldout_loss"].to_numpy()
@@ -505,13 +513,14 @@ def method_means_and_tests(df: pd.DataFrame) -> Tuple[List[Dict[str, Any]], List
                     "n": int(vals.size),
                 }
             )
-    # paired t on partition-level means at a01
-    a01 = df[df.het == "a01"]
-    parts = sorted(a01["data_seed"].unique())
+    # paired t on partition-level means at primary a01 (I1 design)
+    parts = sorted(a01_primary["data_seed"].unique())
     part_means = {
         meth: np.array(
             [
-                a01[(a01.data_seed == part) & (a01.method == meth)]["heldout_loss"].mean()
+                a01_primary[
+                    (a01_primary.data_seed == part) & (a01_primary.method == meth)
+                ]["heldout_loss"].mean()
                 for part in parts
             ]
         )
@@ -610,12 +619,14 @@ def spearman_rows(part_rows: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     return out
 
 
-def comm_fit(model: str, df_a01: pd.DataFrame) -> List[Dict[str, Any]]:
+def comm_fit(model: str, df_het: pd.DataFrame, het: str) -> List[Dict[str, Any]]:
     rows = []
     full = PAYLOAD_FULL[model]
     b_only = PAYLOAD_B_ONLY[model]
     for meth in METHODS:
-        sub = df_a01[df_a01.method == meth]
+        sub = df_het[df_het.method == meth]
+        if sub.empty:
+            continue
         # one row per run; use active_clients and upload_mb_total
         x = sub["active_clients"].to_numpy(dtype=float)
         y = sub["comm_mb_total"].to_numpy(dtype=float)
@@ -630,11 +641,12 @@ def comm_fit(model: str, df_a01: pd.DataFrame) -> List[Dict[str, Any]]:
         else:
             # upload 15*full, download 15*full
             expected = x * (2 * 15 * full) / MB
-        # linear fit y = a + b * active
+        # linear fit y = a + b * active; constant active → origin slope y/x
         if len(np.unique(x)) >= 2:
             slope, intercept = np.polyfit(x, y, 1)
         else:
-            slope, intercept = float("nan"), float(np.mean(y))
+            slope = float(np.mean(y / x))
+            intercept = 0.0
         max_abs_err = float(np.max(np.abs(y - expected)))
         rows.append(
             {
@@ -648,6 +660,8 @@ def comm_fit(model: str, df_a01: pd.DataFrame) -> List[Dict[str, Any]]:
                 "active_min": int(np.min(x)),
                 "active_max": int(np.max(x)),
                 "n": int(len(sub)),
+                "model": model,
+                "het": het,
             }
         )
     return rows
@@ -671,7 +685,12 @@ def write_csv(path: Path, rows: List[Dict[str, Any]]) -> None:
 
 def analyze_model(df_all: pd.DataFrame, model: str, out_dir: Path) -> Dict[str, Any]:
     df = df_all[df_all.model == model].copy()
-    a01 = df[df.het == "a01"].copy()
+    a01_all = df[df.het == "a01"].copy()
+    # Primary I1 design: LLaMA uses p=6; TinyLlama uses all a01 partitions (p=10).
+    if model == "l3":
+        a01 = a01_all[a01_all.data_seed.isin(L3_PRIMARY_SEEDS)].copy()
+    else:
+        a01 = a01_all
     iid = df[df.het == "iid"].copy()
 
     y = a01["heldout_loss"].to_numpy(dtype=float)
@@ -748,23 +767,26 @@ def analyze_model(df_all: pd.DataFrame, model: str, out_dir: Path) -> Dict[str, 
         e["model"] = model
         e["sd_pair_model"] = sd_pair
 
-    # I5
-    means, tests = method_means_and_tests(df)
+    # I5 — means over all hets/seeds present; pairwise tests on primary a01
+    means, tests = method_means_and_tests(df, a01)
     for r in means:
         r["model"] = model
     for r in tests:
         r["model"] = model
 
-    # I6
+    # I6 — partition effects on primary a01; comm fit per het (full cells)
     part_rows = partition_effects(model, a01)
     for r in part_rows:
         r["model"] = model
     spear = spearman_rows(part_rows)
     for r in spear:
         r["model"] = model
-    comm = comm_fit(model, a01)
-    for r in comm:
-        r["model"] = model
+    comm: List[Dict[str, Any]] = []
+    for het in HET_ORDER:
+        sub = df[df.het == het]
+        if sub.empty:
+            continue
+        comm.extend(comm_fit(model, sub, het))
 
     return {
         "vc": vc_row,
@@ -872,6 +894,14 @@ def main() -> None:
         part_rows.extend(res["partition"])
         spear_rows.extend(res["spearman"])
         comm_rows.extend(res["comm"])
+
+    # Archive row order for comm.csv: model l3→tl, het a01→a05→iid, METHODS order.
+    model_rank = {"l3": 0, "tl": 1}
+    het_rank = {h: i for i, h in enumerate(HET_ORDER)}
+    meth_rank = {m: i for i, m in enumerate(METHODS)}
+    comm_rows.sort(
+        key=lambda r: (model_rank[r["model"]], het_rank[r["het"]], meth_rank[r["method"]])
+    )
 
     write_csv(out_dir / "variance_components.csv", vc_rows)
     write_csv(out_dir / "iid_noise.csv", iid_rows)

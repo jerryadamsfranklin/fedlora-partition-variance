@@ -53,3 +53,12 @@ Baseline test count at v0-import: 28 passed
   `manuscript/template/` (SAI zip + IJACSA copyright PDF); public STATUS;
   move process logs to `analysis/logs/` and campaign scripts to `scripts/ops/`;
   rewrite README and add `docs/REPRODUCE.md`.
+- O11: Linux Docker verify of the pinned stack (`python:3.12-slim-bookworm`
+  linux/amd64, 2026-09-20): 84 tests, full analysis over 204 cells,
+  `verify_varpart` 33/33. Byte-level CSV regen differs at ULP across OpenBLAS;
+  archive left unchanged. Exposed two regeneration bugs fixed in O12.
+- O12: `analyze_variance.py` — LLaMA primary I1 restricted to p=6 (seeds
+  2001–2006) per ANALYSIS_PLAN when `l3_ext` is present; `comm.csv` keeps
+  per-het rows (`het` column) and constant-active origin slopes. Fresh
+  regeneration now reproduces the committed archive at manuscript precision.
+  Document verified environment and numerical reproducibility in REPRODUCE.
