@@ -435,16 +435,16 @@ CLAIMS: List[Dict[str, Any]] = [
     },
     {
         "id": "zenodo_availability_dois",
-        "text": "Availability statement cites Zenodo concept and v0.9.1 version DOIs",
-        "value": ("10.5281/zenodo.22861074", "10.5281/zenodo.22861075"),
-        "source": "manuscript/main.tex Declarations; Zenodo record 22861075",
+        "text": "Availability statement cites Zenodo concept and v0.9.2 version DOIs",
+        "value": ("10.5281/zenodo.22861074", "10.5281/zenodo.22862931"),
+        "source": "manuscript/main.tex Declarations; Zenodo record 22862931",
         "kind": "analysis",
         "check": lambda: (
             "10.5281/zenodo.22861074"
             in (REPO_ROOT / "manuscript" / "main.tex").read_text(encoding="utf-8")
-            and "10.5281/zenodo.22861075"
+            and "10.5281/zenodo.22862931"
             in (REPO_ROOT / "manuscript" / "main.tex").read_text(encoding="utf-8")
-            and "v0.9.1"
+            and "v0.9.2"
             in (REPO_ROOT / "manuscript" / "main.tex").read_text(encoding="utf-8")
         ),
     },
