@@ -386,9 +386,9 @@ Behavior:
    python scripts/evaluate_instruction_holdout.py \
      --checkpoint {run_dir}/final_adapter_state.pt --device cuda \
      --start-index 3000 --num-examples 500 --max-seq-length 256 \
-     --summary-csv analysis/holdout_{grid}_shard{I}.csv --skip-existing
+     --summary-csv analysis/logs/holdout_{grid}_shard{I}.csv --skip-existing
    ```
-   When `--workers > 1`, use per-cell CSV paths `analysis/holdout_{grid}_shard{I}_{cell_id}.csv` to avoid concurrent writes.
+   When `--workers > 1`, use per-cell CSV paths `analysis/logs/holdout_{grid}_shard{I}_{cell_id}.csv` to avoid concurrent writes.
    The dataset is read from the run's `config_merged.yaml`. Assert that the written JSON reports `databricks/databricks-dolly-15k`.
 7. **Logging.** Stream stdout and stderr to `logs/{grid}_shard{I}/{cell_id}.log`. Append one JSON line per attempt to `results/launch/{grid}_shard{I}.jsonl` with: `cell_id`, `attempt`, `status`, `start`, `end`, `duration_s`, `train_exit`, `holdout_exit`, `run_dir`, `gpu_name`.
 8. **Failure handling.** On failure, retry up to `--max-retries`, resuming if a checkpoint exists. After final failure, log `status: failed` and continue to the next cell.
@@ -797,9 +797,9 @@ IJACSA treats undeclared or inaccurately declared AI use as misconduct, so accur
 - [ ] Every reference verified
 - [ ] No em dashes or curly quotes: `python scripts/check_typography.py manuscript/` reports clean. The script flags U+2014, U+2013, U+201C, U+201D, U+2018, and U+2019 in every `.tex` and `.bib` file, and flags sentences starting with First, Furthermore, Moreover, or Additionally.
 - [ ] Cover letter names the related preprint and states that the present study uses new experiments, different methods, and a different research question
-- [ ] Signed IJACSA copyright form completed and attached with the manuscript (download from thesai.org/Home/Downloads; blank copy in `manuscript/template/IJACSA_Copyright.pdf`)
-- [ ] Non-Gmail author email ready for the submission form (prefer an address on jerryadamsfranklin.com); ORCID iD ready; affiliation remains Independent Researcher
-- [ ] Final commit tagged `ijacsa-submitted-v1`
+- [ ] IEEE Access ScholarOne submission materials complete (copyright form at acceptance per Access policy)
+- [ ] Author email and ORCID ready for the submission form; affiliation remains Independent Researcher
+- [ ] Final commit tagged for the Access submission tip
 
 ---
 
@@ -986,11 +986,11 @@ Opened after N6: holdouts were repaired on torch 2.2.0+cu121, but **training** o
 
 **N7-2.** Extend V2 across all tags: library versions identical across every run of a model (prod_v1 + prod_v2 together). Report pass/fail (`V2-cross-tag`).
 
-**N7-3.** Sensitivity: if any partition group mixes stacks, estimate the stack offset vs `s2_PM`. If wholly within one stack, compare within-stack variance components. → `analysis/n7_stack_sensitivity.txt`.
+**N7-3.** Sensitivity: if any partition group mixes stacks, estimate the stack offset vs `s2_PM`. If wholly within one stack, compare within-stack variance components. → `analysis/logs/n7_stack_sensitivity.txt`.
 
 **N7-4.** DECISIONS: if any drifted-stack training cell exists, retrain those cells on torch 2.2.0+cu121 before analysis. Report cell count and GPU-hour estimate for Jerry approval. Keep M2 alive until the decision.
 
-**N7-5.** Harden `scripts/vast_setup.sh`: after pip install, assert `torch.__version__ == "2.2.0+cu121"` and exit non-zero otherwise. Install cu121 wheel from the official index first. Record pin-failure cause from shard logs. → `analysis/n7_pin_failure_cause.txt`.
+**N7-5.** Harden `scripts/vast_setup.sh`: after pip install, assert `torch.__version__ == "2.2.0+cu121"` and exit non-zero otherwise. Install cu121 wheel from the official index first. Record pin-failure cause from shard logs. → `analysis/logs/n7_pin_failure_cause.txt`.
 
 **N7-6.** Fix analysis bugs in I10 power/flip: distinct `sd_unpair`; restore pre-registered deltas 0.005/0.01/0.02/0.05; `B=10000` for flip simulation; add observed-gap rows per method pair at p=10 (paired and unpaired).
 
