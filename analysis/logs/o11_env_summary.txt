@@ -1,0 +1,21 @@
+OS=Linux x86_64 6.12.54-linuxkit
+PYTHON=Python 3.12.14
+DATE_UTC=2026-09-20
+datasets==2.18.0
+evaluate==0.4.1
+matplotlib==3.8.0
+numpy==1.26.0
+pandas==2.2.0
+peft==0.10.0
+pytest==8.3.5
+scipy==1.12.0
+statsmodels==0.14.1
+torch==2.2.0
+transformers==4.45.2
+PYTEST_EXIT=0
+BUILD_EXIT=0
+VAR_EXIT=0
+I8_EXIT=0
+VERIFY_EXIT=0
+BYTE_DIFFERS_FLAG=1
+PREC_EXIT=0

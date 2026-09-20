@@ -1,0 +1,10 @@
+........................................................................ [ 85%]
+............                                                             [100%]
+=============================== warnings summary ===============================
+tests/test_checkpoint_resume.py: 8 warnings
+tests/test_evaluation.py: 2 warnings
+  /tmp/o11_venv/lib/python3.12/site-packages/tqdm/std.py:580: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
+    if rate and total else datetime.utcfromtimestamp(0))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+84 passed, 10 warnings in 6.76s

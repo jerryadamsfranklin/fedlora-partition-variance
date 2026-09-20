@@ -1,0 +1,25 @@
+claim_id	ndigits	archive	regen	expected	status
+tl_share_P	3	0.508	0.508	None	OK
+tl_share_PM	3	0.469	0.469	None	OK
+tl_share_E	3	0.023	0.023	None	OK
+l3_share_PM	3	0.992	0.992	None	OK
+l3_share_P_ci_includes_0	0	0.0	0.0	None	OK
+l3_trunc_P_p10	-1	true	true		OK
+tl_flip_k3_paired	3	0.377	0.377	None	OK
+l3_flip_k3_paired_p10	3	0.493	0.493	None	OK
+tl_near_tie_n_paired	0	206	206		OK
+l3_near_tie_n_paired	-1	more than 1000	more than 1000		OK
+base_loss_tl	3	2.121	2.121	None	OK
+base_loss_l3	3	2.169	2.169	None	OK
+sd_pair_tl	5	0.00282	0.00282	None	OK
+sd_pair_l3	5	0.00771	0.00771	None	OK
+tl_near_tie_unpaired	0	416	416		OK
+l3_near_tie_unpaired	-1	more than 1000	more than 1000		OK
+method_means_tl_flora	4	1.6957	1.6957	None	OK
+method_means_l3_p10_n20	0	20	20		OK
+stack_effect_l3_mean	4	0.0008416	0.0008416	8.4e-4	OK
+comm_v6_match	0	0.0	0.0	None	OK
+ffa_slope_tl	4	98.3125	98.3125	None	OK
+n_runs_204	0	204	204		OK
+l3_i1_share_P	3	0.227	0.227	0.227	OK
+l3_i1_share_PM	3	0.764	0.764	0.764	OK
