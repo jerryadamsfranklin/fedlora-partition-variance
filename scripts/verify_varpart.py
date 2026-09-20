@@ -8,6 +8,7 @@ V10 prints a resume/retry census and never fails.
 from __future__ import annotations
 
 import argparse
+import csv
 import hashlib
 import json
 import math
@@ -62,8 +63,6 @@ MB = 1024 * 1024
 # kind: "analysis" (value checked against analysis/*.csv) or "external-verified"
 # or "design" (frozen design constant, not from analysis CSV).
 def _csv_rows(name: str) -> List[Dict[str, str]]:
-    import csv
-
     path = REPO_ROOT / "analysis" / name
     with path.open(encoding="utf-8") as f:
         return list(csv.DictReader(f))
@@ -500,6 +499,63 @@ CLAIMS: List[Dict[str, Any]] = [
 ]
 
 
+def _parse_claim_source(source: str) -> Tuple[str, str]:
+    """Split a CLAIMS source string into (source_file, source_column_or_cell)."""
+    src = (source or "").strip()
+    if not src:
+        return ("", "")
+    parts = src.split(None, 1)
+    head = parts[0]
+    rest = parts[1] if len(parts) > 1 else ""
+    if "/" in head or head.endswith((".csv", ".txt", ".tex", ".json", ".md", ".py")):
+        return (head, rest)
+    return ("", src)
+
+
+def _format_claim_value(value: Any) -> str:
+    if value is None:
+        return ""
+    if isinstance(value, bool):
+        return "true" if value else "false"
+    if isinstance(value, (tuple, list)):
+        return json.dumps(list(value), separators=(",", ":"))
+    if isinstance(value, float):
+        return repr(value) if value != int(value) else str(int(value))
+    return str(value)
+
+
+def export_claims_csv(path: Optional[Path] = None) -> Path:
+    """Write analysis/claims.csv from the V9 CLAIMS registry (single source of truth)."""
+    out = path if path is not None else REPO_ROOT / "analysis" / "claims.csv"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    fieldnames = [
+        "claim_id",
+        "text",
+        "kind",
+        "source_file",
+        "source_column_or_cell",
+        "value",
+    ]
+    rows: List[Dict[str, str]] = []
+    for claim in CLAIMS:
+        source_file, source_cell = _parse_claim_source(str(claim.get("source", "")))
+        rows.append(
+            {
+                "claim_id": str(claim["id"]),
+                "text": str(claim.get("text", "")),
+                "kind": str(claim.get("kind", "analysis")),
+                "source_file": source_file,
+                "source_column_or_cell": source_cell,
+                "value": _format_claim_value(claim.get("value")),
+            }
+        )
+    with out.open("w", encoding="utf-8", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(rows)
+    return out
+
+
 class CheckResult:
     def __init__(self, vid: str) -> None:
         self.vid = vid
@@ -918,6 +974,8 @@ def v9() -> CheckResult:
     if not CLAIMS:
         r.fail("CLAIMS empty; every manuscript number must be registered")
         return r
+    claims_path = export_claims_csv()
+    r.note(f"exported {claims_path.relative_to(REPO_ROOT)} ({len(CLAIMS)} rows)")
     n_ok = 0
     for claim in CLAIMS:
         cid = claim["id"]
