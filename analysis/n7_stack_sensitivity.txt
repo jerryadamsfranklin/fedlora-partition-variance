@@ -1,0 +1,7 @@
+N7-3 Stack sensitivity
+Every l3_ext data_seed 2007-2010 mixes torch stacks across its 6 cells.
+l3_ext OLS stack_drift coef=-2.752606e-04 se=3.078244e-03 p≈0.9287 (n=24, n_drift=15)
+|offset|=2.752606e-04; pooled s2_PM=2.944651e-05; sqrt(s2_PM)=5.426464e-03; |offset|/sqrt(s2_PM)=0.051
+s2_PM p6(2.2.0)=1.105393e-05 vs pooled p10=2.944651e-05 ratio=2.66
+Interpretation: partition groups are NOT wholly within one stack; stack offset is estimable and comparable in scale to interaction SD. Cannot attribute interaction inflation to partitions alone.
+tl_a05 OLS stack_drift coef=-2.314271e-05 p≈0.9113 n_drift=39/60

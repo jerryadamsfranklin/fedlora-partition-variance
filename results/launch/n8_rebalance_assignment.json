@@ -1,0 +1,426 @@
+{
+  "policy": "greedy_by_group_largest_first",
+  "assumptions_min": {
+    "tl_train_plus_eval": 31,
+    "l3_train_plus_eval": 76
+  },
+  "machines": {
+    "0": {
+      "projected_hours": 13.8,
+      "tl_fresh": 12,
+      "l3_fresh": 6,
+      "tl_groups": [
+        {
+          "grid": "tl",
+          "het": "a05",
+          "data_seed": 2003,
+          "run_seed": 7002,
+          "n_fresh": 3,
+          "cell_ids": [
+            "tl_fedit_a05_d2003_r7002",
+            "tl_ffa_lora_a05_d2003_r7002",
+            "tl_flora_a05_d2003_r7002"
+          ],
+          "methods": [
+            "fedit",
+            "ffa_lora",
+            "flora"
+          ],
+          "projected_min": 93
+        },
+        {
+          "grid": "tl",
+          "het": "a05",
+          "data_seed": 2005,
+          "run_seed": 7002,
+          "n_fresh": 3,
+          "cell_ids": [
+            "tl_fedit_a05_d2005_r7002",
+            "tl_ffa_lora_a05_d2005_r7002",
+            "tl_flora_a05_d2005_r7002"
+          ],
+          "methods": [
+            "fedit",
+            "ffa_lora",
+            "flora"
+          ],
+          "projected_min": 93
+        },
+        {
+          "grid": "tl",
+          "het": "a05",
+          "data_seed": 2008,
+          "run_seed": 7001,
+          "n_fresh": 3,
+          "cell_ids": [
+            "tl_fedit_a05_d2008_r7001",
+            "tl_ffa_lora_a05_d2008_r7001",
+            "tl_flora_a05_d2008_r7001"
+          ],
+          "methods": [
+            "fedit",
+            "ffa_lora",
+            "flora"
+          ],
+          "projected_min": 93
+        },
+        {
+          "grid": "tl",
+          "het": "a05",
+          "data_seed": 2010,
+          "run_seed": 7001,
+          "n_fresh": 3,
+          "cell_ids": [
+            "tl_fedit_a05_d2010_r7001",
+            "tl_ffa_lora_a05_d2010_r7001",
+            "tl_flora_a05_d2010_r7001"
+          ],
+          "methods": [
+            "fedit",
+            "ffa_lora",
+            "flora"
+          ],
+          "projected_min": 93
+        }
+      ],
+      "l3_groups": [
+        {
+          "grid": "l3",
+          "het": "a01",
+          "data_seed": 2007,
+          "run_seed": 7001,
+          "n_fresh": 3,
+          "cell_ids": [
+            "l3_fedit_a01_d2007_r7001",
+            "l3_ffa_lora_a01_d2007_r7001",
+            "l3_flora_a01_d2007_r7001"
+          ],
+          "methods": [
+            "fedit",
+            "ffa_lora",
+            "flora"
+          ],
+          "projected_min": 228
+        },
+        {
+          "grid": "l3",
+          "het": "a01",
+          "data_seed": 2009,
+          "run_seed": 7002,
+          "n_fresh": 3,
+          "cell_ids": [
+            "l3_fedit_a01_d2009_r7002",
+            "l3_ffa_lora_a01_d2009_r7002",
+            "l3_flora_a01_d2009_r7002"
+          ],
+          "methods": [
+            "fedit",
+            "ffa_lora",
+            "flora"
+          ],
+          "projected_min": 228
+        }
+      ],
+      "tl_cell_ids": [
+        "tl_fedit_a05_d2003_r7002",
+        "tl_ffa_lora_a05_d2003_r7002",
+        "tl_flora_a05_d2003_r7002",
+        "tl_fedit_a05_d2005_r7002",
+        "tl_ffa_lora_a05_d2005_r7002",
+        "tl_flora_a05_d2005_r7002",
+        "tl_fedit_a05_d2008_r7001",
+        "tl_ffa_lora_a05_d2008_r7001",
+        "tl_flora_a05_d2008_r7001",
+        "tl_fedit_a05_d2010_r7001",
+        "tl_ffa_lora_a05_d2010_r7001",
+        "tl_flora_a05_d2010_r7001"
+      ],
+      "l3_cell_ids": [
+        "l3_fedit_a01_d2007_r7001",
+        "l3_ffa_lora_a01_d2007_r7001",
+        "l3_flora_a01_d2007_r7001",
+        "l3_fedit_a01_d2009_r7002",
+        "l3_ffa_lora_a01_d2009_r7002",
+        "l3_flora_a01_d2009_r7002"
+      ]
+    },
+    "1": {
+      "projected_hours": 12.25,
+      "tl_fresh": 9,
+      "l3_fresh": 6,
+      "tl_groups": [
+        {
+          "grid": "tl",
+          "het": "a05",
+          "data_seed": 2004,
+          "run_seed": 7001,
+          "n_fresh": 3,
+          "cell_ids": [
+            "tl_fedit_a05_d2004_r7001",
+            "tl_ffa_lora_a05_d2004_r7001",
+            "tl_flora_a05_d2004_r7001"
+          ],
+          "methods": [
+            "fedit",
+            "ffa_lora",
+            "flora"
+          ],
+          "projected_min": 93
+        },
+        {
+          "grid": "tl",
+          "het": "a05",
+          "data_seed": 2006,
+          "run_seed": 7002,
+          "n_fresh": 3,
+          "cell_ids": [
+            "tl_fedit_a05_d2006_r7002",
+            "tl_ffa_lora_a05_d2006_r7002",
+            "tl_flora_a05_d2006_r7002"
+          ],
+          "methods": [
+            "fedit",
+            "ffa_lora",
+            "flora"
+          ],
+          "projected_min": 93
+        },
+        {
+          "grid": "tl",
+          "het": "a05",
+          "data_seed": 2008,
+          "run_seed": 7002,
+          "n_fresh": 3,
+          "cell_ids": [
+            "tl_fedit_a05_d2008_r7002",
+            "tl_ffa_lora_a05_d2008_r7002",
+            "tl_flora_a05_d2008_r7002"
+          ],
+          "methods": [
+            "fedit",
+            "ffa_lora",
+            "flora"
+          ],
+          "projected_min": 93
+        }
+      ],
+      "l3_groups": [
+        {
+          "grid": "l3",
+          "het": "a01",
+          "data_seed": 2008,
+          "run_seed": 7001,
+          "n_fresh": 3,
+          "cell_ids": [
+            "l3_fedit_a01_d2008_r7001",
+            "l3_ffa_lora_a01_d2008_r7001",
+            "l3_flora_a01_d2008_r7001"
+          ],
+          "methods": [
+            "fedit",
+            "ffa_lora",
+            "flora"
+          ],
+          "projected_min": 228
+        },
+        {
+          "grid": "l3",
+          "het": "a01",
+          "data_seed": 2010,
+          "run_seed": 7001,
+          "n_fresh": 3,
+          "cell_ids": [
+            "l3_fedit_a01_d2010_r7001",
+            "l3_ffa_lora_a01_d2010_r7001",
+            "l3_flora_a01_d2010_r7001"
+          ],
+          "methods": [
+            "fedit",
+            "ffa_lora",
+            "flora"
+          ],
+          "projected_min": 228
+        }
+      ],
+      "tl_cell_ids": [
+        "tl_fedit_a05_d2004_r7001",
+        "tl_ffa_lora_a05_d2004_r7001",
+        "tl_flora_a05_d2004_r7001",
+        "tl_fedit_a05_d2006_r7002",
+        "tl_ffa_lora_a05_d2006_r7002",
+        "tl_flora_a05_d2006_r7002",
+        "tl_fedit_a05_d2008_r7002",
+        "tl_ffa_lora_a05_d2008_r7002",
+        "tl_flora_a05_d2008_r7002"
+      ],
+      "l3_cell_ids": [
+        "l3_fedit_a01_d2008_r7001",
+        "l3_ffa_lora_a01_d2008_r7001",
+        "l3_flora_a01_d2008_r7001",
+        "l3_fedit_a01_d2010_r7001",
+        "l3_ffa_lora_a01_d2010_r7001",
+        "l3_flora_a01_d2010_r7001"
+      ]
+    },
+    "2": {
+      "projected_hours": 13.1,
+      "tl_fresh": 18,
+      "l3_fresh": 3,
+      "tl_groups": [
+        {
+          "grid": "tl",
+          "het": "a05",
+          "data_seed": 2001,
+          "run_seed": 7001,
+          "n_fresh": 3,
+          "cell_ids": [
+            "tl_fedit_a05_d2001_r7001",
+            "tl_ffa_lora_a05_d2001_r7001",
+            "tl_flora_a05_d2001_r7001"
+          ],
+          "methods": [
+            "fedit",
+            "ffa_lora",
+            "flora"
+          ],
+          "projected_min": 93
+        },
+        {
+          "grid": "tl",
+          "het": "a05",
+          "data_seed": 2002,
+          "run_seed": 7001,
+          "n_fresh": 3,
+          "cell_ids": [
+            "tl_fedit_a05_d2002_r7001",
+            "tl_ffa_lora_a05_d2002_r7001",
+            "tl_flora_a05_d2002_r7001"
+          ],
+          "methods": [
+            "fedit",
+            "ffa_lora",
+            "flora"
+          ],
+          "projected_min": 93
+        },
+        {
+          "grid": "tl",
+          "het": "a05",
+          "data_seed": 2002,
+          "run_seed": 7002,
+          "n_fresh": 3,
+          "cell_ids": [
+            "tl_fedit_a05_d2002_r7002",
+            "tl_ffa_lora_a05_d2002_r7002",
+            "tl_flora_a05_d2002_r7002"
+          ],
+          "methods": [
+            "fedit",
+            "ffa_lora",
+            "flora"
+          ],
+          "projected_min": 93
+        },
+        {
+          "grid": "tl",
+          "het": "a05",
+          "data_seed": 2005,
+          "run_seed": 7001,
+          "n_fresh": 3,
+          "cell_ids": [
+            "tl_fedit_a05_d2005_r7001",
+            "tl_ffa_lora_a05_d2005_r7001",
+            "tl_flora_a05_d2005_r7001"
+          ],
+          "methods": [
+            "fedit",
+            "ffa_lora",
+            "flora"
+          ],
+          "projected_min": 93
+        },
+        {
+          "grid": "tl",
+          "het": "a05",
+          "data_seed": 2007,
+          "run_seed": 7001,
+          "n_fresh": 3,
+          "cell_ids": [
+            "tl_fedit_a05_d2007_r7001",
+            "tl_ffa_lora_a05_d2007_r7001",
+            "tl_flora_a05_d2007_r7001"
+          ],
+          "methods": [
+            "fedit",
+            "ffa_lora",
+            "flora"
+          ],
+          "projected_min": 93
+        },
+        {
+          "grid": "tl",
+          "het": "a05",
+          "data_seed": 2009,
+          "run_seed": 7002,
+          "n_fresh": 3,
+          "cell_ids": [
+            "tl_fedit_a05_d2009_r7002",
+            "tl_ffa_lora_a05_d2009_r7002",
+            "tl_flora_a05_d2009_r7002"
+          ],
+          "methods": [
+            "fedit",
+            "ffa_lora",
+            "flora"
+          ],
+          "projected_min": 93
+        }
+      ],
+      "l3_groups": [
+        {
+          "grid": "l3",
+          "het": "a01",
+          "data_seed": 2008,
+          "run_seed": 7002,
+          "n_fresh": 3,
+          "cell_ids": [
+            "l3_fedit_a01_d2008_r7002",
+            "l3_ffa_lora_a01_d2008_r7002",
+            "l3_flora_a01_d2008_r7002"
+          ],
+          "methods": [
+            "fedit",
+            "ffa_lora",
+            "flora"
+          ],
+          "projected_min": 228
+        }
+      ],
+      "tl_cell_ids": [
+        "tl_fedit_a05_d2001_r7001",
+        "tl_ffa_lora_a05_d2001_r7001",
+        "tl_flora_a05_d2001_r7001",
+        "tl_fedit_a05_d2002_r7001",
+        "tl_ffa_lora_a05_d2002_r7001",
+        "tl_flora_a05_d2002_r7001",
+        "tl_fedit_a05_d2002_r7002",
+        "tl_ffa_lora_a05_d2002_r7002",
+        "tl_flora_a05_d2002_r7002",
+        "tl_fedit_a05_d2005_r7001",
+        "tl_ffa_lora_a05_d2005_r7001",
+        "tl_flora_a05_d2005_r7001",
+        "tl_fedit_a05_d2007_r7001",
+        "tl_ffa_lora_a05_d2007_r7001",
+        "tl_flora_a05_d2007_r7001",
+        "tl_fedit_a05_d2009_r7002",
+        "tl_ffa_lora_a05_d2009_r7002",
+        "tl_flora_a05_d2009_r7002"
+      ],
+      "l3_cell_ids": [
+        "l3_fedit_a01_d2008_r7002",
+        "l3_ffa_lora_a01_d2008_r7002",
+        "l3_flora_a01_d2008_r7002"
+      ]
+    }
+  }
+}

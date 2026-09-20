@@ -1,0 +1,30 @@
+name: tl_a05_n8_m0
+tag: prod_v2
+freeze_tag: freeze-v3.1
+methods:
+- fedit
+- ffa_lora
+- flora
+config_pattern: config/vp/vp_tl_{method}_{het}.yaml
+cells:
+- het: a05
+  data_seeds:
+  - 2003
+  run_seeds:
+  - 7002
+- het: a05
+  data_seeds:
+  - 2005
+  run_seeds:
+  - 7002
+- het: a05
+  data_seeds:
+  - 2008
+  run_seeds:
+  - 7001
+- het: a05
+  data_seeds:
+  - 2010
+  run_seeds:
+  - 7001
+expected_runs: 12
