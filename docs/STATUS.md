@@ -6,7 +6,12 @@ Replace this file in the Claude Project whenever the state changes. Keep only on
 
 ## Current phase
 
-Manuscript tagged `ieee-access-submitted-v1` on `main` at `e21251c` (10 pages, verifier exit 0, typography clean). Ready for ScholarOne submission to IEEE Access. Record the manuscript ID here after submit.
+Manuscript tip `5788946` (O9) on `main` / `phase-o` (10 pages, verifier exit 0, typography clean). Tag `ieee-access-submitted` marks this tip as the PDF to submit. Ready for ScholarOne; record the manuscript ID here after submit.
+
+## Tags
+
+- `ieee-access-submitted-v1` → `e21251c` (O8-6). Created before the O9 edits; retained; do not delete or move.
+- `ieee-access-submitted` → `5788946` (O9). Marks the submitted PDF (held-out-loss justification, limitations framing, abstract protocol order). No new Zenodo release: code/results unchanged since `v0.9.1`.
 
 ## Venue
 
@@ -21,7 +26,8 @@ IEEE Access. Single-anonymized, no anonymization. About 20% overall acceptance; 
 - ORCID 0009-0006-8470-8349 in the author block, .zenodo.json, and CITATION.cff
 - Corresponding email in manuscript: jerry.adamsf@gmail.com (domain address preferred if routing is ready)
 - Public repo scan clean at HEAD (no tokens; IPs redacted forward, history not rewritten)
-- `phase-o` fast-forwarded into `main`; tag `ieee-access-submitted-v1`
+- `phase-o` fast-forwarded into `main`; submission tags recorded above
+- O9: Why held-out loss subsection; limitations verifier framing; abstract protocol after six-to-ten reversal; REML MixedLM cross-check attempted locally and did not identify (moment estimates primary)
 
 ## Next
 
