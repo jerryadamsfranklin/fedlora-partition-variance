@@ -479,6 +479,18 @@ CLAIMS: List[Dict[str, Any]] = [
         "kind": "external-verified",
     },
     {
+        "id": "ext_flora_mmlu_binomial_se",
+        "text": "FLoRA 1444-sample MMLU at p≈0.30: binomial SE ≈1.2 pp; independent-difference SE ≤≈1.7 pp vs 0.44-point margin",
+        "value": (1444, 0.30, 0.01205941, 0.01705458, 0.44),
+        "source": (
+            "Wang et al. NeurIPS 2024 App./text: MMLU on 1,444 samples; "
+            "our calc SE=sqrt(0.3*0.7/1444)=0.012059≈1.2 pp; "
+            "SE_diff≤sqrt(2)*SE≈0.01705≈1.7 pp under independent scoring "
+            "(external-verified sample size; arithmetic ours)"
+        ),
+        "kind": "external-verified",
+    },
+    {
         "id": "ext_hsu_dirichlet",
         "text": "Hsu et al. Dirichlet Dir(alpha p) non-IID construction",
         "value": None,
