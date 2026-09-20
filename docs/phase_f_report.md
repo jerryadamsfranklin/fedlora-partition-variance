@@ -81,8 +81,8 @@ With **2Ã— 4090** on `tl` shards 0+1 (27+24 cells): expect on the order of **~1â
 
 | Instance | Command | Cells |
 |---|---|---|
-| Machine 1 (`116.127.115.27:43029`) | `run_grid.py --grid grids/tl.yaml --shard 0 --num-shards 3 --production --workers 1` | 27 |
-| Machine 2 (`115.75.223.236:57132`) | `run_grid.py --grid grids/tl.yaml --shard 1 --num-shards 3 --production --workers 1` | 24 |
+| Machine 1 (M1) | `run_grid.py --grid grids/tl.yaml --shard 0 --num-shards 3 --production --workers 1` | 27 |
+| Machine 2 (M2) | `run_grid.py --grid grids/tl.yaml --shard 1 --num-shards 3 --production --workers 1` | 24 |
 
 Still needed later: **shard 2** (24 cells) on a third 4090; then `grids/l3.yaml` on matching 4090s (same `gpu_name`).
 

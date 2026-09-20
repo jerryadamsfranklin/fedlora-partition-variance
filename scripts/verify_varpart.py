@@ -427,11 +427,11 @@ def v1(cells: Sequence[Cell]) -> CheckResult:
         completes = _complete_run_dirs(cell)
         if len(completes) != 1:
             r.fail(
-                f"{cell.cell_id}: expected exactly 1 complete prod_v1 run, got {len(completes)} "
+                f"{cell.cell_id}: expected exactly 1 complete {cell.tag} run, got {len(completes)} "
                 f"{[d.name for d in completes]}"
             )
     if r.ok:
-        r.note(f"{len(cells)} cells each have exactly one complete prod_v1 run")
+        r.note(f"{len(cells)} cells each have exactly one complete run (per cell tag)")
     return r
 
 
@@ -1068,14 +1068,12 @@ def main() -> None:
     print("\n======== cross-grid ========")
     cross_checks = [v2_cross_tag(dict(cells_by_model)), v9(), v10(grid_names), v11(), v12()]
     for res in cross_checks:
-        # V9 and V10 never fail the exit criteria for Phase H; V11/V12 must pass
-        # V2-cross-tag is informational until drifted cells are retrained (N7).
+        # V9 and V10 never fail the exit criteria for Phase H; V11/V12 must pass.
+        # V2-cross-tag is blocking after N8 retrain (stack confound resolved).
         if res.vid == "V9":
             status = "SKIP" if not CLAIMS else ("PASS" if res.ok else "FAIL")
-        elif res.vid in ("V10", "V2-cross-tag"):
-            status = "INFO" if res.vid == "V10" else ("PASS" if res.ok else "FAIL")
-            if res.vid == "V2-cross-tag" and not res.ok:
-                status = "FAIL"
+        elif res.vid == "V10":
+            status = "INFO"
         else:
             status = "PASS" if res.ok else "FAIL"
         print(f"[{status}] {res.vid}")
@@ -1085,17 +1083,17 @@ def main() -> None:
             print(f"       FAIL: {f}")
         all_results.append(res)
 
-    # Exit criteria: V1-V8, V9 (populated), V11, and V12 must pass; V10 informational.
-    # V2-cross-tag is reported but not blocking until N7 retrain completes (stack confound).
+    # Exit criteria: V1-V8, V9 (populated), V11, V12, and V2-cross-tag must pass.
+    # V10 remains informational.
     blocking = [
         res
         for res in all_results
-        if res.vid not in ("V10", "V2-cross-tag") and not res.ok
+        if res.vid not in ("V10",) and not res.ok
     ]
     if blocking:
         print(f"\nVERIFY FAILED: {len(blocking)} blocking check(s)")
         sys.exit(1)
-    print("\nVERIFY OK: V1-V8, V9, V11, and V12 passed (V10 informational)")
+    print("\nVERIFY OK: V1-V8, V9, V11, V12, and V2-cross-tag passed (V10 informational)")
     sys.exit(0)
 
 

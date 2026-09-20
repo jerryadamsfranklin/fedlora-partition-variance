@@ -1,13 +1,22 @@
-N8-0 Machine gates (19 Sep 2026)
+N8-0 Machine gates (19 Sep 2026; endpoints redacted 20 Sep)
 
-M2 (78.44.170.162:53267) — PASS
+M1 (rebalance machine 1) — PASS
   gpu_name: NVIDIA GeForce RTX 4090
   torch: 2.2.0+cu121
   git: freeze-v3.1
-  disk: 113G free on /workspace
+  grid: tl_a05_n8_m1.yaml (9) + l3_ext_n8_m1.yaml (6)
 
-M1 — NOT RENTED YET (await Jerry)
-M3 — NOT RENTED YET (await Jerry)
+M0 (Taiwan; rebalance machine 0) — PASS
+  gpu_name: NVIDIA GeForce RTX 4090
+  torch: 2.2.0+cu121
+  git: freeze-v3.1
+  grid: tl_a05_n8_m0.yaml (12) + l3_ext_n8_m0.yaml (6)
 
-Do not launch until M1 and M3 pass the same gates after vast_setup.sh with N7-5 assert.
+M2 (France; rebalance machine 2) — PASS (replaced Japan after slow net)
+  gpu_name: NVIDIA GeForce RTX 4090
+  torch: 2.2.0+cu121
+  git: freeze-v3.1
+  grid: tl_a05_n8_m2.yaml (18) + l3_ext_n8_m2.yaml (3)
+
 Do not use default --num-shards 3; use grids/*_n8_m{i}.yaml (see analysis/n8_balance_check.txt).
+SSH host:port strings removed from this file (public-repo hygiene).
