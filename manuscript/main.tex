@@ -1,7 +1,8 @@
 %% manuscript/main.tex
-%% SAI / IJACSA paper format (IEEEtran conference class from thesai.org ZipFileHandler).
-%% Review copy: anonymized (Phase M step 4).
-\documentclass[conference, letterpaper]{IEEEtran}
+%% Phase O3: migrating from IJACSA conference IEEEtran toward IEEE Access
+%% (single-anonymized). Full ieeeaccess.cls swap still requires the Access
+%% template zip; journal-mode IEEEtran is the interim Access-facing shell.
+\documentclass[journal, letterpaper]{IEEEtran}
 
 \usepackage[pdftex]{graphicx}
 \usepackage[cmex10]{amsmath}
@@ -25,30 +26,22 @@
 
 \graphicspath{{../figures/}{figures/}}
 
-% SAI header/footer (from Paper_format.tex)
-\pagestyle{fancy}
-\fancyhf{}
-\fancyhead[L]{\footnotesize (IJACSA) International Journal of Advanced Computer Science and Applications,}
-\fancyhead[R]{\footnotesize Vol.\ , No.\ , 2026}
-\renewcommand{\headrulewidth}{0.5pt}
-\fancyfoot[C]{www.ijacsa.thesai.org}
-\renewcommand{\footrulewidth}{0.5pt}
-\fancyfoot[R]{\thepage \  $|$ P a g e }
+% Access is single-anonymized: author identity restored (O3).
+\pagestyle{plain}
 
 \begin{document}
 
 \title{Partition Draws, Not Aggregators: Decomposing Result Variance in Federated LoRA Fine-Tuning Under Non-IID Splits}
 
-% Double-blind review copy: no author, affiliation, or acknowledgments.
-\author{\IEEEauthorblockN{Anonymous Author(s)}
-\IEEEauthorblockA{Anonymous Affiliation}
+\author{\IEEEauthorblockN{Jerry Adams Franklin}
+\IEEEauthorblockA{Independent Researcher\\
+ORCID: \textit{(to be inserted before submission)}\\
+Email: \textit{(non-Gmail address on jerryadamsfranklin.com, to be inserted)}}
 }
 
 \maketitle
 
 \input{sections/00_abstract}
-
-\IEEEpeerreviewmaketitle
 
 \input{sections/01_introduction}
 \input{sections/02_related_work}
@@ -106,7 +99,9 @@
 
 \section*{Declarations}
 \paragraph{Data and code availability.}
-Code and run artifacts will be released upon acceptance.
+Code and run artifacts will be released at
+\url{https://github.com/jerryadamsfranklin/fedlora-partition-variance}
+with an archival Zenodo DOI (\textit{DOI to be minted at public release}).
 \paragraph{Funding.}
 None.
 \paragraph{Conflicts of interest.}
