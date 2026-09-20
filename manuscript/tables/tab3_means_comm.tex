@@ -1,13 +1,15 @@
 \begin{tabular}{llrrrr}
 \toprule
-Model & Method & Mean ($\alpha{=}0.1$) & SD & Comm.\ range (MB) & Active clients \\
+Model & Method & Mean & SD & Comm.\ range (MB) & Active clients \\
 \midrule
-TinyLlama-1.1B & FedIT & 1.6962 & 0.0038 & 2320.3--2578.1 & 9--10 \\
-TinyLlama-1.1B & FFA-LoRA & 1.7192 & 0.0026 & 884.8--983.1 & 9--10 \\
-TinyLlama-1.1B & FLoRA & 1.6957 & 0.0013 & 2320.3--2578.1 & 9--10 \\
-LLaMA-3.2-3B & FedIT & 1.8028 & 0.0051 & 2362.5--2625.0 & 9--10 \\
-LLaMA-3.2-3B & FFA-LoRA & 1.8355 & 0.0031 & 992.3--1102.5 & 9--10 \\
-LLaMA-3.2-3B & FLoRA & 1.8049 & 0.0020 & 2362.5--2625.0 & 9--10 \\
+TinyLlama-1.1B ($\alpha{=}0.1$) & FedIT & 1.6962 & 0.0038 & 2320.3--2578.1 & 9--10 \\
+TinyLlama-1.1B ($\alpha{=}0.1$) & FFA-LoRA & 1.7192 & 0.0026 & 884.8--983.1 & 9--10 \\
+TinyLlama-1.1B ($\alpha{=}0.1$) & FLoRA & 1.6957 & 0.0013 & 2320.3--2578.1 & 9--10 \\
+TinyLlama-1.1B ($\alpha{=}0.5$) & FedIT & 1.6918 & 0.0006 & 2578.1--2578.1 & 10--10 \\
+TinyLlama-1.1B ($\alpha{=}0.5$) & FFA-LoRA & 1.7183 & 0.0013 & 983.1--983.1 & 10--10 \\
+TinyLlama-1.1B ($\alpha{=}0.5$) & FLoRA & 1.6939 & 0.0006 & 2578.1--2578.1 & 10--10 \\
+LLaMA-3.2-3B ($p{=}10$) & FedIT & 1.8045 & 0.0077 & 2362.5--2625.0 & 9--10 \\
+LLaMA-3.2-3B ($p{=}10$) & FFA-LoRA & 1.8350 & 0.0035 & 992.2--1102.5 & 9--10 \\
+LLaMA-3.2-3B ($p{=}10$) & FLoRA & 1.8038 & 0.0029 & 2362.5--2625.0 & 9--10 \\
 \bottomrule
 \end{tabular}
-

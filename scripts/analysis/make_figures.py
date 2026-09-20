@@ -160,9 +160,15 @@ def fig1_heldout() -> Path:
 
 
 def fig2_rank_flip() -> Path:
-    """Full-width: aggregate flips (top) + per-pair flips (bottom)."""
-    rf = pd.read_csv(ANALYSIS / "rank_flip.csv")
-    rp = pd.read_csv(ANALYSIS / "rank_flip_pairs.csv")
+    """Full-width: aggregate flips (top) + per-pair flips (bottom).
+
+    TinyLlama from rank_flip.csv / rank_flip_pairs.csv (p=10 a01).
+    LLaMA from rank_flip_l3_p10.csv / rank_flip_pairs_l3_p10.csv (p=10 primary).
+    """
+    rf_tl = pd.read_csv(ANALYSIS / "rank_flip.csv")
+    rp_tl = pd.read_csv(ANALYSIS / "rank_flip_pairs.csv")
+    rf_l3 = pd.read_csv(ANALYSIS / "rank_flip_l3_p10.csv")
+    rp_l3 = pd.read_csv(ANALYSIS / "rank_flip_pairs_l3_p10.csv")
     min_font = 8.0
     fig = plt.figure(figsize=(IN_FULL, 4.8))
     gs = fig.add_gridspec(2, 2, height_ratios=[1.0, 1.0], hspace=0.55, wspace=0.32)
@@ -171,8 +177,10 @@ def fig2_rank_flip() -> Path:
     ax_pair_tl = fig.add_subplot(gs[1, 0])
     ax_pair_l3 = fig.add_subplot(gs[1, 1])
 
-    for ax, model in ((ax_tl, "tl"), (ax_l3, "l3")):
-        sub = rf[(rf.model == model) & (rf.event == "best")]
+    for ax, model, rf in ((ax_tl, "tl", rf_tl), (ax_l3, "l3", rf_l3)):
+        sub = rf[(rf.event == "best")].copy()
+        if "model" in sub.columns:
+            sub = sub[sub.model == model]
         for protocol, color in (("paired", C["paired"]), ("unpaired", C["unpaired"])):
             s = sub[sub.protocol == protocol].sort_values("k")
             ax.errorbar(
@@ -192,14 +200,17 @@ def fig2_rank_flip() -> Path:
         ax.set_ylim(0, 1)
         ax.set_xlabel("Partitions drawn (k)", fontsize=8)
         ax.set_ylabel("P(best differs)" if model == "tl" else "", fontsize=8)
-        ax.set_title(MODEL_LABEL[model], fontsize=8)
+        title = MODEL_LABEL[model] + (" ($p{=}10$)" if model == "l3" else "")
+        ax.set_title(title, fontsize=8)
         ax.tick_params(labelsize=8)
         ax.grid(True, alpha=0.3, linewidth=0.5)
         if model == "tl":
             ax.legend(frameon=False, loc="upper right", fontsize=8)
 
-    for ax, model in ((ax_pair_tl, "tl"), (ax_pair_l3, "l3")):
-        sub = rp[(rp.model == model) & (rp.protocol == "paired")]
+    for ax, model, rp in ((ax_pair_tl, "tl", rp_tl), (ax_pair_l3, "l3", rp_l3)):
+        sub = rp[rp.protocol == "paired"].copy()
+        if "model" in sub.columns:
+            sub = sub[sub.model == model]
         for pair, color, ls in (
             ("fedit-flora", C["tie"], "-"),
             ("fedit-ffa_lora", C["sep1"], "--"),
@@ -241,26 +252,34 @@ def fig2_rank_flip() -> Path:
 
 
 def fig3_power() -> Path:
-    """Full-width draws-needed figure (preregistered deltas + observed near-tie)."""
-    power = pd.read_csv(ANALYSIS / "power.csv")
-    pre = power[power.kind == "preregistered_delta"].copy()
-    obs = power[(power.kind == "observed_gap") & (power.pair == "fedit-flora")].copy()
+    """Full-width draws-needed figure (preregistered deltas + observed near-tie).
+
+    TinyLlama from power.csv; LLaMA from power_l3_p10.csv (p=10; near-tie >1000).
+    """
+    power_tl = pd.read_csv(ANALYSIS / "power.csv")
+    power_l3 = pd.read_csv(ANALYSIS / "power_l3_p10.csv")
     min_font = 8.0
 
     def _n_num(v):
-        if isinstance(v, str) and "more" in str(v):
+        if isinstance(v, str) and "more" in str(v).lower():
             return 1000.0
         return float(v)
 
     fig, axes = plt.subplots(1, 2, figsize=(IN_FULL, 2.7), sharey=True)
-    for ax, model in zip(axes, ("tl", "l3")):
-        sub = pre[pre.model == model].sort_values("delta").reset_index(drop=True)
-        xs = np.arange(len(sub), dtype=float)
+    for ax, model, power in zip(axes, ("tl", "l3"), (power_tl, power_l3)):
+        pre = power[power.kind == "preregistered_delta"].copy()
+        if "model" in pre.columns:
+            pre = pre[pre.model == model]
+        pre = pre.sort_values("delta").reset_index(drop=True)
+        obs = power[(power.kind == "observed_gap") & (power.pair == "fedit-flora")].copy()
+        if "model" in obs.columns:
+            obs = obs[obs.model == model]
+        xs = np.arange(len(pre), dtype=float)
         for protocol, col, key, mark in (
             ("paired", C["paired"], "n_paired", "o"),
             ("unpaired", C["unpaired"], "n_unpaired_per_method", "s"),
         ):
-            ys = [_n_num(v) for v in sub[key]]
+            ys = [_n_num(v) for v in pre[key]]
             ax.plot(
                 xs,
                 ys,
@@ -270,12 +289,11 @@ def fig3_power() -> Path:
                 color=col,
                 label=protocol,
             )
-        o = obs[obs.model == model]
-        if not o.empty:
-            n_paired = float(o["n_paired"].iloc[0])
-            gap = abs(float(o["delta"].iloc[0]))
-            # Place star to the right of the preregistered series to use empty upper region
-            x_star = float(len(sub)) + 0.35
+        if not obs.empty:
+            n_raw = obs["n_paired"].iloc[0]
+            n_paired = _n_num(n_raw)
+            gap = abs(float(obs["delta"].iloc[0]))
+            x_star = float(len(pre)) + 0.35
             ax.scatter(
                 [x_star],
                 [n_paired],
@@ -285,10 +303,11 @@ def fig3_power() -> Path:
                 zorder=5,
                 label="obs. near-tie (paired)",
             )
+            n_lab = "more than 1000" if isinstance(n_raw, str) and "more" in str(n_raw).lower() else f"n={int(n_paired)}"
             ax.annotate(
-                f"n={int(n_paired)}\n(|g|={gap:.4f})",
+                f"{n_lab}\n(|g|={gap:.4f})",
                 xy=(x_star, n_paired),
-                xytext=(x_star - 0.15, n_paired * 0.55),
+                xytext=(x_star - 0.15, n_paired * 0.55 if n_paired < 900 else 200),
                 fontsize=8,
                 color=C["tie"],
                 arrowprops=dict(arrowstyle="-", color=C["tie"], lw=0.7),
@@ -299,12 +318,13 @@ def fig3_power() -> Path:
         ax.set_xlabel(r"Detectable $\Delta$ / observed gap", fontsize=8)
         if model == "tl":
             ax.set_ylabel("Partitions needed (n)", fontsize=8)
-        ax.set_title(MODEL_LABEL[model], fontsize=8)
-        tick_x = list(xs) + ([float(len(sub)) + 0.35] if not o.empty else [])
-        tick_lab = [f"{d:g}" for d in sub["delta"]] + (["near-tie"] if not o.empty else [])
+        title = MODEL_LABEL[model] + (" ($p{=}10$)" if model == "l3" else "")
+        ax.set_title(title, fontsize=8)
+        tick_x = list(xs) + ([float(len(pre)) + 0.35] if not obs.empty else [])
+        tick_lab = [f"{d:g}" for d in pre["delta"]] + (["near-tie"] if not obs.empty else [])
         ax.set_xticks(tick_x)
         ax.set_xticklabels(tick_lab, fontsize=8)
-        ax.set_xlim(-0.35, float(len(sub)) + 0.9)
+        ax.set_xlim(-0.35, float(len(pre)) + 0.9)
         ax.tick_params(labelsize=8)
         ax.grid(True, which="both", alpha=0.3, linewidth=0.5)
         if model == "tl":

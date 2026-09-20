@@ -1,10 +1,14 @@
-\begin{tabular}{lrrrlllrrr}
+\begin{tabular}{llrrrlllrrr}
 \toprule
-Model & $\hat\sigma^2_P$ & $\hat\sigma^2_{PM}$ & $\hat\sigma^2_E$ & Share $P$ & Share $PM$ & Share $E$ & $p$ & $m$ & $r$ \\
+Model & Setting & $\hat\sigma^2_P$ & $\hat\sigma^2_{PM}$ & $\hat\sigma^2_E$ & Share $P$ & Share $PM$ & Share $E$ & $p$ & $m$ & $r$ \\
 \midrule
-TinyLlama-1.1B & 4.09e-06 & 3.78e-06 & 1.89e-07 & 0.508 [0.202, 0.663] & 0.469 [0.316, 0.765] & 0.023 [0.007, 0.056] & 10 & 3 & 2 \\
-LLaMA-3.2-3B & 3.28e-06 & 1.11e-05 & 1.31e-07 & 0.227 [0.000, 0.551] & 0.764 [0.443, 0.990] & 0.009 [0.002, 0.043] & 6 & 3 & 2 \\
+TinyLlama-1.1B & $\alpha{=}0.1$ & 4.09e-06 & 3.78e-06 & 1.89e-07 & 0.508 [0.202, 0.663] & 0.469 [0.316, 0.765] & 0.023 [0.007, 0.056] & 10 & 3 & 2 \\
+TinyLlama-1.1B & $\alpha{=}0.5$ & 2.22e-07 & 5.47e-07 & 3.34e-08 & 0.277 [0.000, 0.597] & 0.682 [0.352, 0.958] & 0.042 [0.027, 0.094] & 10 & 3 & 2 \\
+LLaMA-3.2-3B & $\alpha{=}0.1$, $p{=}10$ & 0.00e+00 & 2.94e-05 & 2.51e-07 & 0.000 [0.000, 0.329] & 0.992 [0.662, 0.995] & 0.008 [0.005, 0.029] & 10 & 3 & 2 \\
+LLaMA-3.2-3B & $\alpha{=}0.1$, $p{=}6$ sens.\ & 3.28e-06 & 1.11e-05 & 1.31e-07 & 0.227 [0.000, 0.551] & 0.764 [0.443, 0.990] & 0.009 [0.002, 0.043] & 6 & 3 & 2 \\
 \bottomrule
 \end{tabular}
 
-% Caption note: balanced two-way ANOVA with replication at Dirichlet $\alpha{=}0.1$; $p$ partitions, $m{=}3$ methods (fixed), $r{=}2$ run seeds. Shares are point estimates with percentile bootstrap 95\% CIs over partitions ($B{=}2000$). No method-of-moments estimate was truncated at zero.
+% Caption note: balanced two-way ANOVA with replication; $p$ partitions, $m{=}3$ methods (fixed), $r{=}2$ run seeds.
+% Shares are point estimates with percentile bootstrap 95\% CIs over partitions ($B{=}2000$).
+% LLaMA $p{=}10$ is primary ($s2_P$ truncated at zero); $p{=}6$ is the pre-registered sensitivity.

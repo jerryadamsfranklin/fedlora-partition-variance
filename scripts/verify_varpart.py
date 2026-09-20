@@ -105,19 +105,36 @@ CLAIMS: List[Dict[str, Any]] = [
     },
     {
         "id": "l3_share_PM",
-        "text": "LLaMA interaction share 0.764",
-        "value": 0.764,
-        "source": "analysis/variance_components.csv share_PM model=l3",
+        "text": "LLaMA interaction share 0.992 at p=10",
+        "value": 0.992,
+        "source": "analysis/variance_components_l3_p10.csv share_PM label=I10_l3_p10",
         "kind": "analysis",
-        "check": lambda: abs(float(_row("variance_components.csv", model="l3")["share_PM"]) - 0.764) < 5e-4,
+        "check": lambda: abs(
+            float(_row("variance_components_l3_p10.csv", label="I10_l3_p10")["share_PM"]) - 0.9915
+        )
+        < 5e-3,
     },
     {
         "id": "l3_share_P_ci_includes_0",
-        "text": "LLaMA partition share CI includes 0",
+        "text": "LLaMA partition share CI includes 0 at p=10",
         "value": 0.0,
-        "source": "analysis/variance_components.csv share_P_ci_lo model=l3",
+        "source": "analysis/variance_components_l3_p10.csv share_P_ci_lo label=I10_l3_p10",
         "kind": "analysis",
-        "check": lambda: float(_row("variance_components.csv", model="l3")["share_P_ci_lo"]) == 0.0,
+        "check": lambda: float(
+            _row("variance_components_l3_p10.csv", label="I10_l3_p10")["share_P_ci_lo"]
+        )
+        == 0.0,
+    },
+    {
+        "id": "l3_trunc_P_p10",
+        "text": "LLaMA s2_P truncated at p=10",
+        "value": True,
+        "source": "analysis/variance_components_l3_p10.csv trunc_P label=I10_l3_p10",
+        "kind": "analysis",
+        "check": lambda: str(
+            _row("variance_components_l3_p10.csv", label="I10_l3_p10")["trunc_P"]
+        ).lower()
+        in ("true", "1"),
     },
     {
         "id": "tl_flip_k3_paired",
@@ -136,6 +153,25 @@ CLAIMS: List[Dict[str, Any]] = [
                 )["prob"]
             )
             - 0.377
+        )
+        < 5e-4,
+    },
+    {
+        "id": "l3_flip_k3_paired_p10",
+        "text": "LLaMA 3-draw paired flip probability 0.493 at p=10",
+        "value": 0.493,
+        "source": "analysis/rank_flip_l3_p10.csv k=3 protocol=paired event=best",
+        "kind": "analysis",
+        "check": lambda: abs(
+            float(
+                _row(
+                    "rank_flip_l3_p10.csv",
+                    k="3",
+                    protocol="paired",
+                    event="best",
+                )["prob"]
+            )
+            - 0.4933
         )
         < 5e-4,
     },
@@ -159,31 +195,36 @@ CLAIMS: List[Dict[str, Any]] = [
     },
     {
         "id": "l3_near_tie_n_paired",
-        "text": "Near-tie needs 46 paired draws (l3)",
-        "value": 46,
-        "source": "analysis/power.csv model=l3 pair=fedit-flora kind=observed_gap",
+        "text": "Near-tie needs more than 1000 paired draws (l3 p=10)",
+        "value": "more than 1000",
+        "source": "analysis/power_l3_p10.csv pair=fedit-flora kind=observed_gap",
         "kind": "analysis",
-        "check": lambda: int(
-            float(
-                _row(
-                    "power.csv",
-                    model="l3",
-                    pair="fedit-flora",
-                    kind="observed_gap",
-                )["n_paired"]
-            )
+        "check": lambda: str(
+            _row(
+                "power_l3_p10.csv",
+                pair="fedit-flora",
+                kind="observed_gap",
+            )["n_paired"]
         )
-        == 46,
+        .lower()
+        .startswith("more"),
     },
     {
         "id": "separable_n_paired_3",
         "text": "Separable pairs need 3 paired draws",
         "value": 3,
-        "source": "analysis/power.csv observed_gap fedit-ffa_lora / ffa_lora-flora",
+        "source": "analysis/power.csv and power_l3_p10.csv observed_gap",
         "kind": "analysis",
         "check": lambda: all(
             int(float(r["n_paired"])) == 3
             for r in _csv_rows("power.csv")
+            if r["kind"] == "observed_gap"
+            and r["pair"] != "fedit-flora"
+            and r["model"] == "tl"
+        )
+        and all(
+            int(float(r["n_paired"])) == 3
+            for r in _csv_rows("power_l3_p10.csv")
             if r["kind"] == "observed_gap" and r["pair"] != "fedit-flora"
         ),
     },
@@ -213,13 +254,13 @@ CLAIMS: List[Dict[str, Any]] = [
     },
     {
         "id": "tuned_loss_range",
-        "text": "Fine-tuned held-out loss between 1.69 and 1.84",
-        "value": (1.69, 1.84),
+        "text": "Fine-tuned held-out loss between 1.69 and 1.85",
+        "value": (1.69, 1.85),
         "source": "analysis/runs.csv heldout_loss min/max",
         "kind": "analysis",
         "check": lambda: (
             min(float(r["heldout_loss"]) for r in _csv_rows("runs.csv")) >= 1.69
-            and max(float(r["heldout_loss"]) for r in _csv_rows("runs.csv")) <= 1.84
+            and max(float(r["heldout_loss"]) for r in _csv_rows("runs.csv")) <= 1.85
         ),
     },
     {
@@ -236,13 +277,17 @@ CLAIMS: List[Dict[str, Any]] = [
     },
     {
         "id": "sd_pair_l3",
-        "text": "Paired SD 0.00473 (l3)",
-        "value": 0.00473,
-        "source": "analysis/power.csv sd_pair_model model=l3",
+        "text": "Paired SD 0.00770 (l3 p=10)",
+        "value": 0.00770,
+        "source": "analysis/power_l3_p10.csv sd_pair_model",
         "kind": "analysis",
         "check": lambda: abs(
-            float(_row("power.csv", model="l3", kind="preregistered_delta", delta="0.005")["sd_pair_model"])
-            - 0.00473
+            float(
+                _row("power_l3_p10.csv", kind="preregistered_delta", delta="0.005")[
+                    "sd_pair_model"
+                ]
+            )
+            - 0.007706
         )
         < 5e-5,
     },
@@ -266,21 +311,19 @@ CLAIMS: List[Dict[str, Any]] = [
     },
     {
         "id": "l3_near_tie_unpaired",
-        "text": "Near-tie unpaired n 57 (l3)",
-        "value": 57,
-        "source": "analysis/power.csv n_unpaired_per_method model=l3 pair=fedit-flora",
+        "text": "Near-tie unpaired more than 1000 (l3 p=10)",
+        "value": "more than 1000",
+        "source": "analysis/power_l3_p10.csv n_unpaired_per_method pair=fedit-flora",
         "kind": "analysis",
-        "check": lambda: int(
-            float(
-                _row(
-                    "power.csv",
-                    model="l3",
-                    pair="fedit-flora",
-                    kind="observed_gap",
-                )["n_unpaired_per_method"]
-            )
+        "check": lambda: str(
+            _row(
+                "power_l3_p10.csv",
+                pair="fedit-flora",
+                kind="observed_gap",
+            )["n_unpaired_per_method"]
         )
-        == 57,
+        .lower()
+        .startswith("more"),
     },
     {
         "id": "method_means_tl_flora",
@@ -294,6 +337,36 @@ CLAIMS: List[Dict[str, Any]] = [
         < 5e-5,
     },
     {
+        "id": "method_means_l3_p10_n20",
+        "text": "LLaMA a01 n=20 per method at p=10",
+        "value": 20,
+        "source": "analysis/method_means.csv model=l3 het=a01",
+        "kind": "analysis",
+        "check": lambda: all(
+            int(r["n"]) == 20
+            for r in _csv_rows("method_means.csv")
+            if r["model"] == "l3" and r["het"] == "a01"
+        ),
+    },
+    {
+        "id": "stack_effect_l3_mean",
+        "text": "N9 l3 stack mean delta 8.4e-4",
+        "value": 8.4e-4,
+        "source": "analysis/stack_effect.csv summary label=l3/a01",
+        "kind": "analysis",
+        "check": lambda: abs(
+            float(
+                next(
+                    r["mean_delta"]
+                    for r in _csv_rows("stack_effect.csv")
+                    if r.get("row_kind") == "summary" and r.get("label") == "l3/a01"
+                )
+            )
+            - 8.416e-4
+        )
+        < 5e-6,
+    },
+    {
         "id": "comm_v6_match",
         "text": "Communication matches V6 formula (max abs err 0)",
         "value": 0.0,
@@ -305,20 +378,25 @@ CLAIMS: List[Dict[str, Any]] = [
         "id": "ffa_slope_tl",
         "text": "FFA-LoRA TinyLlama MB/client slope 98.3125",
         "value": 98.3125,
-        "source": "analysis/comm.csv fit_slope_per_active model=tl method=ffa_lora",
+        "source": "analysis/comm.csv fit_slope_per_active model=tl method=ffa_lora het=a01",
         "kind": "analysis",
         "check": lambda: abs(
-            float(_row("comm.csv", model="tl", method="ffa_lora")["fit_slope_per_active"]) - 98.3125
+            float(
+                _row("comm.csv", model="tl", method="ffa_lora", het="a01")[
+                    "fit_slope_per_active"
+                ]
+            )
+            - 98.3125
         )
         < 1e-6,
     },
     {
-        "id": "n_runs_120",
-        "text": "120 production cells",
-        "value": 120,
+        "id": "n_runs_204",
+        "text": "204 production cells in runs.csv",
+        "value": 204,
         "source": "analysis/runs.csv row count",
         "kind": "analysis",
-        "check": lambda: len(_csv_rows("runs.csv")) == 120,
+        "check": lambda: len(_csv_rows("runs.csv")) == 204,
     },
     # --- External citation figures (verified against primary sources; not analysis) ---
     {
@@ -550,6 +628,13 @@ def v3(cells: Sequence[Cell], model_key: str) -> CheckResult:
                     (("data", "partition_alpha"), 0.1),
                 ]
             )
+        elif cell.het == "a05":
+            checks.extend(
+                [
+                    (("data", "partition_method"), "label_skew"),
+                    (("data", "partition_alpha"), 0.5),
+                ]
+            )
         else:
             checks.append((("data", "partition_method"), "iid"))
         for keys, want in checks:
@@ -568,7 +653,7 @@ def v4(cells: Sequence[Cell]) -> CheckResult:
     for cell in cells:
         run_dir = _complete_run_dirs(cell)[0]
         ps = _load_json(run_dir / "partition_stats.json")
-        if cell.het == "a01":
+        if cell.het in ("a01", "a05"):
             if ps.get("label_source") != "column":
                 r.fail(
                     f"{cell.cell_id}: label_source={ps.get('label_source')!r} want 'column'"
