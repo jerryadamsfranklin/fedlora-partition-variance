@@ -9,7 +9,7 @@ Do **not** rewrite history without Jerry's OK. Findings below are HEAD + sampled
 ## SSH host:port / IPs (FINDING — redaction candidate)
 Committed in docs (not live credentials, but operational endpoints):
 - `docs/phase_f_report.md`, `docs/phase_g_report.md`: destroyed Phase F/G hosts (`116.127…`, `115.75…`, `1.193…`, wrong-IP note)
-- `analysis/n8_machine_gates.txt`: live M2 `78.44.170.162:53267`
+- `analysis/n8_machine_gates.txt`: live M2 `<REDACTED-HOST>`
 
 Recommend: redact IPs in those docs in a normal forward commit (not history rewrite). Destroyed hosts are low risk; live M2 endpoint should not stay in a public file.
 

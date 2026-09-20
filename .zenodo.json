@@ -1,0 +1,28 @@
+{
+  "title": "fedlora-partition-variance: code, configurations, and run artifacts for Partition Draws, Not Aggregators",
+  "description": "Pre-registered 204-run study decomposing held-out-loss variance in federated LoRA fine-tuning into partition-draw, partition-by-method interaction, and training-seed components. Includes frozen configurations, grid definitions, the pre-registered analysis plan, the verifier, per-run metadata, and analysis outputs. Adapter weights are not included.",
+  "upload_type": "software",
+  "license": "mit",
+  "creators": [
+    {
+      "name": "Franklin, Jerry Adams",
+      "affiliation": "Independent Researcher",
+      "orcid": "0009-0006-8470-8349"
+    }
+  ],
+  "keywords": [
+    "federated learning",
+    "low-rank adaptation",
+    "non-IID partitioning",
+    "experimental variance",
+    "reproducibility",
+    "large language models"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "arXiv:2609.13512",
+      "relation": "cites",
+      "scheme": "arxiv"
+    }
+  ]
+}
