@@ -77,6 +77,21 @@ def _row(name: str, **pred: str) -> Dict[str, str]:
     raise KeyError(f"no row in {name} matching {pred}")
 
 
+def _count_resumed_cells() -> int:
+    """Count complete cells whose run_meta records overrides.resume (V10 source)."""
+    n = 0
+    for gname in ("tl", "l3", "tl_a05", "l3_ext"):
+        grid = load_grid(REPO_ROOT / "grids" / f"{gname}.yaml")
+        for cell in enumerate_cells(grid):
+            completes = _complete_run_dirs(cell)
+            if not completes:
+                continue
+            meta = _load_json(completes[0] / "run_meta.json")
+            if (meta.get("overrides") or {}).get("resume"):
+                n += 1
+    return n
+
+
 CLAIMS: List[Dict[str, Any]] = [
     # --- Headline / abstract / intro (analysis) ---
     {
@@ -397,6 +412,27 @@ CLAIMS: List[Dict[str, Any]] = [
         "source": "analysis/runs.csv row count",
         "kind": "analysis",
         "check": lambda: len(_csv_rows("runs.csv")) == 204,
+    },
+    {
+        "id": "design_204_setup",
+        "text": "Setup design statement: 204 production cells",
+        "value": 204,
+        "source": "manuscript/sections/03_setup.tex; analysis/runs.csv",
+        "kind": "analysis",
+        "check": lambda: (
+            len(_csv_rows("runs.csv")) == 204
+            and "204 production cells" in (
+                REPO_ROOT / "manuscript" / "sections" / "03_setup.tex"
+            ).read_text(encoding="utf-8")
+        ),
+    },
+    {
+        "id": "resumed_cells_9",
+        "text": "Nine cells resumed from checkpoint",
+        "value": 9,
+        "source": "run_meta overrides.resume across tl/l3/tl_a05/l3_ext",
+        "kind": "analysis",
+        "check": lambda: _count_resumed_cells() == 9,
     },
     # --- External citation figures (verified against primary sources; not analysis) ---
     {

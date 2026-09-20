@@ -15,6 +15,10 @@ We answer three pre-registered questions on FedIT, FFA-LoRA, and FLoRA, using he
 
 An exploratory RQ4 on partition statistics is reported but not used for claims.
 
+The design extension adds a second heterogeneity level and a larger partition count, which
+test whether the RQ1 composition and the RQ2 ranking behavior hold beyond the originally
+registered setting.
+
 \paragraph{Advance over the state of the art.}
 Prior federated LoRA evaluations either report multi-seed means without separating the partition draw from the training seed, or treat the non-IID split as a fixed setting rather than a variance component. Adjacent work decomposes variance over training or unlearning seeds and over benchmark variants, but not over the federated partition draw for LoRA instruction tuning. This paper's advance is to isolate that draw in a pre-registered design, quantify its share relative to interaction and residual noise, and turn the measurement into an explicit reporting protocol that states how many draws were used, that comparisons were paired on those draws, and what minimum difference the design can detect. The same design also shows the cost of too few draws: extending LLaMA-3.2-3B from six to ten partitions reverses the FedIT--FLoRA top-two order and grows the interaction component by a factor of $2.66$.
 
