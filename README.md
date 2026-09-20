@@ -14,3 +14,8 @@ imported unmodified from an earlier federated LoRA codebase (commit recorded in
 docs/PROVENANCE.md). All later changes are listed in docs/CHANGELOG.md.
 
 Secrets: set HF_TOKEN in the environment. Never commit it.
+
+## License
+
+MIT — see `LICENSE`.
+

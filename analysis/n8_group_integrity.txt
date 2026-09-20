@@ -1,0 +1,29 @@
+N8 pre-gate group integrity (19 Sep 2026)
+
+## Group split check (Phase D fairness)
+
+For every (het, data_seed, run_seed) group with fresh cells, all fresh methods
+are in the same filtered grid file.
+
+- tl_a05: 13 groups across m0/m1/m2 — PASS, no splits
+- l3_ext: 5 groups across m0/m1/m2 — PASS, no splits
+
+Rebalance was already at group granularity (greedy on whole groups), so method
+and hardware stay paired within each partition/run-seed group.
+
+## Union check
+
+- Quarantined cells (MANIFEST): 54
+- Union of filtered grids: 54
+- Duplicates across machines: 0
+- Already-complete cells included: 0
+- filtered == quarantined: True
+
+## Hour spread (unchanged)
+
+machine 0: 12 tl + 6 l3 ≈ 13.80 h
+machine 1: 9 tl + 6 l3 ≈ 12.25 h
+machine 2: 18 tl + 3 l3 ≈ 13.10 h
+spread (max-min)/max = 11.2% (< 20%)
+
+No rebalance needed. Clear to proceed to N8-0 once M1 and M3 SSH are provided.
