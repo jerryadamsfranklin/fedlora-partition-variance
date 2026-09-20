@@ -1,4 +1,0 @@
-I10 l3 p=10: trunc_P=True trunc_PM=False
-s2_P=0.000000e+00 (truncated at zero=True)
-s2_PM=2.944651e-05 s2_E=2.034403e-07
-share_P=0.000000 CI=[0.000000,0.352652]

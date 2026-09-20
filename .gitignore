@@ -96,3 +96,14 @@ dist/
 checkpoints/
 .venv/
 wandb/
+
+# Intermediate review packages and root manuscript snapshots (use manuscript/main.pdf)
+phase_*_review*/
+phase_*_review*.zip
+manuscript_review_*/
+manuscript_review_*.zip
+manuscript_review_*.pdf
+manuscript_o*_*.pdf
+*.bak
+analysis/*_scratch_*.csv
+analysis/*.csv.bak
