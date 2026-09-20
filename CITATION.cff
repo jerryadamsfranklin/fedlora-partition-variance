@@ -16,5 +16,6 @@ keywords:
   - large language models
 version: v0.9.1
 date-released: "2026-09-20"
+doi: "10.5281/zenodo.22861075"
 repository-code: "https://github.com/jerryadamsfranklin/fedlora-partition-variance"
 license: MIT

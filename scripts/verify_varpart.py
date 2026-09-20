@@ -434,6 +434,21 @@ CLAIMS: List[Dict[str, Any]] = [
         "kind": "analysis",
         "check": lambda: _count_resumed_cells() == 9,
     },
+    {
+        "id": "zenodo_availability_dois",
+        "text": "Availability statement cites Zenodo concept and v0.9.1 version DOIs",
+        "value": ("10.5281/zenodo.22861074", "10.5281/zenodo.22861075"),
+        "source": "manuscript/main.tex Declarations; Zenodo record 22861075",
+        "kind": "analysis",
+        "check": lambda: (
+            "10.5281/zenodo.22861074"
+            in (REPO_ROOT / "manuscript" / "main.tex").read_text(encoding="utf-8")
+            and "10.5281/zenodo.22861075"
+            in (REPO_ROOT / "manuscript" / "main.tex").read_text(encoding="utf-8")
+            and "v0.9.1"
+            in (REPO_ROOT / "manuscript" / "main.tex").read_text(encoding="utf-8")
+        ),
+    },
     # --- External citation figures (verified against primary sources; not analysis) ---
     {
         "id": "ext_ffa_mnli",

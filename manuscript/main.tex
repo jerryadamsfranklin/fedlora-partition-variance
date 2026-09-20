@@ -34,7 +34,7 @@
 
 \author{\uppercase{Jerry Adams Franklin}\authorrefmark{1}}
 
-\address[1]{Independent Researcher (ORCID: to be inserted before submission)}
+\address[1]{Independent Researcher (ORCID: \url{https://orcid.org/0009-0006-8470-8349})}
 
 \tfootnote{}
 
@@ -42,7 +42,7 @@
 {Franklin: Partition Draws, Not Aggregators}
 {Franklin: Partition Draws, Not Aggregators}
 
-\corresp{Corresponding author: Jerry Adams Franklin (e-mail: to-be-inserted@jerryadamsfranklin.com).}
+\corresp{Corresponding author: Jerry Adams Franklin (e-mail: jerry.adamsf@gmail.com).}
 
 \begin{abstract}
 Federated LoRA comparisons often rest on a single non-IID partition draw, even when reported method gaps sit near ordinary run-to-run noise. We ask how much of the variation in held-out next-token loss comes from the partition draw, how often few-draw rankings flip, and how many draws a target effect size requires. In a pre-registered design of $204$ runs at two scales (TinyLlama-1.1B-Chat and LLaMA-3.2-3B),
@@ -122,9 +122,11 @@ federated learning, low-rank adaptation, non-IID partitioning, experimental vari
 
 \section*{Declarations}
 \paragraph{Data and code availability.}
-Code and run artifacts will be released at
-\url{https://github.com/jerryadamsfranklin/fedlora-partition-variance}
-with an archival Zenodo DOI (\textit{DOI to be minted at public release}).
+Code, configurations, the pre-registered analysis plan, per-run metadata, and analysis
+outputs are available at \url{https://github.com/jerryadamsfranklin/fedlora-partition-variance}
+and archived at \url{https://doi.org/10.5281/zenodo.22861074}. The submitted snapshot is release
+\texttt{v0.9.1} (\url{https://doi.org/10.5281/zenodo.22861075}). Adapter weights are not
+included in the archive.
 \paragraph{Funding.}
 None.
 \paragraph{Conflicts of interest.}
