@@ -6,7 +6,7 @@ Replace this file in the Claude Project whenever the state changes. Keep only on
 
 ## Current phase
 
-Phase N8-5/N8-6 complete on the merged 204-cell set. N8-7/N8-8 hygiene in progress. Results prose (Phase O) unblocked for drafting from the clean N8-6 table; still no dual-submit.
+Phase N8-5 through N8-8 complete (`4de9af0`). Clean N8-6 table is the gate for Phase O results prose. Jerry still owes: destroy Taiwan 51661379, revoke campaign tokens, Zenodo v0.9.1 concept DOI.
 
 ## Venue
 
@@ -37,10 +37,9 @@ Stable (prod_v1, unaffected): tl alpha 0.1 shares 0.508 / 0.469 / 0.023; s2_P 4.
 
 ## Next
 
-1. N8-7: DECISIONS rows for the retrain and the superseded comparison (append)
-2. N8-8: confirm IP/path redacts; forward commit
-3. Phase O: Results, Discussion, Abstract, Conclusion; regenerate figures and tables; refresh V9
-4. Jerry: destroy Taiwan 51661379 if still up; revoke campaign GitHub/HF tokens; enable Zenodo and cut v0.9.1 for the concept DOI
+1. Phase O: Results, Discussion, Abstract, Conclusion from clean N8-6; regenerate figures/tables; refresh V9
+2. Jerry: destroy Taiwan 51661379 (Vast UI — no `VAST_API_KEY` in this shell); revoke campaign GitHub/HF tokens; enable Zenodo on the repo and cut `v0.9.1` for the concept DOI
+3. Human skim (agent pass): plan/DECISIONS/PROVENANCE/overlap_check.py reference OJ-CS as a corpus path only; no long body quotations found to strip
 
 ## Framing rules for the manuscript
 
