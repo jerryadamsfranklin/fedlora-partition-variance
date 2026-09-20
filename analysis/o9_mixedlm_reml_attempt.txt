@@ -1,0 +1,2 @@
+killed hung REML attempt
+NO_IDENTIFYING_FIT (statsmodels hang on import/fit; disclosure unchanged)

@@ -52,9 +52,9 @@ $\alpha{=}0.1$ and $\alpha{=}0.5$. On TinyLlama the partition and interaction sh
 TinyLlama and more than 1000 on LLaMA-3.2-3B; separable pairs need only 3. Extending
 the 3B grid from six to ten draws reverses the top-two ordering and grows the
 interaction component by a factor of 2.66, so an evaluation stopping at six draws
-would report the opposite ranking. Repeating the design at $\alpha{=}0.5$ leaves the
+would report the opposite ranking. We propose the Partition-Draw Reporting Protocol: (1)~report the number of partition draws, and the partition seeds, separately from training seeds; (2)~pair method comparisons on the same partition draws; (3)~report the minimum difference the design can detect, at the design's number of draws. After first mention we call this ``the protocol.'' Repeating the design at $\alpha{=}0.5$ leaves the
 variance composition statistically unchanged while shrinking total variance by about
-an order of magnitude. We propose the Partition-Draw Reporting Protocol: (1)~report the number of partition draws, and the partition seeds, separately from training seeds; (2)~pair method comparisons on the same partition draws; (3)~report the minimum difference the design can detect, at the design's number of draws. After first mention we call this ``the protocol.'' We make no method recommendation.
+an order of magnitude. We make no method recommendation.
 \end{abstract}
 
 \begin{keywords}
