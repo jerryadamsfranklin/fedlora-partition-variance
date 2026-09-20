@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Campaign tooling (n6 re-eval batch); not part of the analysis path.
 # Re-eval anomalous l3 prod_v2 holdouts on torch 2.2.0 host.
 set -u
 cd /workspace/fedlora-partition-variance

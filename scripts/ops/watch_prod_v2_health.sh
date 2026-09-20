@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Campaign tooling (prod_v2 health watcher); not part of the analysis path.
 # Health check for Phase N prod_v2 boxes (tl_a05 then l3_ext).
 # Exit 0 = all OK / done. Exit 1 = at least one box UNHEALTHY.
 #

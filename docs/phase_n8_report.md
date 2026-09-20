@@ -59,7 +59,7 @@ Projected hours at planning rates: M0 ≈13.8 h · M1 ≈12.3 h · M2 ≈13.1 h.
 | Gate | Status |
 |------|--------|
 | N8-0 torch + GPU name per machine | **PASS** (all three) |
-| Group integrity (no method split across machines) | **PASS** — see `analysis/n8_group_integrity.txt` |
+| Group integrity (no method split across machines) | **PASS** — see `analysis/logs/n8_group_integrity.txt` |
 | Filtered union == 54 quarantined | **PASS** |
 | First-cell / stack assert in setup | **PASS** (`GATE_PASS 2.2.0+cu121`) |
 | Post-retrain manifest (`n8_cell_manifest.csv`) | **54/54** torch/gpu/git match |
@@ -97,8 +97,8 @@ Projected hours at planning rates: M0 ≈13.8 h · M1 ≈12.3 h · M2 ≈13.1 h.
 | `results/downstream_instruction/**/instruction_holdout.json` | Held-out eval |
 | `results/quarantine_stackdrift/` | Original drifted cells (preserved) |
 | `grids/*_n8_m*.yaml` | Filtered launch grids |
-| `analysis/n8_*.txt` / `n8_public_repo_scan*` | Pre-launch checks |
-| `analysis/holdout_*_n8_*.csv` | Holdout summary CSVs from remotes |
+| `analysis/logs/n8_*.txt` / `n8_public_repo_scan*` | Pre-launch checks |
+| `analysis/logs/holdout_*_n8_*.csv` | Holdout summary CSVs from remotes |
 | `logs/prod_v2_health.log` | 10-min health history |
 
 ---
@@ -110,12 +110,12 @@ phase_n8_review_20260920/
   README.md                          # this pointer
   docs/phase_n8_report.md            # this report
   docs/IMPLEMENTATION_PLAN_N8_excerpt.md
-  analysis/n8_cell_manifest.csv      # 54 rows: paths, torch, gpu, git
-  analysis/n8_group_integrity.txt
-  analysis/n8_machine_gates.txt
-  analysis/n8_balance_check.txt
-  analysis/n8_public_repo_scan_findings.md
-  analysis/holdout_*.csv             # available n8 holdout summaries
+  analysis/logs/n8_cell_manifest.csv      # 54 rows: paths, torch, gpu, git
+  analysis/logs/n8_group_integrity.txt
+  analysis/logs/n8_machine_gates.txt
+  analysis/logs/n8_balance_check.txt
+  analysis/logs/n8_public_repo_scan_findings.md
+  analysis/logs/holdout_*.csv             # available n8 holdout summaries
   grids/*.yaml                       # six filtered grids
   status/GIT_HEAD.txt
   status/completion_summary.txt
