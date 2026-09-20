@@ -7,11 +7,11 @@ Models & TinyLlama-1.1B-Chat-v1.0; LLaMA-3.2-3B \\
 LoRA & $r{=}16$, $\alpha_{\mathrm{LoRA}}{=}32$, dropout $0.1$, $q\_proj$+$v\_proj$ \\
 Federation & 10 clients, full participation, 15 rounds, 1 local epoch \\
 Data & Dolly-15k train$[0{:}3000]$; held-out train$[3000{:}3500]$ \\
-Non-IID & Dirichlet label skew on \texttt{category}, $\alpha{=}0.1$ \\
+Non-IID & Dirichlet label skew on \texttt{category}, $\alpha{=}0.1$ and $\alpha{=}0.5$ \\
 IID & Fixed data seed split \\
 Primary metric & Held-out loss (formatter \texttt{v2-dolly-context}) \\
 Secondary & Measured communication (MB) \\
-TinyLlama cells & 60 ($\alpha{=}0.1$) + 15 (IID) \\
-LLaMA-3.2-3B cells & 36 ($\alpha{=}0.1$) + 9 (IID) \\
+TinyLlama cells & 60 ($\alpha{=}0.1$) + 60 ($\alpha{=}0.5$) + 15 (IID) \\
+LLaMA-3.2-3B cells & 60 ($\alpha{=}0.1$, $p{=}10$) + 9 (IID) \\
 \bottomrule
 \end{tabular}
