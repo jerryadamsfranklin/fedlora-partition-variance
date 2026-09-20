@@ -15,7 +15,6 @@ from typing import Any, Dict, List, Optional, Sequence, Tuple
 import numpy as np
 import pandas as pd
 from scipy import stats
-from statsmodels.regression.mixed_linear_model import MixedLM
 from statsmodels.stats.multitest import multipletests
 from statsmodels.stats.power import TTestIndPower, TTestPower
 
@@ -227,6 +226,18 @@ def bootstrap_components(
 
 def mixedlm_crosscheck(df: pd.DataFrame) -> Dict[str, Any]:
     """Y ~ C(method) with VC for partition and partition:method."""
+    # Lazy import: MixedLM can hang or segfault on some macOS Python builds at
+    # import time; moment estimators above remain primary.
+    try:
+        from statsmodels.regression.mixed_linear_model import MixedLM
+    except Exception as e:  # noqa: BLE001
+        return {
+            "mixedlm_partition_var": float("nan"),
+            "mixedlm_method_vc": float("nan"),
+            "mixedlm_residual": float("nan"),
+            "mixedlm_converged": False,
+            "mixedlm_error": f"import: {e}",
+        }
     d = df.copy()
     d["partition"] = d["data_seed"].astype(str)
     with warnings.catch_warnings():
