@@ -3,12 +3,12 @@
 
 All analyses use held-out loss as the response. Numbers below come from the pre-registered tables in \texttt{analysis/}. We report TinyLlama and LLaMA-3.2-3B separately and do not recommend a method.
 
-\paragraph{Variance components at $\alpha{=}0.1$.}
+\subsection{Variance components at $\alpha{=}0.1$.}
 Table~\ref{tab:variance} summarizes the method-of-moments estimates under the two-way design in Section~\ref{sec:setup}. On TinyLlama ($p{=}10$), the partition share is $\hat\sigma^2_P/(\hat\sigma^2_P{+}\hat\sigma^2_{PM}{+}\hat\sigma^2_E){=}0.508$ with bootstrap 95\% CI $[0.202,0.663]$, the interaction share is $0.469$ $[0.316,0.765]$, and the residual share is $0.023$ $[0.007,0.056]$. Absolute components are $\hat\sigma^2_P{=}4.09{\times}10^{-6}$, $\hat\sigma^2_{PM}{=}3.78{\times}10^{-6}$, and $\hat\sigma^2_E{=}1.89{\times}10^{-7}$. Partition and interaction are comparable in magnitude; residual training-seed noise is an order of magnitude smaller. No estimate was truncated at zero. The pre-registered mixed-model cross-check recovers the residual component on both models ($1.89{\times}10^{-7}$ and $1.31{\times}10^{-7}$, matching $\hat\sigma^2_E$) and a method-level variance component comparable to $\hat\sigma^2_P{+}\hat\sigma^2_{PM}$, but the separate partition component did not identify under the specified variance-component formula. We therefore report the moment estimates as primary, as pre-registered, and treat the mixed model as a partial cross-check.
 
 On LLaMA-3.2-3B the primary analysis uses $p{=}10$ partitions (Table~\ref{tab:variance}). The interaction share is $0.992$ $[0.662,0.995]$, with $\hat\sigma^2_{PM}{=}2.94{\times}10^{-5}$ and residual share $0.008$; the partition component truncates at zero (share $0.000$, CI $[0.000,0.329]$). Because that CI includes zero, we do not claim a partition main effect at 3B. Cross-scale bootstrap CIs on the partition share overlap ($[0.202,0.663]$ versus $[0.000,0.329]$). The $p{=}6$ sensitivity row is reported next.
 
-\paragraph{Partition count and ranking (LLaMA-3.2-3B).}
+\subsection{Partition count and ranking (LLaMA-3.2-3B)}
 The LLaMA grid was extended from six partition draws to ten after the pre-registered
 design completed, which permits a direct test of how many draws an evaluation needs.
 At $p{=}6$ the reference ranking placed FedIT ahead of FLoRA by $0.00201$; at $p{=}10$
@@ -23,7 +23,7 @@ top-two ordering and understated the interaction variance by more than half. Six
 draws exceeds what the federated LoRA evaluations in Section~\ref{sec:related} report.
 We treat $p{=}10$ as primary and $p{=}6$ as the pre-registered sensitivity analysis.
 
-\paragraph{A second heterogeneity level.}
+\subsection{A second heterogeneity level}
 Repeating the TinyLlama design at Dirichlet $\alpha{=}0.5$ (10 partition draws, two
 training seeds, 60 cells) leaves the variance composition statistically unchanged:
 shares are $0.277$ $[0.000, 0.597]$, $0.682$ $[0.352, 0.958]$, and $0.042$
@@ -39,10 +39,10 @@ indistinguishable at $\alpha{=}0.1$, separates at $\alpha{=}0.5$ ($-0.00218$,
 Holm $p{=}3.2{\times}10^{-6}$). All ten clients are active in every $\alpha{=}0.5$
 partition, so measured communication is constant within method.
 
-\paragraph{IID noise floor.}
+\subsection{IID noise floor}
 Pooling the per-method IID variances gives $6.40{\times}10^{-8}$ on TinyLlama and $3.07{\times}10^{-7}$ on LLaMA-3.2-3B. The ratio of $\hat\sigma^2_E$ at $\alpha{=}0.1$ to this IID floor is $2.96$ on TinyLlama. On LLaMA the ratio is $0.43$, but each method's IID variance has only two degrees of freedom (three run seeds), and the per-method IID variances differ by more than an order of magnitude ($2.4{\times}10^{-8}$ for FFA-LoRA versus $6.6{\times}10^{-7}$ for FLoRA). We therefore report the 3B IID floor descriptively and do not interpret the ratio below one as evidence that $\alpha{=}0.1$ is quieter than IID.
 
-\paragraph{Ranking stability.}
+\subsection{Ranking stability}
 The reference ranking at $\alpha{=}0.1$ orders methods by mean held-out loss over all cells: TinyLlama ranks FLoRA, FedIT, then FFA-LoRA; LLaMA-3.2-3B at $p{=}10$ ranks FLoRA, FedIT, then FFA-LoRA. Under the pre-registered paired protocol ($B{=}10{,}000$), the probability that the best method differs from this reference equals the probability that the full order differs (the two coincide because the only pair whose order changes is the top one; the third method is separated by an order of magnitude more than the per-draw noise). On TinyLlama those probabilities are $0.555$, $0.406$, $0.377$, and $0.284$ for $k{\in}\{1,2,3,5\}$ (Wilson 95\% CI half-widths about $0.01$). On LLaMA-3.2-3B at $p{=}10$ they are $0.700$, $0.533$, and $0.493$ for
 $k{\in}\{1,2,3\}$ (unpaired $0.599$, $0.528$, $0.483$), so a three-draw evaluation at
 3B is close to a coin flip on the top two. Unpaired probabilities are shown in Figure~\ref{fig:flip}; the paired protocol is primary.
@@ -53,20 +53,20 @@ reverse at any $k$.
 
 Conditioned on effect size, the ranking claim is therefore: pairs separated by less than the per-draw paired SD ($0.00282$ on TinyLlama, $0.00770$ on LLaMA-3.2-3B at $p{=}10$) are ordered near-randomly by a few-partition evaluation, while gaps of about $0.023$ (TinyLlama) and $0.031$ (LLaMA) were recovered in every single draw. The flip table is a restatement of that conditioning, not a separate claim about method quality.
 
-\paragraph{Draws needed.}
+\subsection{Draws needed}
 Using the model-based paired SD, detecting a pre-registered $\Delta{=}0.005$ at 80\% power (two-sided $\alpha{=}0.05$) requires $5$ paired partition draws on TinyLlama. At 3B with ten draws, $\Delta{=}0.005$ requires $21$ paired draws, $\Delta{=}0.01$
 requires $7$, $\Delta{=}0.02$ requires $4$, and $\Delta{=}0.05$ requires $3$
 (unpaired per method: $20$, $6$, $3$, $2$). For the observed gaps, each separable pair
 needs $3$ paired draws, whereas the FedIT--FLoRA near-tie needs more than $1000$ under
 either protocol. The 1.1B near-tie needs $206$ paired draws. That contrast is the operational form of the ranking result: a few partitions suffice when the gap is large relative to the paired SD, and hundreds to more than a thousand are required when it is not.
 
-\paragraph{Observed method differences.}
+\subsection{Observed method differences}
 Table~\ref{tab:means} reports means and SDs. At $\alpha{=}0.1$, TinyLlama means are FLoRA $1.6957$ (SD $0.0013$), FedIT $1.6962$ ($0.0038$), and FFA-LoRA $1.7192$ ($0.0026$), each over $n{=}20$ cells; LLaMA-3.2-3B at $p{=}10$ means are FLoRA $1.8038$ ($0.0029$), FedIT $1.8045$ ($0.0077$), and FFA-LoRA $1.8350$ ($0.0035$), each over $n{=}20$. Paired $t$-tests on partition-level means with Holm correction~\cite{dror2018hitchhiker} reject FFA-LoRA versus each of the other two methods on both models (TinyLlama Holm $p{<}10^{-8}$; LLaMA Holm $p{<}10^{-5}$) and do not reject FedIT versus FLoRA at $\alpha{=}0.1$ (TinyLlama Holm $p{=}0.57$; LLaMA Holm $p{=}0.83$). The FedIT--FLoRA confidence intervals include zero on both models at $\alpha{=}0.1$. We report these contrasts as context for the ranking and power sections and do not claim a winning method.
 
-\paragraph{Partition statistics and communication.}
+\subsection{Partition statistics and communication}
 Among five exploratory Spearman correlations of partition-mean held-out loss with partition statistics, TinyLlama mean Jensen--Shannon divergence has $\rho{=}0.72$ ($p{=}0.019$, $n{=}10$). That association does not survive Holm correction across the five TinyLlama tests (Holm $p{=}0.093$) and does not replicate on LLaMA ($\rho{=}0.086$, $p{=}0.87$, $n{=}6$). Active clients vary only from 9 to 10 at $\alpha{=}0.1$ and show no reliable association ($\rho{=}0.35$, $p{=}0.32$ on TinyLlama; $\rho{=}0.13$, $p{=}0.80$ on LLaMA). We treat RQ4 as exploratory and do not build an argument on any single correlation.
 
 Measured total communication matches the V6 payload formula exactly for all method--model pairs ($\max|\mathrm{error}|{=}0$). Across $\alpha{=}0.1$ partitions, TinyLlama totals range from $2320.3$ to $2578.1$~MB for FedIT and FLoRA and from $884.8$ to $983.1$~MB for FFA-LoRA; LLaMA ranges are $2362.5$ to $2625.0$~MB and $992.3$ to $1102.5$~MB. At $\alpha{=}0.5$, every TinyLlama partition has ten active clients, so communication is constant within method ($2578.1$~MB for FedIT/FLoRA; $983.1$~MB for FFA-LoRA). The FFA-LoRA range is lower because this implementation transmits $A$ and $B$ only in the first round and $B$ alone thereafter, in both directions; we report the values as measured within method and do not rank methods by bytes.
 
-\paragraph{Pre-registered claim mapping.}
+\subsection{Pre-registered claim mapping}
 Following the outcome-to-claim table, TinyLlama triggers row~1 on the partition share ($0.508$). At $p{=}10$, LLaMA triggers the interaction-dominated row with a truncated partition component whose CI includes zero; the three-draw flip probability is $0.493$. The $\alpha{=}0.5$ share comparison selects the pre-registered ``gradient absent'' row. Cross-scale partition-share CIs overlap. No method recommendation is made.
