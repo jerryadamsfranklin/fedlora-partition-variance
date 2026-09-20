@@ -67,9 +67,9 @@ python scripts/run_grid.py --grid grids/{tl|l3}.yaml --shard {0|1|2} --num-shard
 
 | Role | Host (SSH) | Workload |
 |------|------------|----------|
-| M1 | `116.127.115.27:43029` | tl shard 0 → l3 shard 0 |
-| M2 | `115.75.223.236:57132` | tl shard 1 → l3 shard 1 |
-| M3 | `1.193.139.139:39647` | tl shard 2 → l3 shard 2 (last box still up at close) |
+| M1 | (redacted; role label only) | tl shard 0 → l3 shard 0 |
+| M2 | (redacted; role label only) | tl shard 1 → l3 shard 1 |
+| M3 | (redacted; role label only) | tl shard 2 → l3 shard 2 (last box still up at close) |
 
 - All production `run_meta.json` records: **`hardware.gpu_name == "NVIDIA GeForce RTX 4090"`** (75/75 tl, 45/45 l3).
 - Library triple identical across all 120 production runs: **torch `2.2.0+cu121`**, transformers `4.45.2`, peft `0.10.0`.
@@ -130,7 +130,7 @@ This should be recorded in `docs/DECISIONS.md` if reviewers treat eval dtype as 
 | L3 holdout OOM (dual float32 3B) | Cells trained then failed holdout; 0 L3 completes until fix | float16 + free between loads; re-ran / continued grids |
 | M3 host thrash hangs (GPU ~0%, CPU >>100%) | Delayed tl shard 2 and some l3 flora cells; SIGTERM `exit=-15` in logs | Kill hung `run_experiment`; `run_grid` resume from checkpoint |
 | Overnight autoheal false positives | Brief kill storms on M3 using **global** stale checkpoint mtime | Safer healer (per-run ckpt age, longer grace); grids finished |
-| Wrong SSH IP (`166.88.186.149`) | Operator confusion | Live M3 remained `1.193.139.139:39647` |
+| Wrong SSH IP (redacted) | Operator confusion | Live M3 remained on the intended host (role M3) |
 | M3 venv `python` symlink resolve | Early l3 shard 2 failed `No module named torch` | Launch with unresolved `.venv/bin/python` path |
 
 None of the above left incomplete cells in the final Mac tree (`grid_status` all complete).

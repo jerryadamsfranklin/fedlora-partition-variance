@@ -1,0 +1,88 @@
+Public repo scan — 2026-09-20T00:21:07Z
+
+=== HEAD: credential-like patterns ===
+
+=== HEAD: host:port / root@IP ===
+84:| Machine 1 (`116.127.115.27:43029`) | `run_grid.py --grid grids/tl.yaml --shard 0 --num-shards 3 --production --workers 1` | 27 |
+85:| Machine 2 (`115.75.223.236:57132`) | `run_grid.py --grid grids/tl.yaml --shard 1 --num-shards 3 --production --workers 1` | 24 |
+70:| M1 | `116.127.115.27:43029` | tl shard 0 → l3 shard 0 |
+71:| M2 | `115.75.223.236:57132` | tl shard 1 → l3 shard 1 |
+72:| M3 | `1.193.139.139:39647` | tl shard 2 → l3 shard 2 (last box still up at close) |
+133:| Wrong SSH IP (`166.88.186.149`) | Operator confusion | Live M3 remained `1.193.139.139:39647` |
+3:M2 (78.44.170.162:53267) — PASS
+
+=== HEAD: absolute paths with username ===
+2:vp_tl_fedit_a01,fedit,2001_run7001,smoke,20260916_020603,/Users/jerryadamsfranklin/Documents/Git Repos/fedlora-partition-variance/results/raw/vp_tl_fedit_a01/fedit/seed_2001_run7001/smoke/20260916_020603/final_adapter_state.pt,databricks/databricks-dolly-15k,train,3000,20,256,TinyLlama/TinyLlama-1.1B-Chat-v1.0,"q_proj,v_proj",16,32,mps,v2-dolly-context,torch.float32,2.21092132006292,9.1241187554793,2.075223817402395,7.96632926263828,-0.13569750266052516,-1.1577894928410197
+
+=== HEAD: OJ-CS / fedlora-protocols / old-repo leakage ===
+17:=== HEAD: OJ-CS / fedlora-protocols / old-repo leakage ===
+10:| 16 Sep 2026 | Old-repo local path for Phase M overlap check is federated-lora-experiments | Private reference name fedlora-protocols; local folder differs | Task 01 verification |
+748:- Write the setup section fresh. Do not adapt text from the OJ-CS manuscript.
+793:- [ ] `scripts/overlap_check.py --manuscript manuscript/main.tex --reference $OLD/docs/ojcs-submission/body.tex --reference $OLD/docs/ojcs-submission/supplemental.tex` reports shared 8-gram overlap under 5%, excluding references. The script reads the old files in place and never copies them.
+1124:- Overlap check re-run against the OJ-CS body and supplement
+3:- Source repository: fedlora-protocols (private reference, not cited in the review copy)
+2:"""Shared 8-gram overlap check against old OJ-CS tex files (read in place).
+
+=== HISTORY: secrets (git log -S / grep all commits, capped) ===
+
+=== HISTORY: host:port (first 200 commits) ===
+ed39d587491074a84b8e681232bb6adefa4de6e6:analysis/n8_machine_gates.txt:3:M2 (78.44.170.162:53267) — PASS
+ed39d587491074a84b8e681232bb6adefa4de6e6:docs/phase_f_report.md:84:| Machine 1 (`116.127.115.27:43029`) | `run_grid.py --grid grids/tl.yaml --shard 0 --num-shards 3 --production --workers 1` | 27 |
+ed39d587491074a84b8e681232bb6adefa4de6e6:docs/phase_f_report.md:85:| Machine 2 (`115.75.223.236:57132`) | `run_grid.py --grid grids/tl.yaml --shard 1 --num-shards 3 --production --workers 1` | 24 |
+ed39d587491074a84b8e681232bb6adefa4de6e6:docs/phase_g_report.md:70:| M1 | `116.127.115.27:43029` | tl shard 0 → l3 shard 0 |
+ed39d587491074a84b8e681232bb6adefa4de6e6:docs/phase_g_report.md:71:| M2 | `115.75.223.236:57132` | tl shard 1 → l3 shard 1 |
+ed39d587491074a84b8e681232bb6adefa4de6e6:docs/phase_g_report.md:72:| M3 | `1.193.139.139:39647` | tl shard 2 → l3 shard 2 (last box still up at close) |
+ed39d587491074a84b8e681232bb6adefa4de6e6:docs/phase_g_report.md:133:| Wrong SSH IP (`166.88.186.149`) | Operator confusion | Live M3 remained `1.193.139.139:39647` |
+5f461eb9bf1227fdbc0f9b05d267bc56bc7082d7:analysis/n8_machine_gates.txt:3:M2 (78.44.170.162:53267) — PASS
+5f461eb9bf1227fdbc0f9b05d267bc56bc7082d7:docs/phase_f_report.md:84:| Machine 1 (`116.127.115.27:43029`) | `run_grid.py --grid grids/tl.yaml --shard 0 --num-shards 3 --production --workers 1` | 27 |
+5f461eb9bf1227fdbc0f9b05d267bc56bc7082d7:docs/phase_f_report.md:85:| Machine 2 (`115.75.223.236:57132`) | `run_grid.py --grid grids/tl.yaml --shard 1 --num-shards 3 --production --workers 1` | 24 |
+5f461eb9bf1227fdbc0f9b05d267bc56bc7082d7:docs/phase_g_report.md:70:| M1 | `116.127.115.27:43029` | tl shard 0 → l3 shard 0 |
+5f461eb9bf1227fdbc0f9b05d267bc56bc7082d7:docs/phase_g_report.md:71:| M2 | `115.75.223.236:57132` | tl shard 1 → l3 shard 1 |
+5f461eb9bf1227fdbc0f9b05d267bc56bc7082d7:docs/phase_g_report.md:72:| M3 | `1.193.139.139:39647` | tl shard 2 → l3 shard 2 (last box still up at close) |
+5f461eb9bf1227fdbc0f9b05d267bc56bc7082d7:docs/phase_g_report.md:133:| Wrong SSH IP (`166.88.186.149`) | Operator confusion | Live M3 remained `1.193.139.139:39647` |
+bee95959be4951424b42ea8dd419870270dd04d8:analysis/n8_machine_gates.txt:3:M2 (78.44.170.162:53267) — PASS
+bee95959be4951424b42ea8dd419870270dd04d8:docs/phase_f_report.md:84:| Machine 1 (`116.127.115.27:43029`) | `run_grid.py --grid grids/tl.yaml --shard 0 --num-shards 3 --production --workers 1` | 27 |
+bee95959be4951424b42ea8dd419870270dd04d8:docs/phase_f_report.md:85:| Machine 2 (`115.75.223.236:57132`) | `run_grid.py --grid grids/tl.yaml --shard 1 --num-shards 3 --production --workers 1` | 24 |
+bee95959be4951424b42ea8dd419870270dd04d8:docs/phase_g_report.md:70:| M1 | `116.127.115.27:43029` | tl shard 0 → l3 shard 0 |
+bee95959be4951424b42ea8dd419870270dd04d8:docs/phase_g_report.md:71:| M2 | `115.75.223.236:57132` | tl shard 1 → l3 shard 1 |
+bee95959be4951424b42ea8dd419870270dd04d8:docs/phase_g_report.md:72:| M3 | `1.193.139.139:39647` | tl shard 2 → l3 shard 2 (last box still up at close) |
+bee95959be4951424b42ea8dd419870270dd04d8:docs/phase_g_report.md:133:| Wrong SSH IP (`166.88.186.149`) | Operator confusion | Live M3 remained `1.193.139.139:39647` |
+56e4a120a1c0d2f56092b86f5275600db0ed6482:docs/phase_f_report.md:84:| Machine 1 (`116.127.115.27:43029`) | `run_grid.py --grid grids/tl.yaml --shard 0 --num-shards 3 --production --workers 1` | 27 |
+56e4a120a1c0d2f56092b86f5275600db0ed6482:docs/phase_f_report.md:85:| Machine 2 (`115.75.223.236:57132`) | `run_grid.py --grid grids/tl.yaml --shard 1 --num-shards 3 --production --workers 1` | 24 |
+56e4a120a1c0d2f56092b86f5275600db0ed6482:docs/phase_g_report.md:70:| M1 | `116.127.115.27:43029` | tl shard 0 → l3 shard 0 |
+56e4a120a1c0d2f56092b86f5275600db0ed6482:docs/phase_g_report.md:71:| M2 | `115.75.223.236:57132` | tl shard 1 → l3 shard 1 |
+56e4a120a1c0d2f56092b86f5275600db0ed6482:docs/phase_g_report.md:72:| M3 | `1.193.139.139:39647` | tl shard 2 → l3 shard 2 (last box still up at close) |
+56e4a120a1c0d2f56092b86f5275600db0ed6482:docs/phase_g_report.md:133:| Wrong SSH IP (`166.88.186.149`) | Operator confusion | Live M3 remained `1.193.139.139:39647` |
+d57ccdd97980ac12b8554c8ebef53989b012d1d6:docs/phase_f_report.md:84:| Machine 1 (`116.127.115.27:43029`) | `run_grid.py --grid grids/tl.yaml --shard 0 --num-shards 3 --production --workers 1` | 27 |
+d57ccdd97980ac12b8554c8ebef53989b012d1d6:docs/phase_f_report.md:85:| Machine 2 (`115.75.223.236:57132`) | `run_grid.py --grid grids/tl.yaml --shard 1 --num-shards 3 --production --workers 1` | 24 |
+d57ccdd97980ac12b8554c8ebef53989b012d1d6:docs/phase_g_report.md:70:| M1 | `116.127.115.27:43029` | tl shard 0 → l3 shard 0 |
+d57ccdd97980ac12b8554c8ebef53989b012d1d6:docs/phase_g_report.md:71:| M2 | `115.75.223.236:57132` | tl shard 1 → l3 shard 1 |
+d57ccdd97980ac12b8554c8ebef53989b012d1d6:docs/phase_g_report.md:72:| M3 | `1.193.139.139:39647` | tl shard 2 → l3 shard 2 (last box still up at close) |
+d57ccdd97980ac12b8554c8ebef53989b012d1d6:docs/phase_g_report.md:133:| Wrong SSH IP (`166.88.186.149`) | Operator confusion | Live M3 remained `1.193.139.139:39647` |
+7cff2a4de03bb7e0ab4fecfb3601e278aabe7301:docs/phase_f_report.md:84:| Machine 1 (`116.127.115.27:43029`) | `run_grid.py --grid grids/tl.yaml --shard 0 --num-shards 3 --production --workers 1` | 27 |
+7cff2a4de03bb7e0ab4fecfb3601e278aabe7301:docs/phase_f_report.md:85:| Machine 2 (`115.75.223.236:57132`) | `run_grid.py --grid grids/tl.yaml --shard 1 --num-shards 3 --production --workers 1` | 24 |
+7cff2a4de03bb7e0ab4fecfb3601e278aabe7301:docs/phase_g_report.md:70:| M1 | `116.127.115.27:43029` | tl shard 0 → l3 shard 0 |
+7cff2a4de03bb7e0ab4fecfb3601e278aabe7301:docs/phase_g_report.md:71:| M2 | `115.75.223.236:57132` | tl shard 1 → l3 shard 1 |
+7cff2a4de03bb7e0ab4fecfb3601e278aabe7301:docs/phase_g_report.md:72:| M3 | `1.193.139.139:39647` | tl shard 2 → l3 shard 2 (last box still up at close) |
+7cff2a4de03bb7e0ab4fecfb3601e278aabe7301:docs/phase_g_report.md:133:| Wrong SSH IP (`166.88.186.149`) | Operator confusion | Live M3 remained `1.193.139.139:39647` |
+63c5406deeac9c6232a7d950a824e57743e349d8:docs/phase_f_report.md:84:| Machine 1 (`116.127.115.27:43029`) | `run_grid.py --grid grids/tl.yaml --shard 0 --num-shards 3 --production --workers 1` | 27 |
+63c5406deeac9c6232a7d950a824e57743e349d8:docs/phase_f_report.md:85:| Machine 2 (`115.75.223.236:57132`) | `run_grid.py --grid grids/tl.yaml --shard 1 --num-shards 3 --production --workers 1` | 24 |
+63c5406deeac9c6232a7d950a824e57743e349d8:docs/phase_g_report.md:70:| M1 | `116.127.115.27:43029` | tl shard 0 → l3 shard 0 |
+63c5406deeac9c6232a7d950a824e57743e349d8:docs/phase_g_report.md:71:| M2 | `115.75.223.236:57132` | tl shard 1 → l3 shard 1 |
+63c5406deeac9c6232a7d950a824e57743e349d8:docs/phase_g_report.md:72:| M3 | `1.193.139.139:39647` | tl shard 2 → l3 shard 2 (last box still up at close) |
+63c5406deeac9c6232a7d950a824e57743e349d8:docs/phase_g_report.md:133:| Wrong SSH IP (`166.88.186.149`) | Operator confusion | Live M3 remained `1.193.139.139:39647` |
+e91991a7066c5eeaf7779423f95c6425c8bfa41a:docs/phase_f_report.md:84:| Machine 1 (`116.127.115.27:43029`) | `run_grid.py --grid grids/tl.yaml --shard 0 --num-shards 3 --production --workers 1` | 27 |
+e91991a7066c5eeaf7779423f95c6425c8bfa41a:docs/phase_f_report.md:85:| Machine 2 (`115.75.223.236:57132`) | `run_grid.py --grid grids/tl.yaml --shard 1 --num-shards 3 --production --workers 1` | 24 |
+e91991a7066c5eeaf7779423f95c6425c8bfa41a:docs/phase_g_report.md:70:| M1 | `116.127.115.27:43029` | tl shard 0 → l3 shard 0 |
+e91991a7066c5eeaf7779423f95c6425c8bfa41a:docs/phase_g_report.md:71:| M2 | `115.75.223.236:57132` | tl shard 1 → l3 shard 1 |
+e91991a7066c5eeaf7779423f95c6425c8bfa41a:docs/phase_g_report.md:72:| M3 | `1.193.139.139:39647` | tl shard 2 → l3 shard 2 (last box still up at close) |
+e91991a7066c5eeaf7779423f95c6425c8bfa41a:docs/phase_g_report.md:133:| Wrong SSH IP (`166.88.186.149`) | Operator confusion | Live M3 remained `1.193.139.139:39647` |
+43fc0a7e8cde8b6f64964ce88180cb42387cd728:docs/phase_f_report.md:84:| Machine 1 (`116.127.115.27:43029`) | `run_grid.py --grid grids/tl.yaml --shard 0 --num-shards 3 --production --workers 1` | 27 |
+43fc0a7e8cde8b6f64964ce88180cb42387cd728:docs/phase_f_report.md:85:| Machine 2 (`115.75.223.236:57132`) | `run_grid.py --grid grids/tl.yaml --shard 1 --num-shards 3 --production --workers 1` | 24 |
+43fc0a7e8cde8b6f64964ce88180cb42387cd728:docs/phase_g_report.md:70:| M1 | `116.127.115.27:43029` | tl shard 0 → l3 shard 0 |
+43fc0a7e8cde8b6f64964ce88180cb42387cd728:docs/phase_g_report.md:71:| M2 | `115.75.223.236:57132` | tl shard 1 → l3 shard 1 |
+43fc0a7e8cde8b6f64964ce88180cb42387cd728:docs/phase_g_report.md:72:| M3 | `1.193.139.139:39647` | tl shard 2 → l3 shard 2 (last box still up at close) |
+43fc0a7e8cde8b6f64964ce88180cb42387cd728:docs/phase_g_report.md:133:| Wrong SSH IP (`166.88.186.149`) | Operator confusion | Live M3 remained `1.193.139.139:39647` |
+b7da86c4b4844e91a0fc7e42afc9ab60cc13a535:docs/phase_f_report.md:84:| Machine 1 (`116.127.115.27:43029`) | `run_grid.py --grid grids/tl.yaml --shard 0 --num-shards 3 --production --workers 1` | 27 |
+b7da86c4b4844e91a0fc7e42afc9ab60cc13a535:docs/phase_f_report.md:85:| Machine 2 (`115.75.223.236:57132`) | `run_grid.py --grid grids/tl.yaml --shard 1 --num-shards 3 --production --workers 1` | 24 |
+b7da86c4b4844e91a0fc7e42afc9ab60cc13a535:docs/phase_g_report.md:70:| M1 | `116.127.115.27:43029` | tl shard 0 → l3 shard 0 |

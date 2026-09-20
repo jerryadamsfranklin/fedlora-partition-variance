@@ -1,0 +1,43 @@
+
+======== grid tl (tl, 75 cells) ========
+[PASS] V1
+       75 cells each have exactly one complete run (per cell tag)
+[PASS] V2
+       grid tl: libs=('2.2.0+cu121', '12.1', '4.45.2', '0.10.0', '2.18.0') gpu=NVIDIA GeForce RTX 4090
+[PASS] V7
+       tl: eval_dtype=torch.float32, base_loss≈2.120666 identical within 1e-6 across grid and 136 holdout JSON(s) (all tags)
+
+======== grid l3 (l3, 45 cells) ========
+[PASS] V1
+       45 cells each have exactly one complete run (per cell tag)
+[PASS] V2
+       grid l3: libs=('2.2.0+cu121', '12.1', '4.45.2', '0.10.0', '2.18.0') gpu=NVIDIA GeForce RTX 4090
+[PASS] V7
+       l3: eval_dtype=torch.float16, base_loss≈2.168946 identical within 1e-6 across grid and 89 holdout JSON(s) (all tags)
+
+======== grid tl_a05 (tl, 60 cells) ========
+[PASS] V1
+       60 cells each have exactly one complete run (per cell tag)
+[PASS] V2
+       grid tl_a05: libs=('2.2.0+cu121', '12.1', '4.45.2', '0.10.0', '2.18.0') gpu=NVIDIA GeForce RTX 4090
+[PASS] V7
+       tl: eval_dtype=torch.float32, base_loss≈2.120666 identical within 1e-6 across grid and 136 holdout JSON(s) (all tags)
+
+======== grid l3_ext (l3, 24 cells) ========
+[PASS] V1
+       24 cells each have exactly one complete run (per cell tag)
+[PASS] V2
+       grid l3_ext: libs=('2.2.0+cu121', '12.1', '4.45.2', '0.10.0', '2.18.0') gpu=NVIDIA GeForce RTX 4090
+[PASS] V7
+       l3: eval_dtype=torch.float16, base_loss≈2.168946 identical within 1e-6 across grid and 89 holdout JSON(s) (all tags)
+
+======== cross-grid ========
+[PASS] V2-cross-tag
+       model l3: libs identical across tags ['prod_v1', 'prod_v2'] -> ('2.2.0+cu121', '12.1', '4.45.2', '0.10.0', '2.18.0')
+       model tl: libs identical across tags ['prod_v1', 'prod_v2'] -> ('2.2.0+cu121', '12.1', '4.45.2', '0.10.0', '2.18.0')
+[PASS] V12
+       training path unchanged freeze-v1..freeze-v3 (src, run_experiment.py)
+       holdout eval unchanged freeze-v2..freeze-v3 (evaluate_instruction_holdout.py)
+       freeze-v3.1 hotfixes TinyLlama holdout dtype (float32) vs freeze-v3
+
+VERIFY OK: V1, V2, V2-cross-tag, V7, V12 passed (N8-5 subset)
