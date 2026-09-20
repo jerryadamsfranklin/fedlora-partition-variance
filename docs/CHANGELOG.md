@@ -47,3 +47,9 @@ Baseline test count at v0-import: 28 passed
 - N5 runbook: `docs/PHASE_N_RUNBOOK.md` (RTX 4090 name gate, stagger, tl then l3).
 - N5a-d: grid `freeze_tag` + production_guard; partition preview append;
   V7 cross-tag base_loss pooling; DECISIONS/PROVENANCE for ed80372 spot-check.
+- O10: pin `statsmodels==0.14.1` and drop unused `torchvision`/`torchaudio`/
+  `wandb`/`seaborn`/`scikit-learn` from `requirements.txt`; V9 exports
+  `analysis/claims.csv`; delete `docs/IJACSA_FORMAT_AND_SUBMISSION.md` and
+  `manuscript/template/` (SAI zip + IJACSA copyright PDF); public STATUS;
+  move process logs to `analysis/logs/` and campaign scripts to `scripts/ops/`;
+  rewrite README and add `docs/REPRODUCE.md`.
