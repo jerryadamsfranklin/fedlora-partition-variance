@@ -1,6 +1,6 @@
 # Provenance
 
-- Source repository: fedlora-protocols (private reference, not cited in the review copy)
+- Source repository: fedlora-protocols (private reference). IEEE Access uses single-anonymized review; the arXiv preprint is cited in the manuscript as reference [26].
 - Source tag: ijacsa-fork-point
 - Source commit: 96c40f7040313b8cd5d3ef3ea8362e5ccbcab981
 - Export method: git archive (byte-identical, verified with SHA-256 in CURSOR_TASK_01 step 3)

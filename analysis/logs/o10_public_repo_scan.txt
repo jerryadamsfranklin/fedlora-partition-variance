@@ -1,0 +1,14 @@
+O10 public repo scan — 2026-09-20
+HEAD at scan: 0721379 (pre-commit working tree)
+
+=== Tokens / credentials (working tree text) ===
+PASS: no hf_/sk-/AKIA/ghp_/github_pat_/private-key material found.
+
+=== manuscript/template / IJACSA_FORMAT refs (excl. CHANGELOG deletion note) ===
+PASS: no stale template/IJACSA format paths
+
+=== Adapter weights tracked? ===
+PASS: no tracked .pt
+
+=== Verdict ===
+No credentials. No other-venue template paths. Adapter weights not tracked.

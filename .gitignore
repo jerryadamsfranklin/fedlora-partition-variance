@@ -52,7 +52,7 @@ venv/
 # Logs / experiment artifacts
 wandb/
 *.log
-logs/
+/logs/
 
 # LaTeX build artifacts
 *.aux
