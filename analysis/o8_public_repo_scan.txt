@@ -1,0 +1,32 @@
+O8 public repo scan — 2026-09-20
+
+HEAD at scan start: 5c2d9e3 (phase-o)
+License: MIT (LICENSE present)
+
+=== Inventory (tracked at HEAD / to include in release) ===
+- docs/ANALYSIS_PLAN.md, DECISIONS.md, SCOPE.md, IMPLEMENTATION_PLAN.md: TRACKED
+- scripts/verify_varpart.py: TRACKED
+- grids/*.yaml: 11 tracked
+- analysis/*.csv: 37 tracked
+- results/**/*.json metadata: 866 tracked
+- Adapter weights (*.pt): gitignored / not archived
+
+=== Tokens / credentials (HEAD tracked tree) ===
+PASS: no hf_/sk-/AKIA/ghp_/github_pat_/private-key material found.
+
+=== History (last 80 commits, high-signal secret patterns) ===
+PASS: no matching secret blobs in sampled history.
+
+=== Host:port / IPv4 ===
+Prior N8 finding: destroyed Vast SSH endpoints were present in docs/phase_{f,g}_report.md
+and analysis/n8_machine_gates.txt. Working tree now uses role labels / <REDACTED> wording
+(no live host:port). History still contains those IPs (no rewrite). Accept for release;
+do not cut a second release to "fix" history.
+
+=== Absolute user paths ===
+analysis/smoke_holdout.csv had one /Users/jerryadamsfranklin/... adapter path; redacted
+to a repo-relative path in the working tree before v0.9.1.
+
+=== Verdict ===
+No credentials. Proceed to v0.9.1 after committing .zenodo.json, CITATION.cff, and
+redaction cleanups.

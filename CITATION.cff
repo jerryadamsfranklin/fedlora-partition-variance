@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+title: "fedlora-partition-variance: code, configurations, and run artifacts for Partition Draws, Not Aggregators"
+authors:
+  - family-names: Franklin
+    given-names: Jerry Adams
+    affiliation: Independent Researcher
+    orcid: "https://orcid.org/0009-0006-8470-8349"
+keywords:
+  - federated learning
+  - low-rank adaptation
+  - non-IID partitioning
+  - experimental variance
+  - reproducibility
+  - large language models
+version: v0.9.1
+date-released: "2026-09-20"
+repository-code: "https://github.com/jerryadamsfranklin/fedlora-partition-variance"
+license: MIT
