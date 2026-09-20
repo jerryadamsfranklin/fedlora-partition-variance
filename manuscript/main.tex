@@ -15,6 +15,14 @@
 % All production figures are figure*; use textwidth so captions wrap correctly.
 \gdef\xfigwd{\textwidth}
 
+% ieeeaccess.cls biography envs expect a biography counter and TOC flag that
+% this IEEEtran pairing does not define; provide them so IEEEbiographynophoto works.
+\makeatletter
+\@ifundefined{c@biography}{\newcounter{biography}}{}
+\newif\if@biographyTOCentrynotmade
+\@biographyTOCentrynotmadetrue
+\makeatother
+
 \graphicspath{{../figures/}{figures/}}
 
 \begin{document}
@@ -28,7 +36,7 @@
 
 \address[1]{Independent Researcher (ORCID: to be inserted before submission)}
 
-\tfootnote{ORCID and corresponding email are placeholders pending finalization before submission.}
+\tfootnote{}
 
 \markboth
 {Franklin: Partition Draws, Not Aggregators}
@@ -58,13 +66,13 @@ federated learning, low-rank adaptation, non-IID partitioning, experimental vari
 \input{sections/02_related_work}
 \input{sections/03_setup}
 
-\begin{table}[!t]
+\begin{table*}[!t]
 \centering
 \caption{Frozen experimental design.}
 \label{tab:setup}
 \small
 \input{tables/tab1_setup}
-\end{table}
+\end{table*}
 
 \input{sections/04_results}
 
@@ -72,7 +80,8 @@ federated learning, low-rank adaptation, non-IID partitioning, experimental vari
 \centering
 \caption{Method-of-moments variance components by model and heterogeneity level, with bootstrap 95\% CIs over partitions ($B{=}2000$).}
 \label{tab:variance}
-\small
+\scriptsize
+\setlength{\tabcolsep}{3.5pt}
 \input{tables/tab2_variance}
 \end{table*}
 
@@ -87,7 +96,7 @@ federated learning, low-rank adaptation, non-IID partitioning, experimental vari
 \begin{figure*}[!t]
 \centering
 \includegraphics[width=\textwidth]{fig1_heldout_loss.pdf}
-\caption{Held-out loss by method: IID (left group) and Dirichlet $\alpha{=}0.1$ (right group), points colored by partition.}
+\caption{Held-out loss by method. TinyLlama (left): IID, Dirichlet $\alpha{=}0.5$, and $\alpha{=}0.1$. LLaMA-3.2-3B (right): IID and $\alpha{=}0.1$. Points are colored by partition.}
 \label{fig:heldout}
 \end{figure*}
 
@@ -123,6 +132,16 @@ The author used Claude (Anthropic) for language editing and drafting support, an
 \balance
 \bibliographystyle{IEEEtran}
 \bibliography{refs}
+
+\begin{IEEEbiographynophoto}{Jerry Adams Franklin}
+Jerry Adams Franklin is an independent researcher working on reproducible evaluation of
+federated and parameter-efficient learning systems. He previously held industry roles in
+software engineering and applied machine learning, spanning production model deployment and
+distributed training pipelines. His research interests include federated learning,
+parameter-efficient fine-tuning of large language models, non-IID partition design, and
+measurement protocols that separate data-partition variance from training-seed noise in
+distributed instruction-tuning benchmarks.
+\end{IEEEbiographynophoto}
 
 \EOD
 

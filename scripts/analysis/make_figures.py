@@ -96,25 +96,41 @@ def _savefig(fig: plt.Figure, path: Path, width_pt: float, height_in: float, min
 
 
 def fig1_heldout() -> Path:
-    """Full-width two-panel held-out loss figure."""
+    """Full-width two-panel held-out loss figure.
+
+    TinyLlama: IID, alpha 0.5, alpha 0.1 (three groups).
+    LLaMA: IID, alpha 0.1 (two groups).
+    """
     runs = pd.read_csv(ANALYSIS / "runs.csv")
     min_font = 8.0
     fig, axes = plt.subplots(1, 2, figsize=(IN_FULL, 2.6), sharey=False)
+    # Order: mild → skew for left-to-right readability; TL has a05, L3 does not.
+    het_by_model = {
+        "tl": (("iid", "a05", "a01"), "left→right: IID, α=0.5, α=0.1"),
+        "l3": (("iid", "a01"), "left: IID; right: α=0.1"),
+    }
     for ax, model in zip(axes, ("tl", "l3")):
         sub = runs[runs.model == model]
         methods = ["fedit", "ffa_lora", "flora"]
+        hets, annot = het_by_model[model]
+        n_het = len(hets)
+        # Center groups around each method tick; span grows with group count.
+        offsets = {
+            2: (-0.18, 0.18),
+            3: (-0.28, 0.0, 0.28),
+        }[n_het]
         rng = np.random.default_rng(0)
         for i, meth in enumerate(methods):
-            for j, het in enumerate(("iid", "a01")):
+            for j, het in enumerate(hets):
                 vals = sub[(sub.method == meth) & (sub.het == het)]
                 if vals.empty:
                     continue
-                x = i + (j - 0.5) * 0.35
+                x = i + offsets[j]
                 seeds = vals["data_seed"].to_numpy()
                 uniq = sorted(vals["data_seed"].unique())
                 cmap = plt.cm.viridis(np.linspace(0.15, 0.85, max(len(uniq), 1)))
                 seed_to_c = {s: cmap[k] for k, s in enumerate(uniq)}
-                jitter = rng.uniform(-0.05, 0.05, size=len(vals))
+                jitter = rng.uniform(-0.04, 0.04, size=len(vals))
                 ax.scatter(
                     np.full(len(vals), x) + jitter,
                     vals["heldout_loss"],
@@ -126,8 +142,8 @@ def fig1_heldout() -> Path:
                 )
                 ax.hlines(
                     vals["heldout_loss"].mean(),
-                    x - 0.11,
-                    x + 0.11,
+                    x - 0.09,
+                    x + 0.09,
                     colors="black",
                     linewidths=1.0,
                     zorder=4,
@@ -142,7 +158,7 @@ def fig1_heldout() -> Path:
         ax.text(
             0.02,
             0.98,
-            "left: IID; right: alpha 0.1",
+            annot,
             transform=ax.transAxes,
             va="top",
             fontsize=8,
@@ -151,7 +167,6 @@ def fig1_heldout() -> Path:
         ax.grid(True, axis="y", alpha=0.3, linewidth=0.5)
     fig.subplots_adjust(left=0.08, right=0.99, top=0.90, bottom=0.18, wspace=0.28)
     out = FIG / "fig1_heldout_loss.pdf"
-    # Fixed size without bbox_inches=tight so media box matches target
     fig.set_size_inches(IN_FULL, 2.6)
     fig.savefig(out, bbox_inches=None, pad_inches=0)
     plt.close(fig)
@@ -304,15 +319,23 @@ def fig3_power() -> Path:
                 label="obs. near-tie (paired)",
             )
             n_lab = "more than 1000" if isinstance(n_raw, str) and "more" in str(n_raw).lower() else f"n={int(n_paired)}"
+            # Place the near-tie label below the star when it sits on the cap line
+            # (LLaMA >1000), otherwise above-left as before.
+            if n_paired >= 900:
+                xytext = (x_star - 0.05, 120)
+                va = "bottom"
+            else:
+                xytext = (x_star - 0.15, n_paired * 0.55)
+                va = "top"
             ax.annotate(
                 f"{n_lab}\n(|g|={gap:.4f})",
                 xy=(x_star, n_paired),
-                xytext=(x_star - 0.15, n_paired * 0.55 if n_paired < 900 else 200),
+                xytext=xytext,
                 fontsize=8,
                 color=C["tie"],
                 arrowprops=dict(arrowstyle="-", color=C["tie"], lw=0.7),
                 ha="right",
-                va="top",
+                va=va,
             )
         ax.set_yscale("log")
         ax.set_xlabel(r"Detectable $\Delta$ / observed gap", fontsize=8)
@@ -330,16 +353,18 @@ def fig3_power() -> Path:
         if model == "tl":
             ax.legend(frameon=False, fontsize=8, loc="upper left")
         ax.axhline(1000, color="#888888", linewidth=0.6, linestyle="--")
-        ax.text(
-            0.98,
-            0.92,
-            "cap >1000",
-            transform=ax.transAxes,
-            ha="right",
-            va="top",
-            fontsize=8,
-            color="#555555",
-        )
+        # Cap label only on TinyLlama; on LLaMA it collides with the >1000 star.
+        if model == "tl":
+            ax.text(
+                0.98,
+                0.92,
+                "cap >1000",
+                transform=ax.transAxes,
+                ha="right",
+                va="top",
+                fontsize=8,
+                color="#555555",
+            )
     fig.subplots_adjust(left=0.09, right=0.99, top=0.88, bottom=0.20, wspace=0.25)
     out = FIG / "fig3_draws_needed.pdf"
     fig.set_size_inches(IN_FULL, 2.7)
