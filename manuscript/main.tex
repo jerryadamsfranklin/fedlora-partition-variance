@@ -1,8 +1,6 @@
 %% manuscript/main.tex
-%% Phase O3: migrating from IJACSA conference IEEEtran toward IEEE Access
-%% (single-anonymized). Full ieeeaccess.cls swap still requires the Access
-%% template zip; journal-mode IEEEtran is the interim Access-facing shell.
-\documentclass[journal, letterpaper]{IEEEtran}
+%% Phase O3: IEEE Access (ieeeaccess.cls). ORCID, email, and DOI are placeholders.
+\documentclass{ieeeaccess}
 
 \usepackage[pdftex]{graphicx}
 \usepackage[cmex10]{amsmath}
@@ -10,38 +8,51 @@
 \usepackage{booktabs}
 \usepackage{cite}
 \usepackage{url}
-\usepackage{hyperref}
-\usepackage{fancyhdr}
-\usepackage{balance}
 \usepackage{xcolor}
+\usepackage{balance}
 
-\hypersetup{
-  colorlinks=true,
-  linkcolor=black,
-  citecolor=black,
-  urlcolor=black,
-  pdfauthor={},
-  pdftitle={}
-}
+% ieeeaccess.cls \@makecaption expects \xfigwd (normally set by \Figure).
+% All production figures are figure*; use textwidth so captions wrap correctly.
+\gdef\xfigwd{\textwidth}
 
 \graphicspath{{../figures/}{figures/}}
 
-% Access is single-anonymized: author identity restored (O3).
-\pagestyle{plain}
-
 \begin{document}
+
+\history{Date of publication xxxx 00, 0000, date of current version xxxx 00, 0000.}
+\doi{10.1109/ACCESS.2026.XXXXXXX}
 
 \title{Partition Draws, Not Aggregators: Decomposing Result Variance in Federated LoRA Fine-Tuning Under Non-IID Splits}
 
-\author{\IEEEauthorblockN{Jerry Adams Franklin}
-\IEEEauthorblockA{Independent Researcher\\
-ORCID: \textit{(to be inserted before submission)}\\
-Email: \textit{(non-Gmail address on jerryadamsfranklin.com, to be inserted)}}
-}
+\author{\uppercase{Jerry Adams Franklin}\authorrefmark{1}}
+
+\address[1]{Independent Researcher (ORCID: to be inserted before submission)}
+
+\tfootnote{ORCID and corresponding email are placeholders pending finalization before submission.}
+
+\markboth
+{Franklin: Partition Draws, Not Aggregators}
+{Franklin: Partition Draws, Not Aggregators}
+
+\corresp{Corresponding author: Jerry Adams Franklin (e-mail: to-be-inserted@jerryadamsfranklin.com).}
+
+\begin{abstract}
+Federated LoRA comparisons often rest on a single non-IID partition draw, even when reported method gaps sit near ordinary run-to-run noise. We ask how much of the variation in held-out next-token loss comes from the partition draw, how often few-draw rankings flip, and how many draws a target effect size requires. In a pre-registered design of $120$ runs at two scales (TinyLlama-1.1B-Chat and LLaMA-3.2-3B), with partition seeds separated from training seeds, we fit a two-way variance decomposition for FedIT, FFA-LoRA, and FLoRA on Dolly, partitioned by its category labels at Dirichlet $\alpha{=}0.1$, and extend the design by $84$ further runs (TinyLlama $\alpha{=}0.5$; LLaMA to ten partition draws). On TinyLlama the partition and interaction shares are $0.508$ and $0.469$ against a residual of $0.023$. On LLaMA-3.2-3B at $p{=}10$ the interaction dominates ($0.992$) and the partition interval includes zero after truncation. Ranking flips concentrate in the near-tied FedIT--FLoRA pair: the three-draw paired flip probability is $0.377$ on TinyLlama and $0.493$ on LLaMA-3.2-3B, while gaps of about $0.023$ never reverse in a single draw. Detecting that observed near-tie at 80\% power needs 206 paired partition draws on
+TinyLlama and more than 1000 on LLaMA-3.2-3B; separable pairs need only 3. Extending
+the 3B grid from six to ten draws reverses the top-two ordering and grows the
+interaction component by a factor of 2.66, so an evaluation stopping at six draws
+would report the opposite ranking. Repeating the design at $\alpha{=}0.5$ leaves the
+variance composition statistically unchanged while shrinking total variance by about
+an order of magnitude. We propose the Partition-Draw Reporting Protocol: (1)~report the number of partition draws, and the partition seeds, separately from training seeds; (2)~pair method comparisons on the same partition draws; (3)~report the minimum difference the design can detect, at the design's number of draws. After first mention we call this ``the protocol.'' We make no method recommendation.
+\end{abstract}
+
+\begin{keywords}
+federated learning, low-rank adaptation, non-IID partitioning, experimental variance, reproducibility, large language models
+\end{keywords}
+
+\titlepgskip=-15pt
 
 \maketitle
-
-\input{sections/00_abstract}
 
 \input{sections/01_introduction}
 \input{sections/02_related_work}
@@ -112,5 +123,7 @@ The author used Claude (Anthropic) for language editing and drafting support, an
 \balance
 \bibliographystyle{IEEEtran}
 \bibliography{refs}
+
+\EOD
 
 \end{document}
