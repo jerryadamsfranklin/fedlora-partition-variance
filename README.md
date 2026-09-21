@@ -36,7 +36,8 @@ train[3000:3500]. Design size: 204 production cells.
 - `analysis/` — paper CSVs and `claims.csv`; process logs under `analysis/logs/`
 - `figures/` — manuscript figures
 - `manuscript/` — IEEE Access LaTeX source and PDF
-- `docs/` — scope, analysis plan, decisions, provenance, reproduce guide
+- `docs/` — analysis plan, scope, decisions, provenance, reproduce guide,
+  changelog; partition preview and merged-config dumps
 - `tests/` — unit and integration tests for the training path
 - `literature/` — local citation notes
 
