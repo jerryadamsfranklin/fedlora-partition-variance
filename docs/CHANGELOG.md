@@ -67,3 +67,7 @@ Baseline test count at v0-import: 28 passed
   `ieee-access-submitted` / `ieee-access-submitted-v1` and Zenodo `v0.9.1`
   predate this pointer fix (and the O12 analysis fixes); tip tagged
   `ieee-access-submitted-final`. No new Zenodo release (code unchanged).
+- Docs cleanup: remove campaign scaffolding from the public tree
+  (`IMPLEMENTATION_PLAN.md`, `PHASE_N_RUNBOOK.md`, phase/smoke reports,
+  `STATUS.md`). Keep pre-registration and archive docs (`ANALYSIS_PLAN`,
+  `SCOPE`, `DECISIONS`, `PROVENANCE`, `REPRODUCE`, `CHANGELOG`).

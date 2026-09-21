@@ -107,3 +107,7 @@ manuscript_o*_*.pdf
 *.bak
 analysis/*_scratch_*.csv
 analysis/*.csv.bak
+
+# Local O11 Linux runner tooling
+.o11_linux/
+.tmp_o10/
