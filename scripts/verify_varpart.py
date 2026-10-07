@@ -435,17 +435,19 @@ CLAIMS: List[Dict[str, Any]] = [
     },
     {
         "id": "zenodo_availability_dois",
-        "text": "Availability statement cites Zenodo concept and v0.9.2 version DOIs",
-        "value": ("10.5281/zenodo.22861074", "10.5281/zenodo.22862931"),
-        "source": "manuscript/main.tex Declarations; Zenodo record 22862931",
+        "text": "Availability statement cites Zenodo concept DOI and release tag v1.0.0",
+        "value": ("10.5281/zenodo.22861074", "v1.0.0"),
+        "source": "manuscript/main.tex Declarations; Zenodo concept 22861074",
         "kind": "analysis",
         "check": lambda: (
             "10.5281/zenodo.22861074"
             in (REPO_ROOT / "manuscript" / "main.tex").read_text(encoding="utf-8")
+            and "v1.0.0"
+            in (REPO_ROOT / "manuscript" / "main.tex").read_text(encoding="utf-8")
             and "10.5281/zenodo.22862931"
-            in (REPO_ROOT / "manuscript" / "main.tex").read_text(encoding="utf-8")
+            not in (REPO_ROOT / "manuscript" / "main.tex").read_text(encoding="utf-8")
             and "v0.9.2"
-            in (REPO_ROOT / "manuscript" / "main.tex").read_text(encoding="utf-8")
+            not in (REPO_ROOT / "manuscript" / "main.tex").read_text(encoding="utf-8")
         ),
     },
     # --- External citation figures (verified against primary sources; not analysis) ---

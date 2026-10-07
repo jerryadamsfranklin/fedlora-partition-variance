@@ -2,7 +2,8 @@
 """Flag banned typography in manuscript .tex and .bib files.
 
 Flags: U+2014 em dash, U+2013 en dash, curly quotes U+201C/U+201D/U+2018/U+2019,
-and sentences starting with First, Furthermore, Moreover, or Additionally.
+LaTeX three-hyphen em dash (---) in .tex files (not --), and sentences starting
+with First, Furthermore, Moreover, or Additionally.
 Exit 0 if clean; exit 1 if any flag.
 """
 
@@ -25,6 +26,21 @@ BANNED_START = re.compile(
 )
 
 
+def _is_comment_line(line: str) -> bool:
+    return line.lstrip().startswith("%")
+
+
+def check_latex_em_dash(path: Path, line: str, line_no: int) -> list[str]:
+    """Flag --- in .tex files; skip comments; do not flag --."""
+    if path.suffix != ".tex":
+        return []
+    if _is_comment_line(line):
+        return []
+    if "---" in line:
+        return [f"{path}:{line_no}: LaTeX em dash (---)"]
+    return []
+
+
 def check_file(path: Path) -> list[str]:
     text = path.read_text(encoding="utf-8")
     hits: list[str] = []
@@ -32,7 +48,7 @@ def check_file(path: Path) -> list[str]:
         for ch, name in BANNED_CHARS.items():
             if ch in line:
                 hits.append(f"{path}:{i}: {name}")
-        # LaTeX -- is intentional for en-dash in print; only flag Unicode en/em
+        hits.extend(check_latex_em_dash(path, line, i))
     if BANNED_START.search(text):
         for m in BANNED_START.finditer(text):
             # approximate line

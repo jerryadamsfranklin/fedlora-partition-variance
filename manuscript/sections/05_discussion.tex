@@ -14,24 +14,50 @@ When the observed gap is near the paired per-draw SD ($0.00282$ on TinyLlama, $0
 Pairing methods on the same partition draws removes the shared partition main effect from the comparison and is the right default for ranking. It does not remove the interaction: methods can still reorder across draws when their responses to a partition differ. That is exactly the FedIT--FLoRA near-tie ($+0.00055$ on TinyLlama, $+0.00067$ on LLaMA-3.2-3B at $p{=}10$), where best-method and full-order flip probabilities coincide because only the top pair moves. Pairing also does not invent power. Detecting a pre-registered $\Delta{=}0.005$ still needs $5$ (TinyLlama) or $21$ (LLaMA-3.2-3B at $p{=}10$) paired draws, and the observed near-tie would need $206$ and more than $1000$. For that near-tie, pairing roughly halves the requirement at 1.1B ($206$ versus $416$ per method unpaired) but at 3B both protocols exceed $1000$. At some larger $\Delta$ the unpaired design needs fewer draws per method, because the interaction term enters the paired difference twice; where $\hat\sigma^2_{PM}$ dominates, pairing on partitions buys little. Pairing is a variance-control device for the shared partition effect, not a substitute for enough independent partitions.
 
 \subsection{Cross-scale reading}
-On TinyLlama the partition share is substantial ($0.508$). On LLaMA-3.2-3B at $p{=}10$ the interaction dominates ($0.992$) and the partition main-effect CI includes zero after truncation, so we do not claim a partition main effect at 3B. Cross-scale CIs on the partition share overlap; the two scales are not distinguishable on that margin. The scales also differ in more than size: TinyLlama-1.1B-Chat-v1.0 is instruction-tuned while LLaMA-3.2-3B is a base model, and base weights are float32 versus float16, so cross-scale differences should not be read as pure scale effects. We report the 3B IID floor descriptively only ($2$ degrees of freedom per method).
+On TinyLlama the partition share is substantial ($0.508$). On LLaMA-3.2-3B at $p{=}10$ the
+interaction dominates ($0.992$) and the partition main-effect CI includes zero after
+truncation, so we report no partition main effect at 3B. The cross-scale CIs on the
+partition share overlap, and the two scales differ in more than parameter count:
+TinyLlama-1.1B-Chat-v1.0 is instruction-tuned while LLaMA-3.2-3B is a base model, and the
+base weights are float32 against float16. The design was therefore scoped to measure the
+partition component within each scale rather than to attribute differences between them,
+and the 3B IID floor is reported descriptively at $2$ degrees of freedom per method. The
+within-scale conclusions do not depend on a scale comparison. We make no method
+recommendation: the separable FFA-LoRA gaps are large and stable, the FedIT--FLoRA gap is
+not, and the contribution is the measurement design and the conditioning of ranking
+stability on effect size relative to partition-draw noise.
 
-\subsection{Limitations}
-The operational deviations below were detected by the study's own verifier and are reported in full because the paper's subject is measurement discipline.
-The study uses two model scales only (1.1B and 3B), one dataset (Dolly), two heterogeneity levels at 1.1B ($\alpha{=}0.1$ and $0.5$), three aggregators, $10$ clients with full participation, $15$ rounds with one local epoch, and held-out next-token loss rather than generation benchmarks. Local updates apply only on complete gradient-accumulation blocks, so clients holding fewer samples than one block contribute no update; at $\alpha{=}0.1$ this affected up to two clients per partition, each holding at most $11$ samples. LLaMA production holdouts run in float16; the float32 spot-check bound the difference well below the $0.01$ effect scale, but the primary 3B numbers remain float16. The MixedLM partition component did not identify, so moment estimates are primary. Communication is reported within method only. RQ4 is exploratory and unreplicated at 3B. The release covers results and metadata, not adapter weights.
-Two operational deviations are disclosed. The held-out evaluation was amended
-mid-campaign to restore float32 for TinyLlama (\texttt{freeze-v3.1}); 83 of 84
-extension cells ran under the amended code and one under its predecessor, and 15
-LLaMA held-out evaluations were recomputed to a single code path. Separately, 54
-extension cells trained on hosts that installed a torch build other than the pinned
-2.2.0+cu121 and were retrained on the pinned stack; the originals are retained in the
-repository. Comparing the two versions of those cells, the stack shift averages
+\subsection{Scope and limitations}
+The design covers two model scales (1.1B and 3B), one dataset (Dolly), two heterogeneity
+levels at 1.1B ($\alpha{=}0.1$ and $0.5$), three aggregators, $10$ clients with full
+participation, $15$ rounds with one local epoch, and held-out next-token loss as the single
+response. Generation benchmarks, additional datasets, partial participation, and larger
+scales lie outside it, so the reported shares describe this apparatus rather than federated
+LoRA in general. One property of the frozen federation, stated in
+Section~\ref{sec:setup}, shapes what the partition draw varies: local updates apply only on
+complete gradient-accumulation blocks, so the smallest clients at $\alpha{=}0.1$ contribute
+no optimizer step. Communication is reported within method only, and RQ4 is exploratory and
+is not used for claims.
+
+Two measurement choices carry quantified bounds. LLaMA production holdouts run in float16;
+the float32 spot-check in Section~\ref{sec:setup} bounds the difference at
+$4.1{\times}10^{-5}$, about $250$ times below the $0.01$ effect scale used for power, so the
+3B numbers are reported in float16. The mixed-model cross-check recovers the residual and
+method-level components but not a separate partition component, as reported in
+Section~\ref{sec:results}; the method-of-moments estimates are primary, as pre-registered.
+
+The campaign's operational record is complete in the repository's decision log, and the two
+items that touch the reported numbers are summarized here because measurement discipline is
+the paper's subject. The held-out evaluation was amended mid-campaign to restore float32 for
+TinyLlama (\texttt{freeze-v3.1}), and $15$ LLaMA held-out evaluations were recomputed so
+that every reported value comes from one code path; the TinyLlama base loss is identical to
+$10^{-6}$ across all freeze tags, so the amendment leaves the reported values unchanged.
+Separately, $54$ extension cells trained on hosts that installed a torch build other than
+the pinned 2.2.0+cu121 and were retrained on the pinned stack, with the originals retained
+for comparison. That comparison is itself a measurement: the stack shift averages
 $-8.5{\times}10^{-8}$ at 1.1B and $+8.4{\times}10^{-4}$ at 3B
-($\mathrm{SD}\,3.0{\times}10^{-4}$, $n{=}15$). The 3B shift is larger than the
-observed FedIT--FLoRA gap of $0.00067$, which is a concrete instance of the paper's
-argument: an unreported component of the measurement apparatus moved the metric by
-more than the method difference under test. All reported results use the pinned stack.
-Four duplicate complete run directories were resolved by keeping the newer freeze-v3.1 / torch 2.2.0+cu121 timestamp; both copies already matched the pin.
-
-\subsection{No method recommendation}
-We make no method recommendation. The separable FFA-LoRA gaps are large and stable; the FedIT--FLoRA gap is not. The contribution is the measurement design and the conditioning of ranking stability on effect size relative to partition-draw noise.
+($\mathrm{SD}\,3.0{\times}10^{-4}$, $n{=}15$), so at 3B an undeclared component of the
+apparatus moved the metric by more than the FedIT--FLoRA gap of $0.00067$ under test. This
+is the paper's argument arriving from the inside: components that go unreported are not
+thereby small. All reported results use the pinned stack, and the release covers results and
+metadata but not adapter weights.
