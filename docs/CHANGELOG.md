@@ -71,3 +71,7 @@ Baseline test count at v0-import: 28 passed
   (`IMPLEMENTATION_PLAN.md`, `PHASE_N_RUNBOOK.md`, phase/smoke reports,
   `STATUS.md`). Keep pre-registration and archive docs (`ANALYSIS_PLAN`,
   `SCOPE`, `DECISIONS`, `PROVENANCE`, `REPRODUCE`, `CHANGELOG`).
+- P1: `scripts/check_typography.py` also flags LaTeX `---` em dashes in `.tex`
+  files (comment lines skipped; `--` still allowed). Unit test added.
+  Manuscript: Holm 1979 citation; bib/related-work accuracy; limitations
+  reframed; availability uses concept DOI + `v1.0.0` tag (no release cut).
