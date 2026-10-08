@@ -6,15 +6,15 @@ All analyses use held-out loss as the response. Numbers below come from the pre-
 \begin{figure*}[!t]
 \centering
 \includegraphics[width=\textwidth]{fig1_heldout_loss.pdf}
-\caption{Held-out loss by method. Within each method, clusters run left to right as IID,
-Dirichlet $\alpha{=}0.5$, and $\alpha{=}0.1$ for TinyLlama (left), and IID and
-$\alpha{=}0.1$ for LLaMA-3.2-3B (right). Horizontal bars mark cluster means. Points
-are colored by partition draw.}
+\caption{Held-out loss by method; clusters run left to right by setting (IID, $\alpha{=}0.5$, $\alpha{=}0.1$; LLaMA: IID, $\alpha{=}0.1$). Bars mark means; colors mark partitions.}
 \label{fig:heldout}
 \end{figure*}
 
 \subsection{Variance components at $\alpha{=}0.1$}
 Table~\ref{tab:variance} summarizes the method-of-moments estimates under the two-way design in Section~\ref{sec:setup}.
+Each share is a component divided by the total
+$\hat\sigma^2_P{+}\hat\sigma^2_{PM}{+}\hat\sigma^2_E$. On TinyLlama ($p{=}10$), the
+partition share is $0.508$ with bootstrap 95\% CI $[0.202,0.663]$, the interaction share is $0.469$ $[0.316,0.765]$, and the residual share is $0.023$ $[0.007,0.056]$. Absolute components are $\hat\sigma^2_P{=}4.09{\times}10^{-6}$, $\hat\sigma^2_{PM}{=}3.78{\times}10^{-6}$, and $\hat\sigma^2_E{=}1.89{\times}10^{-7}$. Partition and interaction are comparable in magnitude; residual training-seed noise is an order of magnitude smaller. No estimate was truncated at zero. The pre-registered mixed-model cross-check recovers the residual component on both models ($1.89{\times}10^{-7}$ and $1.31{\times}10^{-7}$, matching $\hat\sigma^2_E$) and a method-level variance component comparable to $\hat\sigma^2_P{+}\hat\sigma^2_{PM}$, but the separate partition component did not identify under the specified variance-component formula. We therefore report the moment estimates as primary, as pre-registered, and treat the mixed model as a partial cross-check.
 
 \begin{table*}[!t]
 \centering
@@ -24,8 +24,6 @@ Table~\ref{tab:variance} summarizes the method-of-moments estimates under the tw
 \setlength{\tabcolsep}{3.5pt}
 \input{tables/tab2_variance}
 \end{table*}
-
-\noindent On TinyLlama ($p{=}10$), the partition share is $\hat\sigma^2_P/(\hat\sigma^2_P{+}\hat\sigma^2_{PM}{+}\hat\sigma^2_E){=}0.508$ with bootstrap 95\% CI $[0.202,0.663]$, the interaction share is $0.469$ $[0.316,0.765]$, and the residual share is $0.023$ $[0.007,0.056]$. Absolute components are $\hat\sigma^2_P{=}4.09{\times}10^{-6}$, $\hat\sigma^2_{PM}{=}3.78{\times}10^{-6}$, and $\hat\sigma^2_E{=}1.89{\times}10^{-7}$. Partition and interaction are comparable in magnitude; residual training-seed noise is an order of magnitude smaller. No estimate was truncated at zero. The pre-registered mixed-model cross-check recovers the residual component on both models ($1.89{\times}10^{-7}$ and $1.31{\times}10^{-7}$, matching $\hat\sigma^2_E$) and a method-level variance component comparable to $\hat\sigma^2_P{+}\hat\sigma^2_{PM}$, but the separate partition component did not identify under the specified variance-component formula. We therefore report the moment estimates as primary, as pre-registered, and treat the mixed model as a partial cross-check.
 
 On LLaMA-3.2-3B the primary analysis uses $p{=}10$ partitions (Table~\ref{tab:variance}). The interaction share is $0.992$ $[0.662,0.995]$, with $\hat\sigma^2_{PM}{=}2.94{\times}10^{-5}$ and residual share $0.008$; the partition component truncates at zero (share $0.000$, CI $[0.000,0.329]$). Because that CI includes zero, we do not claim a partition main effect at 3B. Cross-scale bootstrap CIs on the partition share overlap ($[0.202,0.663]$ versus $[0.000,0.329]$). The $p{=}6$ sensitivity row is reported next.
 
@@ -82,8 +80,6 @@ $k{\in}\{1,2,3\}$ (unpaired $0.599$, $0.528$, $0.483$), so a three-draw evaluati
 \label{fig:flip}
 \end{figure*}
 
-\noindent
-
 The aggregate flip rate is entirely the near-tied FedIT--FLoRA pair. On TinyLlama that pair has true mean gap $+0.00055$; single-draw sign flips occur in 11 of 20 cells, and the paired order-flip probability is $0.555$ at $k{=}1$ and $0.377$ at $k{=}3$. The separable pairs (FedIT versus FFA-LoRA at $-0.023$, FFA-LoRA versus FLoRA at $+0.024$) never reverse: 0 of 20 single draws and paired flip probability $0$ at every $k$. On LLaMA-3.2-3B, FedIT versus FLoRA has gap $+0.00067$ with a $k{=}1$ paired flip
 probability of $0.700$, while the separable gaps ($-0.031$ and $+0.031$) never
 reverse at any $k$.
@@ -106,6 +102,7 @@ either protocol. The 1.1B near-tie needs $206$ paired draws. That contrast is th
 
 \subsection{Observed method differences}
 Table~\ref{tab:means} reports means and SDs.
+At $\alpha{=}0.1$, TinyLlama means are FLoRA $1.6957$ (SD $0.0013$), FedIT $1.6962$ ($0.0038$), and FFA-LoRA $1.7192$ ($0.0026$), each over $n{=}20$ cells; LLaMA-3.2-3B at $p{=}10$ means are FLoRA $1.8038$ ($0.0029$), FedIT $1.8045$ ($0.0077$), and FFA-LoRA $1.8350$ ($0.0035$), each over $n{=}20$. Paired $t$-tests on partition-level means with Holm correction~\cite{holm1979sequential} reject FFA-LoRA versus each of the other two methods on both models (TinyLlama Holm $p{<}10^{-8}$; LLaMA Holm $p{<}10^{-5}$) and do not reject FedIT versus FLoRA at $\alpha{=}0.1$ (TinyLlama Holm $p{=}0.57$; LLaMA Holm $p{=}0.83$). The FedIT--FLoRA confidence intervals include zero on both models at $\alpha{=}0.1$. We report these contrasts as context for the ranking and power sections and do not claim a winning method.
 
 \begin{table*}[!t]
 \centering
@@ -114,8 +111,6 @@ Table~\ref{tab:means} reports means and SDs.
 \small
 \input{tables/tab3_means_comm}
 \end{table*}
-
-At $\alpha{=}0.1$, TinyLlama means are FLoRA $1.6957$ (SD $0.0013$), FedIT $1.6962$ ($0.0038$), and FFA-LoRA $1.7192$ ($0.0026$), each over $n{=}20$ cells; LLaMA-3.2-3B at $p{=}10$ means are FLoRA $1.8038$ ($0.0029$), FedIT $1.8045$ ($0.0077$), and FFA-LoRA $1.8350$ ($0.0035$), each over $n{=}20$. Paired $t$-tests on partition-level means with Holm correction~\cite{holm1979sequential} reject FFA-LoRA versus each of the other two methods on both models (TinyLlama Holm $p{<}10^{-8}$; LLaMA Holm $p{<}10^{-5}$) and do not reject FedIT versus FLoRA at $\alpha{=}0.1$ (TinyLlama Holm $p{=}0.57$; LLaMA Holm $p{=}0.83$). The FedIT--FLoRA confidence intervals include zero on both models at $\alpha{=}0.1$. We report these contrasts as context for the ranking and power sections and do not claim a winning method.
 
 \subsection{Partition statistics and communication}
 Among five exploratory Spearman correlations of partition-mean held-out loss with partition statistics, TinyLlama mean Jensen--Shannon divergence has $\rho{=}0.72$ ($p{=}0.019$, $n{=}10$). That association does not survive Holm correction across the five TinyLlama tests (Holm $p{=}0.093$) and does not replicate on LLaMA ($\rho{=}0.086$, $p{=}0.87$, $n{=}6$). Active clients vary only from 9 to 10 at $\alpha{=}0.1$ and show no reliable association ($\rho{=}0.35$, $p{=}0.32$ on TinyLlama; $\rho{=}0.13$, $p{=}0.80$ on LLaMA). We treat RQ4 as exploratory and do not build an argument on any single correlation.
