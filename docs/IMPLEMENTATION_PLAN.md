@@ -459,9 +459,23 @@ STOP. Report the commit hash. Do not proceed to tagging.
 
 RR-1  Set the release date in CITATION.cff / .zenodo.json if required; metadata-only commit.
       Re-confirm the PDF sha256.
-RR-2  Annotated tag v1.0.0 on that commit; push the tag.
-RR-3  GitHub release from v1.0.0, titled "v1.0.0: IEEE Access submission snapshot".
-RR-4  After Jerry submits: confirm the concept DOI resolves to v1.0.0, the archived zip's
-      main.pdf sha256 matches, and the version field reads v1.0.0. Record the version DOI
+RR-2  Annotated tag v1.1.0 on that commit; push the tag. Do not move the existing v1.0.0 tag.
+RR-3  GitHub release from v1.1.0, titled "v1.1.0: IEEE Access submission snapshot".
+RR-4  After Jerry submits: confirm the concept DOI resolves to v1.1.0, the archived zip's
+      main.pdf sha256 matches, and the version field reads v1.1.0. Record the version DOI
       in docs/DECISIONS.md only. If Zenodo has not ingested after 30 minutes, report;
       do NOT cut a second release.
+
+## Phase P10: final text corrections (NO tag, NO release, NO Zenodo)
+
+Branch: p10-text from main. Add to docs/IMPLEMENTATION_PLAN.md first.
+STANDING RULE: no tag, release, or Zenodo action unless Jerry says "release".
+Base PDF for diffing: sha256 74a4cb26571694dfe5c369542bb944aa5734c2029f8604cbdf7676816ba4cc2a
+
+T1--T11  Text corrections (FFA directions, V6/row labels, order-of-magnitude wording,
+      wrong→opposite ranking, ProFed/NIID-Bench wording, significance level 0.05,
+      full-design mean gap, micro-batch parenthetical, availability v1.1.0).
+T12  V9: gap_to_sdpair_tl (8), gap_to_sdpair_l3 (4); availability claim → v1.1.0 with
+      negative assertion that v1.0.0 is absent. Bite-test each.
+
+CHECKS X1--X4; then commit, merge, push. No tag, no release.

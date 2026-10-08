@@ -236,6 +236,30 @@ def _resumed_iid_max_diff() -> float:
         raise RuntimeError("resumed IID cell has no other seeds")
     return max(others)
 
+
+def _gap_to_sdpair(model: str) -> int:
+    """Round(|FedIT−FFA mean gap| / model-based paired SD) for separable-gap prose."""
+    if model == "tl":
+        row = _row(
+            "power.csv", model="tl", kind="observed_gap", pair="fedit-ffa_lora"
+        )
+    elif model == "l3":
+        row = _row(
+            "power_l3_p10.csv", kind="observed_gap", pair="fedit-ffa_lora"
+        )
+    else:
+        raise ValueError(model)
+    gap = abs(float(row["delta"]))
+    sd = float(row["sd_pair_model"])
+    return int(round(gap / sd))
+
+
+def _conclusion_tex() -> str:
+    return (REPO_ROOT / "manuscript" / "sections" / "06_conclusion.tex").read_text(
+        encoding="utf-8"
+    )
+
+
 CLAIMS: List[Dict[str, Any]] = [
     # --- Headline / abstract / intro (analysis) ---
     {
@@ -729,16 +753,42 @@ CLAIMS: List[Dict[str, Any]] = [
         ),
     },
     {
+        "id": "gap_to_sdpair_tl",
+        "text": "TinyLlama separable FedIT-FFA gap is about 8× the per-draw paired SD",
+        "value": 8,
+        "source": "analysis/power.csv observed_gap fedit-ffa_lora / sd_pair_model model=tl",
+        "kind": "analysis",
+        "check": lambda: (
+            _gap_to_sdpair("tl") == 8
+            and "eight (TinyLlama)" in _results_tex()
+            and "four to eight times" in _conclusion_tex()
+        ),
+    },
+    {
+        "id": "gap_to_sdpair_l3",
+        "text": "LLaMA separable FedIT-FFA gap is about 4× the per-draw paired SD",
+        "value": 4,
+        "source": "analysis/power_l3_p10.csv observed_gap fedit-ffa_lora / sd_pair_model",
+        "kind": "analysis",
+        "check": lambda: (
+            _gap_to_sdpair("l3") == 4
+            and "four (LLaMA-3.2-3B)" in _results_tex()
+            and "four to eight times" in _conclusion_tex()
+        ),
+    },
+    {
         "id": "zenodo_availability_dois",
-        "text": "Availability statement cites Zenodo concept DOI and release tag v1.0.0",
-        "value": ("10.5281/zenodo.22861074", "v1.0.0"),
+        "text": "Availability statement cites Zenodo concept DOI and release tag v1.1.0",
+        "value": ("10.5281/zenodo.22861074", "v1.1.0"),
         "source": "manuscript/main.tex Declarations; Zenodo concept 22861074",
         "kind": "analysis",
         "check": lambda: (
             "10.5281/zenodo.22861074"
             in (REPO_ROOT / "manuscript" / "main.tex").read_text(encoding="utf-8")
-            and "v1.0.0"
+            and "v1.1.0"
             in (REPO_ROOT / "manuscript" / "main.tex").read_text(encoding="utf-8")
+            and "v1.0.0"
+            not in (REPO_ROOT / "manuscript" / "main.tex").read_text(encoding="utf-8")
             and "10.5281/zenodo.22862931"
             not in (REPO_ROOT / "manuscript" / "main.tex").read_text(encoding="utf-8")
             and "v0.9.2"

@@ -36,7 +36,9 @@ iid_floor_l3,LLaMA pooled IID floor 3.07e-7,analysis,analysis/iid_noise.csv,pool
 tl_iid_ratio,TinyLlama s2_E / IID floor ratio 2.96,analysis,analysis/iid_noise.csv,ratio_s2E_a01_over_iid model=tl,2.96
 l3_iid_ratio_p6,LLaMA six-draw s2_E / IID floor ratio 0.43,analysis,analysis/iid_noise.csv,ratio_s2E_a01_over_iid model=l3,0.43
 l3_iid_ratio_p10,LLaMA ten-draw s2_E / IID floor ratio 0.82,analysis,analysis/variance_components_l3_p10.csv,s2_E / iid_noise.csv pooled_iid_var,0.82
-zenodo_availability_dois,Availability statement cites Zenodo concept DOI and release tag v1.0.0,analysis,manuscript/main.tex,Declarations; Zenodo concept 22861074,"[""10.5281/zenodo.22861074"",""v1.0.0""]"
+gap_to_sdpair_tl,TinyLlama separable FedIT-FFA gap is about 8× the per-draw paired SD,analysis,analysis/power.csv,observed_gap fedit-ffa_lora / sd_pair_model model=tl,8
+gap_to_sdpair_l3,LLaMA separable FedIT-FFA gap is about 4× the per-draw paired SD,analysis,analysis/power_l3_p10.csv,observed_gap fedit-ffa_lora / sd_pair_model,4
+zenodo_availability_dois,Availability statement cites Zenodo concept DOI and release tag v1.1.0,analysis,manuscript/main.tex,Declarations; Zenodo concept 22861074,"[""10.5281/zenodo.22861074"",""v1.1.0""]"
 ext_ffa_mnli,FFA-LoRA non-private MNLI-m 85.05+/-1.1 vs LoRA 82.03+/-10.7,external-verified,,Sun et al. ICLR 2024 Table 1 (external-verified),"[85.05,82.03,10.7]"
 ext_ffa_qqp,FFA-LoRA non-private QQP 84.35+/-0.6 vs LoRA 83.51+/-3.3,external-verified,,Sun et al. ICLR 2024 Table 1 (external-verified),"[84.35,83.51]"
 ext_flora_alpaca,FLoRA vs FedIT Llama Alpaca MMLU 29.85 vs 29.41,external-verified,,Wang et al. NeurIPS 2024 Table 1 (external-verified),"[29.85,29.41]"

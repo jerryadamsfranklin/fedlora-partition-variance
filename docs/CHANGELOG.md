@@ -98,3 +98,7 @@ Baseline test count at v0-import: 28 passed
 - R-prep: document Python ≥ 3.11 (3.12 verified) for byte-identical
   `stack_effect.csv` regen; keep `CITATION.cff` / `.zenodo.json` at version
   1.0.0 with release date deferred to R-release. No tag.
+- P10: correct FFA download wording; replace repo-internal V6/row labels; bound
+  separable gaps as 4×–8× paired SD; ``opposite'' ranking; significance level
+  0.05; full-design mean gap; micro-batch parenthetical; availability `v1.1.0`;
+  V9 `gap_to_sdpair_{tl,l3}`. No tag.
