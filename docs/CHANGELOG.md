@@ -77,3 +77,8 @@ Baseline test count at v0-import: 28 passed
   reframed; availability uses concept DOI + `v1.0.0` tag (no release cut).
 - P4: abstract shortened to IEEE Access 150--250 words; `check_typography.py`
   fails outside that range on `main.tex` (unit tests for 251-fail / 200-pass).
+- P5: cite every float in order; Fig.~1 caption carries cluster order (no
+  in-axes labels); Fig.~2 legends use FedIT/FFA-LoRA/FLoRA; tables use
+  ${\times}10^{k}$ (no e-notation) and round-half-up comm ranges; bib titles
+  FederatedGPT and non-IID; resumed-cell sibling diffs registered in V9;
+  `check_typography` requires every `fig:`/`tab:` label to be referenced.

@@ -7,6 +7,7 @@ from pathlib import Path
 from scripts.check_typography import (
     abstract_word_count,
     check_abstract_word_count,
+    check_float_citations,
     check_latex_em_dash,
 )
 
@@ -56,3 +57,13 @@ def test_abstract_word_count_200_passes():
 def test_abstract_word_count_skips_non_main():
     tex = _abstract_fixture(251)
     assert check_abstract_word_count(Path("sections/00_abstract.tex"), tex) == []
+
+
+def test_float_citation_flags_unreferenced_label(tmp_path: Path):
+    orphan = tmp_path / "orphan.tex"
+    orphan.write_text(
+        r"\label{fig:orphan}" + "\n" + r"See Figure~\ref{fig:heldout}." + "\n",
+        encoding="utf-8",
+    )
+    hits = check_float_citations([orphan])
+    assert any("fig:orphan" in h for h in hits)

@@ -106,13 +106,13 @@ def fig1_heldout() -> Path:
     fig, axes = plt.subplots(1, 2, figsize=(IN_FULL, 2.6), sharey=False)
     # Order: mild → skew for left-to-right readability; TL has a05, L3 does not.
     het_by_model = {
-        "tl": (("iid", "a05", "a01"), "left→right: IID, α=0.5, α=0.1"),
-        "l3": (("iid", "a01"), "left: IID; right: α=0.1"),
+        "tl": ("iid", "a05", "a01"),
+        "l3": ("iid", "a01"),
     }
     for ax, model in zip(axes, ("tl", "l3")):
         sub = runs[runs.model == model]
         methods = ["fedit", "ffa_lora", "flora"]
-        hets, annot = het_by_model[model]
+        hets = het_by_model[model]
         n_het = len(hets)
         # Center groups around each method tick; span grows with group count.
         offsets = {
@@ -155,15 +155,6 @@ def fig1_heldout() -> Path:
         if model == "tl":
             ax.set_ylabel("Held-out loss", fontsize=8)
         ax.tick_params(labelsize=8)
-        ax.text(
-            0.02,
-            0.98,
-            annot,
-            transform=ax.transAxes,
-            va="top",
-            fontsize=8,
-            color="#333333",
-        )
         ax.grid(True, axis="y", alpha=0.3, linewidth=0.5)
     fig.subplots_adjust(left=0.08, right=0.99, top=0.90, bottom=0.18, wspace=0.28)
     out = FIG / "fig1_heldout_loss.pdf"
@@ -235,7 +226,8 @@ def fig2_rank_flip() -> Path:
             if s.empty:
                 continue
             gap = float(s["true_gap"].iloc[0])
-            label = f"{pair.replace('-', ' vs ')} ({gap:+.4f})"
+            a, b = pair.split("-", 1)
+            label = f"{METHOD_LABEL[a]} vs {METHOD_LABEL[b]} ({gap:+.4f})"
             ax.plot(
                 s["k"],
                 s["prob_order_flip"],
