@@ -370,3 +370,14 @@ P6-1..P6-8  Restore Table 3 (9 rows); fix Fig 1 caption; break IV-A share formul
       sentence with stop gate; define active vs effective clients.
 G1--G3  Layout gates (overfull hbox >1pt; caption text in PDF; table row counts).
 Acceptance H1--H5; then commit, merge, push. Do not tag.
+
+## Phase P7: final polish (two edits)
+
+Branch: p7-polish from main. Add to docs/IMPLEMENTATION_PLAN.md first. Phase R stays on
+hold until Jerry confirms the P7 PDF.
+
+P7-1  sections/03_setup.tex: "For the 8 resumed cells" -> "For the eight resumed cells".
+P7-2  main.tex: remove \balance.
+
+CHECKS K1--K3 (gates unchanged; 11 pages with single-column bio; word-level pdftotext
+diff vs 06f69033). Then commit, merge, push. Do not tag.
