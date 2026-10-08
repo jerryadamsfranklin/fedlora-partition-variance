@@ -77,55 +77,7 @@ federated learning, low-rank adaptation, non-IID partitioning, experimental vari
 \input{sections/01_introduction}
 \input{sections/02_related_work}
 \input{sections/03_setup}
-
-\begin{table*}[!t]
-\centering
-\caption{Frozen experimental design.}
-\label{tab:setup}
-\small
-\input{tables/tab1_setup}
-\end{table*}
-
 \input{sections/04_results}
-
-\begin{table*}[!t]
-\centering
-\caption{Method-of-moments variance components by model and heterogeneity level, with bootstrap 95\% CIs over partitions ($B{=}2000$).}
-\label{tab:variance}
-\scriptsize
-\setlength{\tabcolsep}{3.5pt}
-\input{tables/tab2_variance}
-\end{table*}
-
-\begin{table*}[!t]
-\centering
-\caption{Method means and communication ranges by model and setting.}
-\label{tab:means}
-\small
-\input{tables/tab3_means_comm}
-\end{table*}
-
-\begin{figure*}[!t]
-\centering
-\includegraphics[width=\textwidth]{fig1_heldout_loss.pdf}
-\caption{Held-out loss by method. TinyLlama (left): IID, Dirichlet $\alpha{=}0.5$, and $\alpha{=}0.1$. LLaMA-3.2-3B (right): IID and $\alpha{=}0.1$. Points are colored by partition.}
-\label{fig:heldout}
-\end{figure*}
-
-\begin{figure*}[!t]
-\centering
-\includegraphics[width=\textwidth]{fig2_rank_flip.pdf}
-\caption{Ranking-flip probabilities under paired and unpaired protocols.}
-\label{fig:flip}
-\end{figure*}
-
-\begin{figure*}[!t]
-\centering
-\includegraphics[width=\textwidth]{fig3_draws_needed.pdf}
-\caption{Partition draws needed for pre-registered deltas and the observed FedIT--FLoRA near-tie (star).}
-\label{fig:draws}
-\end{figure*}
-
 \input{sections/05_discussion}
 \input{sections/06_conclusion}
 
@@ -153,8 +105,7 @@ federated and parameter-efficient learning systems. He previously held industry 
 software engineering and applied machine learning, spanning production model deployment and
 distributed training pipelines. His research interests include federated learning,
 parameter-efficient fine-tuning of large language models, non-IID partition design, and
-measurement protocols that separate data-partition variance from training-seed noise in
-distributed instruction-tuning benchmarks.
+measurement protocols that separate data-partition variance from training-seed noise.
 \end{IEEEbiographynophoto}
 
 \EOD

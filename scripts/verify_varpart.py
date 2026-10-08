@@ -127,7 +127,12 @@ def _results_tex() -> str:
 
 def _count_resumed_cells() -> int:
     """Count complete cells whose run_meta records overrides.resume (V10 source)."""
-    n = 0
+    return len(_resumed_cells())
+
+
+def _resumed_cells():
+    """Return list of Cell objects whose complete run_meta has overrides.resume."""
+    out = []
     for gname in ("tl", "l3", "tl_a05", "l3_ext"):
         grid = load_grid(REPO_ROOT / "grids" / f"{gname}.yaml")
         for cell in enumerate_cells(grid):
@@ -136,8 +141,57 @@ def _count_resumed_cells() -> int:
                 continue
             meta = _load_json(completes[0] / "run_meta.json")
             if (meta.get("overrides") or {}).get("resume"):
-                n += 1
-    return n
+                out.append(cell)
+    return out
+
+
+def _sibling_loss_groups() -> Dict[Tuple[str, str, str, str], Dict[str, float]]:
+    groups: Dict[Tuple[str, str, str, str], Dict[str, float]] = defaultdict(dict)
+    for r in _csv_rows("runs.csv"):
+        key = (r["model"], r["het"], r["method"], r["data_seed"])
+        groups[key][r["run_seed"]] = float(r["heldout_loss"])
+    return groups
+
+
+def _resumed_max_sibling_diff() -> float:
+    """Max |loss - sibling| over resumed cells with exactly one sibling (r=2)."""
+    groups = _sibling_loss_groups()
+    diffs: List[float] = []
+    for cell in _resumed_cells():
+        gkey = (cell.model, cell.het, cell.method, str(cell.data_seed))
+        seeds = groups[gkey]
+        if len(seeds) != 2:
+            continue
+        loss = seeds[str(cell.run_seed)]
+        sib = next(v for s, v in seeds.items() if s != str(cell.run_seed))
+        diffs.append(abs(loss - sib))
+    if not diffs:
+        raise RuntimeError("no resumed r=2 sibling diffs")
+    return max(diffs)
+
+
+def _nonresumed_median_sibling_diff() -> float:
+    """Median |sibling diff| over a01 pairs where neither seed resumed."""
+    from statistics import median
+
+    groups = _sibling_loss_groups()
+    resumed_keys = {
+        (c.model, c.het, c.method, str(c.data_seed), str(c.run_seed))
+        for c in _resumed_cells()
+    }
+    diffs: List[float] = []
+    for (model, het, method, dseed), seeds in groups.items():
+        if het != "a01" or len(seeds) != 2:
+            continue
+        s1, s2 = list(seeds.keys())
+        if (model, het, method, dseed, s1) in resumed_keys:
+            continue
+        if (model, het, method, dseed, s2) in resumed_keys:
+            continue
+        diffs.append(abs(seeds[s1] - seeds[s2]))
+    if not diffs:
+        raise RuntimeError("no non-resumed a01 sibling pairs")
+    return float(median(diffs))
 
 
 CLAIMS: List[Dict[str, Any]] = [
@@ -317,13 +371,19 @@ CLAIMS: List[Dict[str, Any]] = [
     },
     {
         "id": "tuned_loss_range",
-        "text": "Fine-tuned held-out loss between 1.69 and 1.85",
-        "value": (1.69, 1.85),
-        "source": "analysis/runs.csv heldout_loss min/max",
+        "text": "Fine-tuned held-out loss between 1.691 and 1.841",
+        "value": (1.691, 1.841),
+        "source": "analysis/runs.csv heldout_loss min/max rounded to 3 dp",
         "kind": "analysis",
         "check": lambda: (
-            min(float(r["heldout_loss"]) for r in _csv_rows("runs.csv")) >= 1.69
-            and max(float(r["heldout_loss"]) for r in _csv_rows("runs.csv")) <= 1.85
+            round(min(float(r["heldout_loss"]) for r in _csv_rows("runs.csv")), 3)
+            == 1.691
+            and round(max(float(r["heldout_loss"]) for r in _csv_rows("runs.csv")), 3)
+            == 1.841
+            and "between $1.691$ and $1.841$"
+            in (
+                REPO_ROOT / "manuscript" / "sections" / "01_introduction.tex"
+            ).read_text(encoding="utf-8")
         ),
     },
     {
@@ -481,6 +541,34 @@ CLAIMS: List[Dict[str, Any]] = [
         "source": "run_meta overrides.resume across tl/l3/tl_a05/l3_ext",
         "kind": "analysis",
         "check": lambda: _count_resumed_cells() == 9,
+    },
+    {
+        "id": "resumed_max_sibling_diff",
+        "text": "Resumed cells differ from sibling by at most 1.4e-3",
+        "value": 1.4e-3,
+        "source": "analysis/runs.csv + resume census; manuscript/sections/03_setup.tex",
+        "kind": "analysis",
+        "check": lambda: (
+            abs(_resumed_max_sibling_diff() - 1.4e-3) < 5e-5
+            and "1.4{\\times}10^{-3}"
+            in (REPO_ROOT / "manuscript" / "sections" / "03_setup.tex").read_text(
+                encoding="utf-8"
+            )
+        ),
+    },
+    {
+        "id": "nonresumed_median_sibling_diff",
+        "text": "Non-resumed a01 median sibling diff 3.1e-4",
+        "value": 3.1e-4,
+        "source": "analysis/runs.csv + resume census; manuscript/sections/03_setup.tex",
+        "kind": "analysis",
+        "check": lambda: (
+            abs(_nonresumed_median_sibling_diff() - 3.1e-4) < 5e-6
+            and "3.1{\\times}10^{-4}"
+            in (REPO_ROOT / "manuscript" / "sections" / "03_setup.tex").read_text(
+                encoding="utf-8"
+            )
+        ),
     },
     {
         "id": "residual_pool_30",
