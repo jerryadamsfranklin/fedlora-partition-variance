@@ -1,7 +1,15 @@
 \section{Experimental Setup}
 \label{sec:setup}
 
-We study three federated LoRA aggregation methods that appear in recent instruction-tuning work: FedIT~\cite{zhang2024fedit} (FedAvg~\cite{mcmahan2017fedavg} over LoRA adapters), FFA-LoRA~\cite{sun2024ffalora}, and FLoRA~\cite{wang2024flora}. No other aggregators are included. The design is fixed before production runs and is identical across methods except for the aggregation rule itself.
+We study three federated LoRA aggregation methods that appear in recent instruction-tuning work: FedIT~\cite{zhang2024fedit} (\mbox{FedAvg}~\cite{mcmahan2017fedavg} over LoRA adapters), FFA-LoRA~\cite{sun2024ffalora}, and FLoRA~\cite{wang2024flora}. No other aggregators are included. The design is fixed before production runs and is identical across methods except for the aggregation rule itself. Table~\ref{tab:setup} summarizes the frozen design.
+
+\begin{table*}[!t]
+\centering
+\caption{Frozen experimental design.}
+\label{tab:setup}
+\small
+\input{tables/tab1_setup}
+\end{table*}
 
 \subsection{Models and adapters}
 The primary model is TinyLlama-1.1B-Chat-v1.0~\cite{zhang2024tinyllama}. The replication model is LLaMA-3.2-3B from the Llama~3 herd~\cite{grattafiori2024llama3}, retained after a pre-registered timing gate on an RTX 4090 measured 65.2 minutes for a full run with a peak allocation of 9.5~GB, within the gate's limits of 75 minutes and 22~GB. Both models use the same LoRA~\cite{hu2022lora} configuration: rank $r{=}16$, scaling $\alpha_{\mathrm{LoRA}}{=}32$, dropout $0.1$, and target modules restricted to \texttt{q\_proj} and \texttt{v\_proj}. The base model is frozen; only the LoRA parameters are trained and communicated. Both models use learning rate $1{\times}10^{-4}$, weight decay $0.01$, and maximum sequence length 256.
@@ -31,10 +39,12 @@ Secondary reporting uses measured communication in megabytes, counting the tenso
 \subsection{Hardware and software provenance}
 Every production cell ran on a single NVIDIA GeForce RTX 4090 with one worker process per GPU. Median wall-clock time is 27.1 minutes for TinyLlama and 51.1 minutes for LLaMA-3.2-3B. Training provenance is the \texttt{freeze-v1} tag for the original 120 cells and
 \texttt{freeze-v3.1} for the 84 extension cells, each with a clean tracked tree; the
-training path is byte-identical across those tags. The LLaMA float16 holdout change is an eval-only amendment tagged \texttt{freeze-v2}; it does not alter training code or aggregated adapters. The design, configurations, grids, and analysis plan were committed and tagged before any production run, and the analysis follows that plan; deviations are logged in the repository's decision log and reported here. Nine cells resumed from a checkpoint
-after host interruptions, and failed attempts were retried to completion; resumed cells'
-held-out losses fall inside the range of the other run seeds sharing the same grid,
-heterogeneity, data seed, and method.
+training path is byte-identical across those tags. The LLaMA float16 holdout change is an eval-only amendment tagged \texttt{freeze-v2}; it does not alter training code or aggregated adapters. The design, configurations, grids, and analysis plan were committed and tagged before any production run, and the analysis follows that plan; deviations are logged in the repository's decision log and reported here. Nine cells resumed from a checkpoint after host interruptions, and failed
+attempts were retried to completion. Each resumed cell's held-out loss differs
+from its sibling run seed by at most $1.4{\times}10^{-3}$, against a median sibling difference of
+$3.1{\times}10^{-4}$ among cells that were not resumed.
+One LLaMA IID cell also resumed; its held-out loss differs from each of the other two
+seeds of that cell by at most $1.4{\times}10^{-3}$.
 
 \subsection{Variance model}
 For each model and heterogeneity level we fit a two-way design with methods fixed ($m{=}3$),
