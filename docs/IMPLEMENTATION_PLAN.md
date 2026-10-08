@@ -381,3 +381,14 @@ P7-2  main.tex: remove \balance.
 
 CHECKS K1--K3 (gates unchanged; 11 pages with single-column bio; word-level pdftotext
 diff vs 06f69033). Then commit, merge, push. Do not tag.
+
+## Phase P8: last-page layout and pre-release workspace check
+
+Branch: p8-final from main at 4ac7546. Add to docs/IMPLEMENTATION_PLAN.md first.
+Phase R stays on hold until Jerry confirms the P8 PDF.
+
+P8-1..P8-3  Investigate untracked holdout dirs; scratch rebuild must stay at 204 rows;
+      quarantine outside the repo only if not needed (else STOP).
+P8-4  Gitignore LaTeX aux artifacts (*.fdb_latexmk, *.fls, ...).
+P8-5  Insert \raggedbottom before bibliography; do not restore \balance.
+CHECKS L1--L4; then commit, merge, push. Do not tag.

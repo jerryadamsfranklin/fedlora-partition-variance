@@ -59,7 +59,10 @@ wandb/
 *.out
 *.bbl
 *.blg
+*.fdb_latexmk
+*.fls
 *.synctex.gz
+# *.log already ignored above under Logs
 
 # Local caches
 .cache/
