@@ -276,3 +276,33 @@ P2-J  Confirm, and state in your report, that the two verifier checks added for
 
 RE-RUN B1 through B8 after P2-H and P2-I.
 THEN commit on p2-positioning, merge to main, push. Log P2 in docs/DECISIONS.md. Do NOT tag.
+
+## Phase P3: IID-floor ratio provenance (final pre-release)
+
+Branch: p3-iid-ratio from main at 7b67182. Add to docs/IMPLEMENTATION_PLAN.md first.
+Text plus claim registration only. No recomputation of any existing analysis output.
+
+P3-1  sections/04_results.tex, subsection "IID noise floor": replace the first three
+      sentences with the block above. The 0.82 value is
+      s2_E(p=10) / pooled_iid_var = 2.5101979798593135e-07 / 3.06834472308735e-07
+      = 0.8181, from analysis/variance_components_l3_p10.csv and analysis/iid_noise.csv.
+
+P3-2  V9 audit. Report whether the following are already registered claims, and register
+      any that are not, each COMPUTED from its source file, never hardcoded:
+        - tl_iid_ratio       2.96  <- iid_noise.csv ratio_s2E_a01_over_iid model=tl
+        - l3_iid_ratio_p6    0.43  <- iid_noise.csv ratio_s2E_a01_over_iid model=l3
+        - l3_iid_ratio_p10   0.82  <- variance_components_l3_p10.csv s2_E
+                                      / iid_noise.csv pooled_iid_var, model=l3
+        - iid_floor_tl       6.40e-8 and iid_floor_l3 3.07e-7 <- iid_noise.csv
+      Do not modify or delete any existing claim. Report the before and after counts and
+      list every claim added.
+
+P3-3  Demonstrate bite on the new checks as in P2-J: mutate pooled_iid_var in a scratch
+      copy, show the ratio checks FAIL, restore. Report it.
+
+P3-4  Add a one-line note to docs/DECISIONS.md recording that the pre-registered noise
+      floor (I2) takes s2_E from I1, that I10 scopes the p=10 recomputation to I1, I3 and
+      I4, and that the manuscript now reports both the six-draw and ten-draw ratios so
+      the number is reproducible from either fit.
+
+THEN commit, merge to main, push. Do NOT tag until Jerry confirms.

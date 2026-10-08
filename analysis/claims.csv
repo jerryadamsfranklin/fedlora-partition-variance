@@ -27,6 +27,11 @@ design_204_setup,Setup design statement: 204 production cells,analysis,manuscrip
 resumed_cells_9,Nine cells resumed from checkpoint,analysis,,run_meta overrides.resume across tl/l3/tl_a05/l3_ext,9
 residual_pool_30,Residual pooled over 30 within-cell differences at p=10 m=3,analysis,analysis/runs.csv,a01 data_seed 2001-2010; manuscript/sections/03_setup.tex,30
 iid_training_seeds_3_to_5,IID cells supply three to five training seeds per method,analysis,analysis/runs.csv,iid run_seed; manuscript/sections/03_setup.tex,"[3,5]"
+iid_floor_tl,TinyLlama pooled IID floor 6.40e-8,analysis,analysis/iid_noise.csv,pooled_iid_var model=tl,6.4e-08
+iid_floor_l3,LLaMA pooled IID floor 3.07e-7,analysis,analysis/iid_noise.csv,pooled_iid_var model=l3,3.07e-07
+tl_iid_ratio,TinyLlama s2_E / IID floor ratio 2.96,analysis,analysis/iid_noise.csv,ratio_s2E_a01_over_iid model=tl,2.96
+l3_iid_ratio_p6,LLaMA six-draw s2_E / IID floor ratio 0.43,analysis,analysis/iid_noise.csv,ratio_s2E_a01_over_iid model=l3,0.43
+l3_iid_ratio_p10,LLaMA ten-draw s2_E / IID floor ratio 0.82,analysis,analysis/variance_components_l3_p10.csv,s2_E / iid_noise.csv pooled_iid_var,0.82
 zenodo_availability_dois,Availability statement cites Zenodo concept DOI and release tag v1.0.0,analysis,manuscript/main.tex,Declarations; Zenodo concept 22861074,"[""10.5281/zenodo.22861074"",""v1.0.0""]"
 ext_ffa_mnli,FFA-LoRA non-private MNLI-m 85.05+/-1.1 vs LoRA 82.03+/-10.7,external-verified,,Sun et al. ICLR 2024 Table 1 (external-verified),"[85.05,82.03,10.7]"
 ext_ffa_qqp,FFA-LoRA non-private QQP 84.35+/-0.6 vs LoRA 83.51+/-3.3,external-verified,,Sun et al. ICLR 2024 Table 1 (external-verified),"[84.35,83.51]"
