@@ -88,3 +88,6 @@ Baseline test count at v0-import: 28 passed
   define active vs effective clients; `check_layout.py` gates G1--G3.
 - P7: spell out ``eight'' resumed cells; drop `\balance` so the biography
   stays in one column on the final page.
+- P8: `\raggedbottom` before the bibliography; gitignore `*.fdb_latexmk` /
+  `*.fls`. Untracked l3_ext holdout dirs left in place (required for 204-row
+  rebuild); page-11 spacing is the class biography `\vskip 4\baselineskip plus 1fil`.
