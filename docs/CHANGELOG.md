@@ -86,3 +86,5 @@ Baseline test count at v0-import: 28 passed
   `tabular{l}` does not wrap); break IV-A share formula; floats between
   paragraphs; GitHub `\href`; precise resumed-cell max/median/max wording;
   define active vs effective clients; `check_layout.py` gates G1--G3.
+- P7: spell out ``eight'' resumed cells; drop `\balance` so the biography
+  stays in one column on the final page.
