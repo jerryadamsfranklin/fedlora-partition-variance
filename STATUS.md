@@ -7,10 +7,8 @@ This file covers one paper: the partition-variance measurement study going to IE
 
 ## Current phase
 
-P9 merged (metadata for 54 extension cells committed; biography `plus 1fil` cancelled
-locally; clean-clone gate passed). Awaiting Jerry sign-off on the P9 PDF and M1/M2
-reports. Phase R ON HOLD. Manuscript text unchanged since P7 (zero word-diff ops vs
-142f38cb).
+R-prep complete. Manuscript frozen at PDF sha256 74a4cb26... (unchanged). No tag, no
+release. Awaiting Jerry's word for R-release (~10 minutes before ScholarOne submit).
 
 ## Venue
 
@@ -18,46 +16,32 @@ IEEE Access, single-anonymized. Binary decisions, about 20% acceptance. Stage 3 
 is the dominant risk. APC $2,160. No page limit. Abstract 150 to 250 words. Practical
 submission cutoff December 2026 for a March 2027 filing.
 
-## Decisions (8 Oct)
+## Release rules (decided 8 Oct)
 
-- Commit per-run metadata for all cells missing from the repo (weights excluded), so the
-  availability statement is true and a clean clone reproduces runs.csv and the verifier
-- Do not edit ieeeaccess.cls; cancel the biography's "plus 1fil" locally in main.tex
-- Layout checks measure rendered geometry (pdftotext -bbox), never blank-line counts
-- Accept 11 pages; one release only, v1.0.0, citing concept DOI 10.5281/zenodo.22861074
+- Exactly one release, v1.0.0, cut by Jerry's call shortly before submitting
+- No platform limit on releases, but each creates a permanent Zenodo version; the
+  manuscript names v1.0.0, so a second release would mismatch the submitted PDF
+- Submission does not wait on Zenodo: the manuscript cites concept DOI
+  10.5281/zenodo.22861074, which already resolves; archive checks run after submitting
+- The PDF sha256 at the tagged commit must equal 74a4cb26...
 
-## Root causes recorded
+## Final state (signed off 8 Oct)
 
-- Page-11 gap: the class's \vskip 4\baselineskip plus 1fil before the biography competes
-  with \raggedbottom's \vfil, splitting slack and centering the biography; cancelled with
-  `\vspace{0pt plus -1fil}` before `\begin{IEEEbiographynophoto}`
-- Untracked dirs: 54 extension cells' raw metadata and downstream holdouts (19 to 20 Sep,
-  freeze-v3.1, torch 2.2.0+cu121) were produced but never git-added; now committed (P9)
-
-## Final manuscript state (text frozen since P7)
-
-- 31 references verified at primary sources; abstract 241 words; 11 pages
-- V9 44/44, all claims computed from CSV and bite-tested; overlap 0%; fonts embedded
-- Layout gates: no overfull hbox > 1pt, all caption text present, table row counts
+- 11 pages; 31 references verified at primary sources; abstract 241 words
+- V9 44/44, every number computed from CSV and bite-tested; overlap 0%
+- Layout gates pass; page 11 spacing measured by bbox (42.5 pt)
+- Clean clone rebuilds runs.csv byte-identically and passes verify 44/44
 - Novelty: no prior work separates partition and training seeds, decomposes, reports
   draws-needed, or conditions flip probability on effect size
 
-## Done (7 to 8 Oct)
-
-P1 `ae7e1c9` references and Limitations; P2 `7b67182` novelty; P3 `bb19d0e` IID-ratio
-provenance; P4 abstract 297 to 241; P5 `8c08fb4` float citations; P6 regressions fixed and
-layout gates; P7 `4ac7546` "eight", \balance removed; P8 `b27ec33` untracked dirs explained,
-LaTeX artifacts gitignored, \raggedbottom added; P9 metadata completeness + bio fil cancel
-+ clean-clone gate
-
 ## Next
 
-1. Sign-off on the P9 PDF and the clean-clone report
-2. Phase R: metadata check, tag v1.0.0, GitHub release, Zenodo ingest, three checks,
-   report version DOI and PDF sha256
-3. Submit via ScholarOne with the sha256-matched PDF; plain-text abstract; cover letter
+1. On Jerry's word: R-release (set release date, tag v1.0.0, GitHub release)
+2. Submit via ScholarOne with the sha256-matched PDF; plain-text abstract; cover letter
    names cited preprint arXiv:2609.13512 as a separate study with no reused results
-4. Record the manuscript ID; revoke campaign GitHub and HF tokens
+3. After submitting: Zenodo checks; record version DOI in DECISIONS.md and the manuscript
+   ID here
+4. Revoke the campaign GitHub and HF tokens
 
 ## Open items
 

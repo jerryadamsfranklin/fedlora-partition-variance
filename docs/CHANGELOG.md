@@ -95,3 +95,6 @@ Baseline test count at v0-import: 28 passed
   excluded) so a clean clone rebuilds `runs.csv` and passes V1–V12; cancel
   biography `plus 1fil` with `\vspace{0pt plus -1fil}` in `main.tex`; measure
   page-11 gap by `pdftotext -bbox-layout`.
+- R-prep: document Python ≥ 3.11 (3.12 verified) for byte-identical
+  `stack_effect.csv` regen; keep `CITATION.cff` / `.zenodo.json` at version
+  1.0.0 with release date deferred to R-release. No tag.

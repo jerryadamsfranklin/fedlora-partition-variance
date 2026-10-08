@@ -441,3 +441,27 @@ M4  All existing gates pass: check_typography, G1, G2, G3, abstract 150 to 250, 
 M5  git status --porcelain clean apart from adapter weights and other excluded artifacts,
     which must be covered by .gitignore. Report the .gitignore lines added.
 THEN merge, push, send the PDF, its sha256, and the M1 and M2 reports. No tag.
+
+## Phase R-prep (run now; NO tag, NO release, NO Zenodo action)
+
+Add to docs/IMPLEMENTATION_PLAN.md. Base: main at 466bc39.
+Expected PDF sha256: 74a4cb26571694dfe5c369542bb944aa5734c2029f8604cbdf7676816ba4cc2a
+RP-1  State whether P9 M1 ran in a FRESH venv from requirements.txt. If not, rerun it that
+      way (204 rows byte-identical, verify 44/44, stack_effect identical) and report.
+RP-2  docs/REPRODUCE.md: add the Python requirement (>= 3.11; 3.12 verified) if missing.
+RP-3  CITATION.cff and .zenodo.json: version 1.0.0. Leave the date field to be set at
+      release time.
+RP-4  Doc/metadata-only commit; manuscript/, analysis/, results/, scripts/ untouched.
+      Confirm manuscript/main.pdf sha256 still equals the expected value. Push.
+STOP. Report the commit hash. Do not proceed to tagging.
+
+## Phase R-release (ONLY when Jerry says "release")
+
+RR-1  Set the release date in CITATION.cff / .zenodo.json if required; metadata-only commit.
+      Re-confirm the PDF sha256.
+RR-2  Annotated tag v1.0.0 on that commit; push the tag.
+RR-3  GitHub release from v1.0.0, titled "v1.0.0: IEEE Access submission snapshot".
+RR-4  After Jerry submits: confirm the concept DOI resolves to v1.0.0, the archived zip's
+      main.pdf sha256 matches, and the version field reads v1.0.0. Record the version DOI
+      in docs/DECISIONS.md only. If Zenodo has not ingested after 30 minutes, report;
+      do NOT cut a second release.

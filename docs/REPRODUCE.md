@@ -6,11 +6,16 @@ tree, so a casual checkout cannot silently diverge from the archived cells.
 
 ## 1. Environment
 
+**Python ≥ 3.11 is required** (3.12 verified). Python 3.9/3.10 can install the
+pinned wheels but `statistics.stdev` differs by a ULP on some summary rows, so
+`analysis/stack_effect.csv` will not regenerate byte-identically. Prefer
+`python3.12` when creating the venv.
+
 ```bash
 git clone https://github.com/jerryadamsfranklin/fedlora-partition-variance.git
 cd fedlora-partition-variance
 git checkout v0.9.2   # or a later archive tag
-python3 -m venv .venv
+python3.12 -m venv .venv
 source .venv/bin/activate
 pip install -U pip
 pip install -r requirements.txt
