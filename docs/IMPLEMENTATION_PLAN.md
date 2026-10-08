@@ -331,3 +331,20 @@ R-5  Report: tag commit hash, release URL, Zenodo version DOI, the sha256 of mai
      and the three R-4 confirmations.
 STOP on any failed check. If Zenodo has not ingested after 30 minutes, report rather
 than retry; a second release would mint a second version DOI.
+
+## Phase P4: abstract length compliance (IEEE Access 150 to 250 words)
+
+Branch: p4-abstract from main. Add to docs/IMPLEMENTATION_PLAN.md first.
+HOLD Phase R until P4 is merged. (Note: v1.0.0 already tagged before this phase
+was discovered; after P4, release strategy must be re-confirmed.)
+
+P4-1  Replace the abstract body with the block above in BOTH places it lives:
+      manuscript/main.tex (inlined before \maketitle) and
+      manuscript/sections/00_abstract.tex. The two must be identical.
+P4-2  Add an abstract word-count rule to scripts/check_typography.py: extract the abstract
+      environment from main.tex, strip LaTeX commands and math delimiters, count
+      whitespace-delimited tokens, and FAIL if the count is outside 150 to 250. Add a unit
+      test with a 251-token fixture (must fail) and a 200-token fixture (must pass). Add a
+      CHANGELOG entry.
+
+CHECKS D1-D6; then commit, merge, push, and report.

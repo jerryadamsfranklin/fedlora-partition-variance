@@ -2,8 +2,9 @@
 """Flag banned typography in manuscript .tex and .bib files.
 
 Flags: U+2014 em dash, U+2013 en dash, curly quotes U+201C/U+201D/U+2018/U+2019,
-LaTeX three-hyphen em dash (---) in .tex files (not --), and sentences starting
-with First, Furthermore, Moreover, or Additionally.
+LaTeX three-hyphen em dash (---) in .tex files (not --), sentences starting
+with First, Furthermore, Moreover, or Additionally, and IEEE Access abstract
+word count outside 150 to 250.
 Exit 0 if clean; exit 1 if any flag.
 """
 
@@ -25,6 +26,15 @@ BANNED_START = re.compile(
     r"(?:^|\n)\s*(First,|Furthermore|Moreover|Additionally)\b"
 )
 
+ABSTRACT_RE = re.compile(
+    r"\\begin\{abstract\}(.*?)\\end\{abstract\}",
+    re.DOTALL | re.IGNORECASE,
+)
+# Strip LaTeX commands (optional args) and math delimiters before counting.
+_LATEX_CMD = re.compile(r"\\[a-zA-Z]+\*?(?:\[[^\]]*\])?(?:\{[^{}]*\})?")
+_MATH = re.compile(r"\$[^$]*\$")
+_BRACES = re.compile(r"[{}]")
+
 
 def _is_comment_line(line: str) -> bool:
     return line.lstrip().startswith("%")
@@ -41,6 +51,53 @@ def check_latex_em_dash(path: Path, line: str, line_no: int) -> list[str]:
     return []
 
 
+def abstract_plain_text(tex: str) -> str | None:
+    """Return stripped abstract body text, or None if no abstract environment."""
+    m = ABSTRACT_RE.search(tex)
+    if not m:
+        return None
+    body = m.group(1)
+    # Drop comment lines inside the environment.
+    body = "\n".join(
+        ln for ln in body.splitlines() if not _is_comment_line(ln)
+    )
+    body = _MATH.sub(" ", body)
+    # Iterate command stripping for nested simple braces.
+    prev = None
+    while prev != body:
+        prev = body
+        body = _LATEX_CMD.sub(" ", body)
+    body = _BRACES.sub(" ", body)
+    body = re.sub(r"[\\~^]", " ", body)
+    body = re.sub(r"\s+", " ", body).strip()
+    return body
+
+
+def abstract_word_count(tex: str) -> int | None:
+    """Whitespace-delimited token count of the stripped abstract, or None."""
+    plain = abstract_plain_text(tex)
+    if plain is None or not plain:
+        return None
+    return len(plain.split())
+
+
+def check_abstract_word_count(
+    path: Path, tex: str, *, lo: int = 150, hi: int = 250
+) -> list[str]:
+    """FAIL if main.tex abstract is outside [lo, hi] words."""
+    if path.name != "main.tex":
+        return []
+    n = abstract_word_count(tex)
+    if n is None:
+        return [f"{path}: abstract environment missing or empty"]
+    if n < lo or n > hi:
+        return [
+            f"{path}: abstract word count {n} outside IEEE Access "
+            f"{lo}–{hi} limit"
+        ]
+    return []
+
+
 def check_file(path: Path) -> list[str]:
     text = path.read_text(encoding="utf-8")
     hits: list[str] = []
@@ -54,6 +111,7 @@ def check_file(path: Path) -> list[str]:
             # approximate line
             line_no = text[: m.start()].count("\n") + 1
             hits.append(f"{path}:{line_no}: banned sentence start {m.group(1)!r}")
+    hits.extend(check_abstract_word_count(path, text))
     return hits
 
 

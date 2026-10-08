@@ -75,3 +75,5 @@ Baseline test count at v0-import: 28 passed
   files (comment lines skipped; `--` still allowed). Unit test added.
   Manuscript: Holm 1979 citation; bib/related-work accuracy; limitations
   reframed; availability uses concept DOI + `v1.0.0` tag (no release cut).
+- P4: abstract shortened to IEEE Access 150--250 words; `check_typography.py`
+  fails outside that range on `main.tex` (unit tests for 251-fail / 200-pass).
