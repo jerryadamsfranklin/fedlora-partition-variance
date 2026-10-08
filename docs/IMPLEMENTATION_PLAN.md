@@ -479,3 +479,30 @@ T12  V9: gap_to_sdpair_tl (8), gap_to_sdpair_l3 (4); availability claim → v1.1
       negative assertion that v1.0.0 is absent. Bite-test each.
 
 CHECKS X1--X4; then commit, merge, push. No tag, no release.
+
+## Phase P11: final compliance and provenance (NO tag, NO release, NO Zenodo)
+
+Branch: p11-final from main at 97509e6. Add to docs/IMPLEMENTATION_PLAN.md first.
+
+P11-1  sections/04_results.tex, "Pre-registered claim mapping", last sentence. Replace
+       "Cross-scale partition-share CIs overlap." with
+       "Cross-scale partition-share CIs overlap, so the data cannot distinguish the two
+       scales on the partition share."
+P11-2  Check whether analysis/ in the CURRENT repo contains the LLaMA p=10 pairwise
+       contrasts (fedit-flora +0.00067, CI [-0.00622, +0.00757], Holm 0.83; FFA-LoRA
+       contrasts Holm 2.8e-6 and 6.1e-10). If not, generate
+       analysis/method_pairwise_l3_p10.csv with the existing I5 code over data seeds
+       2001-2010, without modifying method_pairwise.csv. Report the values.
+P11-3  docs/DECISIONS.md: log that I5 (observed method differences) is reported at p=10
+       for LLaMA, consistent with treating p=10 as primary under I10, although I10's text
+       lists only I1, I3 and I4 for recomputation; the p=6 I5 values remain in
+       method_pairwise.csv.
+P11-4  V9: register, each computed from its CSV and bite-tested: tl fedit-flora Holm 0.57;
+       tl FFA-LoRA contrasts Holm < 1e-8; l3 p=10 fedit-flora Holm 0.83 and CI
+       [-0.00622, +0.00757]; l3 p=10 FFA-LoRA contrasts Holm < 1e-5; tl alpha 0.5
+       fedit-flora -0.00218 and Holm 3.2e-6. Report counts.
+
+CHECKS
+Y1  Word diff against the 9e0e9ec0 PDF: exactly the P11-1 change plus reflow.
+Y2  All gates pass (verify, typography, G1-G3, abstract, 31 refs, page-11 bbox).
+Y3  Report the new PDF sha256. Commit, merge, push. No tag.

@@ -36,6 +36,11 @@ iid_floor_l3,LLaMA pooled IID floor 3.07e-7,analysis,analysis/iid_noise.csv,pool
 tl_iid_ratio,TinyLlama s2_E / IID floor ratio 2.96,analysis,analysis/iid_noise.csv,ratio_s2E_a01_over_iid model=tl,2.96
 l3_iid_ratio_p6,LLaMA six-draw s2_E / IID floor ratio 0.43,analysis,analysis/iid_noise.csv,ratio_s2E_a01_over_iid model=l3,0.43
 l3_iid_ratio_p10,LLaMA ten-draw s2_E / IID floor ratio 0.82,analysis,analysis/variance_components_l3_p10.csv,s2_E / iid_noise.csv pooled_iid_var,0.82
+holm_tl_fedit_flora,TinyLlama FedIT vs FLoRA Holm p=0.57,analysis,analysis/method_pairwise.csv,holm_p model=tl pair=fedit-flora,0.57
+holm_tl_ffa_lt_1e8,TinyLlama FFA-LoRA contrasts Holm p<1e-8,analysis,analysis/method_pairwise.csv,holm_p model=tl FFA pairs,1e-08
+holm_l3_p10_fedit_flora,"LLaMA p=10 FedIT vs FLoRA Holm p=0.83 and CI [-0.00622, +0.00757]",analysis,analysis/method_pairwise_l3_p10.csv,pair=fedit-flora,"[0.83,-0.00622,0.00757]"
+holm_l3_p10_ffa_lt_1e5,LLaMA p=10 FFA-LoRA contrasts Holm p<1e-5,analysis,analysis/method_pairwise_l3_p10.csv,holm_p FFA pairs,1e-05
+holm_tl_a05_fedit_flora,TinyLlama alpha 0.5 FedIT vs FLoRA gap -0.00218 Holm 3.2e-6,analysis,analysis/method_pairwise_tl_a05.csv,pair=fedit-flora,"[-0.00218,3.2e-06]"
 gap_to_sdpair_tl,TinyLlama separable FedIT-FFA gap is about 8× the per-draw paired SD,analysis,analysis/power.csv,observed_gap fedit-ffa_lora / sd_pair_model model=tl,8
 gap_to_sdpair_l3,LLaMA separable FedIT-FFA gap is about 4× the per-draw paired SD,analysis,analysis/power_l3_p10.csv,observed_gap fedit-ffa_lora / sd_pair_model,4
 zenodo_availability_dois,Availability statement cites Zenodo concept DOI and release tag v1.1.0,analysis,manuscript/main.tex,Declarations; Zenodo concept 22861074,"[""10.5281/zenodo.22861074"",""v1.1.0""]"

@@ -102,3 +102,6 @@ Baseline test count at v0-import: 28 passed
   separable gaps as 4×–8× paired SD; ``opposite'' ranking; significance level
   0.05; full-design mean gap; micro-batch parenthetical; availability `v1.1.0`;
   V9 `gap_to_sdpair_{tl,l3}`. No tag.
+- P11: restore I7 ``cannot distinguish the two scales'' clause; add
+  `method_pairwise_l3_p10.csv` and `method_pairwise_tl_a05.csv`; register Holm
+  contrasts in V9. No tag.
