@@ -43,7 +43,7 @@ Secondary reporting uses measured communication in megabytes, counting the tenso
 Every production cell ran on a single NVIDIA GeForce RTX 4090 with one worker process per GPU. Median wall-clock time is 27.1 minutes for TinyLlama and 51.1 minutes for LLaMA-3.2-3B. Training provenance is the \texttt{freeze-v1} tag for the original 120 cells and
 \texttt{freeze-v3.1} for the 84 extension cells, each with a clean tracked tree; the
 training path is byte-identical across those tags. The LLaMA float16 holdout change is an eval-only amendment tagged \texttt{freeze-v2}; it does not alter training code or aggregated adapters. The design, configurations, grids, and analysis plan were committed and tagged before any production run, and the analysis follows that plan; deviations are logged in the repository's decision log and reported here. Nine cells resumed from a checkpoint after host interruptions, and failed attempts
-were retried to completion. For the $8$ resumed cells with a sibling run seed, the
+were retried to completion. For the eight resumed cells with a sibling run seed, the
 held-out loss differs from that sibling by at most $1.4{\times}10^{-3}$, within the spread of sibling
 differences among cells that were not resumed (median $3.1{\times}10^{-4}$, maximum $2.6{\times}10^{-3}$). The ninth,
 a LLaMA IID cell, differs from each of its other seeds by at most $1.4{\times}10^{-3}$.
