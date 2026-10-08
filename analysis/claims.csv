@@ -12,7 +12,7 @@ l3_near_tie_n_paired,Near-tie needs more than 1000 paired draws (l3 p=10),analys
 separable_n_paired_3,Separable pairs need 3 paired draws,analysis,analysis/power.csv,and power_l3_p10.csv observed_gap,3
 base_loss_tl,TinyLlama base loss 2.121 (rounded),analysis,analysis/runs.csv,base_loss model=tl,2.120666
 base_loss_l3,LLaMA base loss 2.169 (rounded),analysis,analysis/runs.csv,base_loss model=l3,2.168946
-tuned_loss_range,Fine-tuned held-out loss between 1.69 and 1.85,analysis,analysis/runs.csv,heldout_loss min/max,"[1.69,1.85]"
+tuned_loss_range,Fine-tuned held-out loss between 1.691 and 1.841,analysis,analysis/runs.csv,heldout_loss min/max rounded to 3 dp,"[1.691,1.841]"
 sd_pair_tl,Paired SD 0.00282 (tl),analysis,analysis/power.csv,sd_pair_model model=tl,0.00282
 sd_pair_l3,Paired SD 0.00770 (l3 p=10),analysis,analysis/power_l3_p10.csv,sd_pair_model,0.0077
 tl_near_tie_unpaired,Near-tie unpaired n 416 (tl),analysis,analysis/power.csv,n_unpaired_per_method model=tl pair=fedit-flora,416
@@ -25,6 +25,8 @@ ffa_slope_tl,FFA-LoRA TinyLlama MB/client slope 98.3125,analysis,analysis/comm.c
 n_runs_204,204 production cells in runs.csv,analysis,analysis/runs.csv,row count,204
 design_204_setup,Setup design statement: 204 production cells,analysis,manuscript/sections/03_setup.tex;,analysis/runs.csv,204
 resumed_cells_9,Nine cells resumed from checkpoint,analysis,,run_meta overrides.resume across tl/l3/tl_a05/l3_ext,9
+resumed_max_sibling_diff,Resumed cells differ from sibling by at most 1.4e-3,analysis,analysis/runs.csv,+ resume census; manuscript/sections/03_setup.tex,0.0014
+nonresumed_median_sibling_diff,Non-resumed a01 median sibling diff 3.1e-4,analysis,analysis/runs.csv,+ resume census; manuscript/sections/03_setup.tex,0.00031
 residual_pool_30,Residual pooled over 30 within-cell differences at p=10 m=3,analysis,analysis/runs.csv,a01 data_seed 2001-2010; manuscript/sections/03_setup.tex,30
 iid_training_seeds_3_to_5,IID cells supply three to five training seeds per method,analysis,analysis/runs.csv,iid run_seed; manuscript/sections/03_setup.tex,"[3,5]"
 iid_floor_tl,TinyLlama pooled IID floor 6.40e-8,analysis,analysis/iid_noise.csv,pooled_iid_var model=tl,6.4e-08

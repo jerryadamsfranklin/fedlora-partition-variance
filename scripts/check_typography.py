@@ -98,6 +98,48 @@ def check_abstract_word_count(
     return []
 
 
+_LABEL_RE = re.compile(r"\\label\{((?:fig|tab):[^}]+)\}")
+_REF_RE = re.compile(r"\\ref\{((?:fig|tab):[^}]+)\}")
+
+
+def check_float_citations(tex_files: list[Path]) -> list[str]:
+    """Every fig:/tab: label must be \\ref'd; first refs in float-number order."""
+    labels: list[tuple[str, Path]] = []
+    refs: list[str] = []
+    for path in tex_files:
+        text = path.read_text(encoding="utf-8")
+        # Strip comments
+        body = "\n".join(
+            ln for ln in text.splitlines() if not _is_comment_line(ln)
+        )
+        for m in _LABEL_RE.finditer(body):
+            labels.append((m.group(1), path))
+        for m in _REF_RE.finditer(body):
+            refs.append(m.group(1))
+    hits: list[str] = []
+    ref_set = set(refs)
+    for lab, path in labels:
+        if lab not in ref_set:
+            hits.append(f"{path}: label {lab} has no \\ref in the manuscript")
+    # First-reference order must match label order for each family.
+    for prefix in ("fig:", "tab:"):
+        lab_order = [lab for lab, _ in labels if lab.startswith(prefix)]
+        first_refs: list[str] = []
+        seen: set[str] = set()
+        for r in refs:
+            if r.startswith(prefix) and r not in seen:
+                seen.add(r)
+                first_refs.append(r)
+        # Only compare labels that are referenced (unref caught above).
+        lab_order = [lab for lab in lab_order if lab in ref_set]
+        if first_refs[: len(lab_order)] != lab_order:
+            hits.append(
+                f"manuscript: first {prefix} references {first_refs} "
+                f"do not follow label order {lab_order}"
+            )
+    return hits
+
+
 def check_file(path: Path) -> list[str]:
     text = path.read_text(encoding="utf-8")
     hits: list[str] = []
@@ -124,6 +166,8 @@ def main() -> int:
     all_hits: list[str] = []
     for f in files:
         all_hits.extend(check_file(f))
+    tex_only = [f for f in files if f.suffix == ".tex"]
+    all_hits.extend(check_float_citations(tex_only))
     if all_hits:
         print("TYPOGRAPHY FAIL:")
         for h in all_hits:

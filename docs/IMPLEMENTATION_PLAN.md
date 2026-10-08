@@ -348,3 +348,13 @@ P4-2  Add an abstract word-count rule to scripts/check_typography.py: extract th
       CHANGELOG entry.
 
 CHECKS D1-D6; then commit, merge, push, and report.
+
+## Phase P5: float citations, figure/table presentation, and provenance precision
+
+Branch: p5-presentation from current main (post-P4). Add to docs/IMPLEMENTATION_PLAN.md
+first. Phase R stays ON HOLD until P5 merges and Jerry/Claude sign off on the new PDF.
+No new runs. No change to any analysis/*.csv. Presentation code changes need tests and a
+CHANGELOG entry.
+
+TEXT EDITS P5-1..P5-7, BIB P5-8..9, PRESENTATION P5-10..12, LAYOUT P5-13,
+REGRESSION P5-14. Acceptance F1-F8. Then commit, merge, push. Do not tag.
