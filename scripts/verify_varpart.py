@@ -97,6 +97,34 @@ def _iid_run_seed_counts() -> Dict[str, int]:
     return {m: len(s) for m, s in by.items()}
 
 
+def _iid_noise_row(model: str) -> Dict[str, str]:
+    return _row("iid_noise.csv", model=model)
+
+
+def _iid_ratio_from_csv(model: str) -> float:
+    """I2 ratio: s2_E from I1 over pooled IID floor (analysis/iid_noise.csv)."""
+    return float(_iid_noise_row(model)["ratio_s2E_a01_over_iid"])
+
+
+def _iid_floor_from_csv(model: str) -> float:
+    return float(_iid_noise_row(model)["pooled_iid_var"])
+
+
+def _l3_iid_ratio_p10_from_csv() -> float:
+    """p=10 residual / pooled IID floor (I10 residual × I2 floor)."""
+    s2_e = float(
+        _row("variance_components_l3_p10.csv", model="l3", het="a01", p="10")["s2_E"]
+    )
+    floor = _iid_floor_from_csv("l3")
+    return s2_e / floor
+
+
+def _results_tex() -> str:
+    return (REPO_ROOT / "manuscript" / "sections" / "04_results.tex").read_text(
+        encoding="utf-8"
+    )
+
+
 def _count_resumed_cells() -> int:
     """Count complete cells whose run_meta records overrides.resume (V10 source)."""
     n = 0
@@ -482,6 +510,63 @@ CLAIMS: List[Dict[str, Any]] = [
             in (REPO_ROOT / "manuscript" / "sections" / "03_setup.tex").read_text(
                 encoding="utf-8"
             )
+        ),
+    },
+    {
+        "id": "iid_floor_tl",
+        "text": "TinyLlama pooled IID floor 6.40e-8",
+        "value": 6.40e-8,
+        "source": "analysis/iid_noise.csv pooled_iid_var model=tl",
+        "kind": "analysis",
+        "check": lambda: (
+            abs(_iid_floor_from_csv("tl") - 6.40e-8) < 5e-11
+            and "6.40{\\times}10^{-8}" in _results_tex()
+        ),
+    },
+    {
+        "id": "iid_floor_l3",
+        "text": "LLaMA pooled IID floor 3.07e-7",
+        "value": 3.07e-7,
+        "source": "analysis/iid_noise.csv pooled_iid_var model=l3",
+        "kind": "analysis",
+        "check": lambda: (
+            abs(_iid_floor_from_csv("l3") - 3.07e-7) < 5e-10
+            and "3.07{\\times}10^{-7}" in _results_tex()
+        ),
+    },
+    {
+        "id": "tl_iid_ratio",
+        "text": "TinyLlama s2_E / IID floor ratio 2.96",
+        "value": 2.96,
+        "source": "analysis/iid_noise.csv ratio_s2E_a01_over_iid model=tl",
+        "kind": "analysis",
+        "check": lambda: (
+            abs(_iid_ratio_from_csv("tl") - 2.96) < 5e-3
+            and "$2.96$" in _results_tex()
+        ),
+    },
+    {
+        "id": "l3_iid_ratio_p6",
+        "text": "LLaMA six-draw s2_E / IID floor ratio 0.43",
+        "value": 0.43,
+        "source": "analysis/iid_noise.csv ratio_s2E_a01_over_iid model=l3",
+        "kind": "analysis",
+        "check": lambda: (
+            abs(_iid_ratio_from_csv("l3") - 0.43) < 5e-3
+            and "$0.43$" in _results_tex()
+            and "six-draw residual" in _results_tex()
+        ),
+    },
+    {
+        "id": "l3_iid_ratio_p10",
+        "text": "LLaMA ten-draw s2_E / IID floor ratio 0.82",
+        "value": 0.82,
+        "source": "analysis/variance_components_l3_p10.csv s2_E / iid_noise.csv pooled_iid_var",
+        "kind": "analysis",
+        "check": lambda: (
+            abs(_l3_iid_ratio_p10_from_csv() - 0.82) < 5e-3
+            and "$0.82$" in _results_tex()
+            and "ten-draw residual" in _results_tex()
         ),
     },
     {

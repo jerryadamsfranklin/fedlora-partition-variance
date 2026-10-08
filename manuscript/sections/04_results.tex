@@ -40,7 +40,14 @@ Holm $p{=}3.2{\times}10^{-6}$). All ten clients are active in every $\alpha{=}0.
 partition, so measured communication is constant within method.
 
 \subsection{IID noise floor}
-Pooling the per-method IID variances gives $6.40{\times}10^{-8}$ on TinyLlama and $3.07{\times}10^{-7}$ on LLaMA-3.2-3B. The ratio of $\hat\sigma^2_E$ at $\alpha{=}0.1$ to this IID floor is $2.96$ on TinyLlama. On LLaMA the ratio is $0.43$, but each method's IID variance has only two degrees of freedom (three run seeds), and the per-method IID variances differ by more than an order of magnitude ($2.4{\times}10^{-8}$ for FFA-LoRA versus $6.6{\times}10^{-7}$ for FLoRA). We therefore report the 3B IID floor descriptively and do not interpret the ratio below one as evidence that $\alpha{=}0.1$ is quieter than IID.
+Pooling the per-method IID variances gives $6.40{\times}10^{-8}$ on TinyLlama and $3.07{\times}10^{-7}$ on LLaMA-3.2-3B. The ratio of $\hat\sigma^2_E$ at $\alpha{=}0.1$ to this IID floor is $2.96$ on TinyLlama.
+On LLaMA the ratio is $0.43$ computed against the six-draw residual, which is the fit the
+pre-registered noise-floor comparison is defined against; the ten-draw residual gives
+$0.82$. Each method's IID variance has only two degrees of freedom (three run seeds), and
+the per-method IID variances differ by more than an order of magnitude
+($2.4{\times}10^{-8}$ for FFA-LoRA versus $6.6{\times}10^{-7}$ for FLoRA). We therefore
+report the 3B IID floor descriptively and do not read either ratio below one as evidence
+that $\alpha{=}0.1$ is quieter than IID.
 
 \subsection{Ranking stability}
 The reference ranking at $\alpha{=}0.1$ orders methods by mean held-out loss over all cells: TinyLlama ranks FLoRA, FedIT, then FFA-LoRA; LLaMA-3.2-3B at $p{=}10$ ranks FLoRA, FedIT, then FFA-LoRA. Under the pre-registered paired protocol ($B{=}10{,}000$), the probability that the best method differs from this reference equals the probability that the full order differs (the two coincide because the only pair whose order changes is the top one; the third method is separated by an order of magnitude more than the per-draw noise). On TinyLlama those probabilities are $0.555$, $0.406$, $0.377$, and $0.284$ for $k{\in}\{1,2,3,5\}$ (Wilson 95\% CI half-widths about $0.01$). On LLaMA-3.2-3B at $p{=}10$ they are $0.700$, $0.533$, and $0.493$ for
