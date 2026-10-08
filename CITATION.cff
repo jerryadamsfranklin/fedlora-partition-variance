@@ -15,7 +15,6 @@ keywords:
   - reproducibility
   - large language models
 version: 1.0.0
-date-released: "2026-10-08"
 doi: "10.5281/zenodo.22861075"
 repository-code: "https://github.com/jerryadamsfranklin/fedlora-partition-variance"
 license: MIT
