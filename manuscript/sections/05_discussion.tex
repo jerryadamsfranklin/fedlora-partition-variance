@@ -16,7 +16,11 @@ Pairing methods on the same partition draws removes the shared partition main ef
 \subsection{Cross-scale reading}
 On TinyLlama the partition share is substantial ($0.508$). On LLaMA-3.2-3B at $p{=}10$ the
 interaction dominates ($0.992$) and the partition main-effect CI includes zero after
-truncation, so we report no partition main effect at 3B. The cross-scale CIs on the
+truncation, so we report no partition main effect at 3B.
+The draw still governs the result at 3B: it acts through the partition-by-method
+interaction rather than through a component shared by all three methods, which is the
+harder case for a few-draw evaluation because pairing cannot remove it.
+The cross-scale CIs on the
 partition share overlap, and the two scales differ in more than parameter count:
 TinyLlama-1.1B-Chat-v1.0 is instruction-tuned while LLaMA-3.2-3B is a base model, and the
 base weights are float32 against float16. The design was therefore scoped to measure the
@@ -38,6 +42,13 @@ Section~\ref{sec:setup}, shapes what the partition draw varies: local updates ap
 complete gradient-accumulation blocks, so the smallest clients at $\alpha{=}0.1$ contribute
 no optimizer step. Communication is reported within method only, and RQ4 is exploratory and
 is not used for claims.
+The mechanism that produces the partition component is not specific to these settings. A
+Dirichlet draw over $C$ categories and $K$ clients fixes which clients hold too few
+examples to take an optimizer step and which categories are absent from a client, and that
+assignment is a combinatorial property of $(\alpha, C, K)$ rather than of model size,
+corpus size, or round count. A design with small $\alpha$ relative to $C/K$ should
+therefore carry a partition component whatever the scale, which is what makes the reporting
+protocol worth applying beyond the conditions measured here.
 
 Two measurement choices carry quantified bounds. LLaMA production holdouts run in float16;
 the float32 spot-check in Section~\ref{sec:setup} bounds the difference at

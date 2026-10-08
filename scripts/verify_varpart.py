@@ -76,6 +76,27 @@ def _row(name: str, **pred: str) -> Dict[str, str]:
     raise KeyError(f"no row in {name} matching {pred}")
 
 
+def _count_a01_p10_cells(model: str) -> int:
+    """Count (data_seed, method) cells for a01 with seeds 2001-2010 (p=10)."""
+    cells = {
+        (r["data_seed"], r["method"])
+        for r in _csv_rows("runs.csv")
+        if r["model"] == model
+        and r["het"] == "a01"
+        and 2001 <= int(r["data_seed"]) <= 2010
+    }
+    return len(cells)
+
+
+def _iid_run_seed_counts() -> Dict[str, int]:
+    """Per-model count of distinct IID training seeds (same for each method)."""
+    by: Dict[str, set] = defaultdict(set)
+    for r in _csv_rows("runs.csv"):
+        if r["het"] == "iid":
+            by[r["model"]].add(r["run_seed"])
+    return {m: len(s) for m, s in by.items()}
+
+
 def _count_resumed_cells() -> int:
     """Count complete cells whose run_meta records overrides.resume (V10 source)."""
     n = 0
@@ -432,6 +453,36 @@ CLAIMS: List[Dict[str, Any]] = [
         "source": "run_meta overrides.resume across tl/l3/tl_a05/l3_ext",
         "kind": "analysis",
         "check": lambda: _count_resumed_cells() == 9,
+    },
+    {
+        "id": "residual_pool_30",
+        "text": "Residual pooled over 30 within-cell differences at p=10 m=3",
+        "value": 30,
+        "source": "analysis/runs.csv a01 data_seed 2001-2010; manuscript/sections/03_setup.tex",
+        "kind": "analysis",
+        "check": lambda: (
+            _count_a01_p10_cells("tl") == 30
+            and _count_a01_p10_cells("l3") == 30
+            and "pooled over $30$ within-cell"
+            in (REPO_ROOT / "manuscript" / "sections" / "03_setup.tex").read_text(
+                encoding="utf-8"
+            )
+        ),
+    },
+    {
+        "id": "iid_training_seeds_3_to_5",
+        "text": "IID cells supply three to five training seeds per method",
+        "value": (3, 5),
+        "source": "analysis/runs.csv iid run_seed; manuscript/sections/03_setup.tex",
+        "kind": "analysis",
+        "check": lambda: (
+            _iid_run_seed_counts().get("l3") == 3
+            and _iid_run_seed_counts().get("tl") == 5
+            and "three to five training seeds"
+            in (REPO_ROOT / "manuscript" / "sections" / "03_setup.tex").read_text(
+                encoding="utf-8"
+            )
+        ),
     },
     {
         "id": "zenodo_availability_dois",

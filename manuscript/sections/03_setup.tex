@@ -39,4 +39,9 @@ heterogeneity, data seed, and method.
 \subsection{Variance model}
 For each model and heterogeneity level we fit a two-way design with methods fixed ($m{=}3$),
 partitions random ($p{=}10$; $p{=}6$ is retained for LLaMA-3.2-3B as a pre-registered
-sensitivity analysis), and $r{=}2$ training seeds per cell. Method-of-moments estimates from the mean squares give the residual (training-seed) component $\hat\sigma^2_E$, the partition-by-method interaction $\hat\sigma^2_{PM}$, and the partition component $\hat\sigma^2_P$, with negative estimates truncated at zero and truncation reported. Confidence intervals come from a cluster bootstrap that resamples partitions with replacement ($B{=}2000$). A mixed-model fit serves as a cross-check; the moment estimates are primary. Ranking stability uses $B{=}10{,}000$ resamples of $k$ partition draws under paired and unpaired protocols, and required sample sizes come from a two-sided $t$ test at $\alpha{=}0.05$ with 80\% power. All random procedures use a fixed seed.
+sensitivity analysis), and $r{=}2$ training seeds per cell.
+Method-of-moments estimates from the mean squares give the residual (training-seed) component $\hat\sigma^2_E$, the partition-by-method interaction $\hat\sigma^2_{PM}$, and the partition component $\hat\sigma^2_P$, with negative estimates truncated at zero and truncation reported.
+With $p{=}10$ and $m{=}3$ the residual component is pooled over $30$ within-cell
+differences, and the IID cells supply three to five training seeds per method as an
+independent read on run-to-run noise.
+Confidence intervals come from a cluster bootstrap that resamples partitions with replacement ($B{=}2000$). A mixed-model fit serves as a cross-check; the moment estimates are primary. Ranking stability uses $B{=}10{,}000$ resamples of $k$ partition draws under paired and unpaired protocols, and required sample sizes come from a two-sided $t$ test at $\alpha{=}0.05$ with 80\% power. All random procedures use a fixed seed.

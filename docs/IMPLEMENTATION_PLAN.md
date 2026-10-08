@@ -201,3 +201,78 @@ P1-11 scripts/check_typography.py: add a rule that flags the LaTeX three-hyphen 
 P1-12 NO RELEASE IN THIS PHASE. Do not create a tag, do not cut a GitHub release, do not
       touch Zenodo. A single release v1.0.0 is cut later, only after Jerry's read-through
       and any follow-up phase, immediately before submission. Stop after P1-11 and report.
+
+## Phase P2: novelty positioning and reviewer-objection pre-emption
+
+Repo: fedlora-partition-variance. Branch: p2-positioning from main at ae7e1c9.
+Add to docs/IMPLEMENTATION_PLAN.md as a numbered phase first, then execute from the plan.
+Text only. No new runs. No changes under results/. Stop on any failed check.
+
+P2-0  BEFORE any edit, output for review:
+      git diff aec19af..ae7e1c9 -- scripts/verify_varpart.py analysis/claims.csv
+      This is the outstanding A9 deviation from P1 and it gates the release. Paste it and
+      continue with P2-1 onward; do not wait.
+
+P2-1  refs.bib: add the four entries agarwal2021precipice, domini2025profed,
+      jimenez2026crossdomain, grosser2026fedpretrain exactly as given in block P2-A.
+P2-2  sections/02_related_work.tex: insert block P2-B after the Reimers and Gurevych
+      sentence in subsection A, before "These lines of work motivate".
+P2-3  sections/02_related_work.tex: replace the closing sentence of subsection B per
+      block P2-C.
+P2-4  sections/01_introduction.tex: replace the first two sentences of the "Advance over
+      the state of the art" paragraph per block P2-D.
+P2-5  sections/05_discussion.tex: insert block P2-E in subsection C immediately after
+      "so we report no partition main effect at 3B."
+P2-6  sections/05_discussion.tex: append block P2-F to the end of the first paragraph of
+      "Scope and limitations".
+P2-7  sections/03_setup.tex: append block P2-G in the variance-model subsection after
+      "and $r{=}2$ training seeds per cell".
+
+ACCEPTANCE CHECKS (stop on any failure)
+B1  verify_varpart.py exits 0 on all four grids. P2-G introduces two derived counts (30
+    within-cell differences; three to five IID training seeds). If V9 requires them
+    registered, ADD them as new claims sourced from analysis/runs.csv and report the new
+    total. Do NOT modify or delete any existing claim. Report the before and after counts
+    and list any claim added.
+B2  check_typography.py exits 0, --- rule active.
+B3  Clean build. Zero undefined citations or references.
+B4  Reference count in the compiled PDF is 31, numbered 1 to 31 with no gaps. Confirm all
+    four new entries render and are cited in text.
+B5  No prevalence words introduced. grep the new text for "usually", "rarely", "most
+    papers", "typically", "commonly" and confirm none appear in the added blocks. Every
+    claim about another paper must name that paper.
+B6  Page count. 11 pages is acceptable at IEEE Access (no page limit, no overlength
+    charge). Report the count. If the last page is ragged, confirm \balance is called.
+B7  overlap_check.py against the OJ-CS tex files read in place, still under 5%.
+B8  git diff --stat touches only manuscript/ and the two docs files. Nothing under
+    results/. Report anything else BEFORE committing, do not proceed.
+
+AFTER CHECKS PASS
+- Commit on p2-positioning, merge to main, push. Log P2 in docs/DECISIONS.md.
+- Report: the P2-0 diff, V9 counts before and after with any claim added, page count,
+  overlap figure, and the rebuilt PDF.
+- Do not tag. v1.0.0 comes after Jerry signs off.
+
+## Phase P2 addendum: flow fixes, then commit and merge
+
+Branch: p2-positioning (already holds the uncommitted P2 edits). Add to the plan first.
+
+P2-H  sections/03_setup.tex, subsection "Variance model": cut the sentence beginning
+      "With $p{=}10$ and $m{=}3$ the residual component is pooled over $30$..." from its
+      current position and reinsert it verbatim immediately AFTER the sentence ending
+      "...with negative estimates truncated at zero and truncation reported."
+      No wording change.
+
+P2-I  sections/01_introduction.tex: apply the replacement block P2-I (removes the word
+      "commonly" and cross-references Section II). Confirm \ref{sec:related} resolves.
+
+P2-J  Confirm, and state in your report, that the two verifier checks added for
+      residual_pool_30 and iid_training_seeds_3_to_5 COMPUTE both values from
+      analysis/runs.csv rather than comparing against hardcoded literals: the first by
+      counting distinct (data_seed, method) groups at p=10, the second by counting
+      distinct run_seed values per model in the IID cells. Demonstrate it: temporarily
+      drop one IID row from a scratch copy of runs.csv, show the check FAILS, restore.
+      A check that passes on mutated input is not a check. Report the demonstration.
+
+RE-RUN B1 through B8 after P2-H and P2-I.
+THEN commit on p2-positioning, merge to main, push. Log P2 in docs/DECISIONS.md. Do NOT tag.
