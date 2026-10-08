@@ -25,8 +25,10 @@ ffa_slope_tl,FFA-LoRA TinyLlama MB/client slope 98.3125,analysis,analysis/comm.c
 n_runs_204,204 production cells in runs.csv,analysis,analysis/runs.csv,row count,204
 design_204_setup,Setup design statement: 204 production cells,analysis,manuscript/sections/03_setup.tex;,analysis/runs.csv,204
 resumed_cells_9,Nine cells resumed from checkpoint,analysis,,run_meta overrides.resume across tl/l3/tl_a05/l3_ext,9
-resumed_max_sibling_diff,Resumed cells differ from sibling by at most 1.4e-3,analysis,analysis/runs.csv,+ resume census; manuscript/sections/03_setup.tex,0.0014
+resumed_max_sibling_diff,Resumed a01 sibling max diff 1.4e-3,analysis,analysis/runs.csv,+ resume census; manuscript/sections/03_setup.tex,0.0014
 nonresumed_median_sibling_diff,Non-resumed a01 median sibling diff 3.1e-4,analysis,analysis/runs.csv,+ resume census; manuscript/sections/03_setup.tex,0.00031
+nonresumed_max_sibling_diff,Non-resumed a01 max sibling diff 2.6e-3,analysis,analysis/runs.csv,+ resume census; manuscript/sections/03_setup.tex,0.0026
+resumed_iid_max_diff,Resumed LLaMA IID max vs other seeds 1.4e-3,analysis,analysis/runs.csv,+ resume census; manuscript/sections/03_setup.tex,0.0014
 residual_pool_30,Residual pooled over 30 within-cell differences at p=10 m=3,analysis,analysis/runs.csv,a01 data_seed 2001-2010; manuscript/sections/03_setup.tex,30
 iid_training_seeds_3_to_5,IID cells supply three to five training seeds per method,analysis,analysis/runs.csv,iid run_seed; manuscript/sections/03_setup.tex,"[3,5]"
 iid_floor_tl,TinyLlama pooled IID floor 6.40e-8,analysis,analysis/iid_noise.csv,pooled_iid_var model=tl,6.4e-08

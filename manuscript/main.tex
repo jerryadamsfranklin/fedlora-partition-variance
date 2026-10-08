@@ -10,6 +10,7 @@
 \usepackage{url}
 \usepackage{xcolor}
 \usepackage{balance}
+\usepackage[hidelinks]{hyperref}
 
 % ieeeaccess.cls \@makecaption expects \xfigwd (normally set by \Figure).
 % All production figures are figure*; use textwidth so captions wrap correctly.
@@ -84,7 +85,8 @@ federated learning, low-rank adaptation, non-IID partitioning, experimental vari
 \section*{Declarations}
 \paragraph{Data and code availability.}
 Code, configurations, the pre-registered analysis plan, per-run metadata, and analysis
-outputs are available at \url{https://github.com/jerryadamsfranklin/fedlora-partition-variance}
+outputs are available at
+\href{https://github.com/jerryadamsfranklin/fedlora-partition-variance}{github.com/jerryadamsfranklin/fedlora-partition-variance}
 and archived at \url{https://doi.org/10.5281/zenodo.22861074}, which resolves to the most
 recent archived version. The submitted snapshot is release \texttt{v1.0.0}. Adapter weights
 are not included in the archive.
@@ -100,11 +102,8 @@ The author used Claude (Anthropic) for language editing and drafting support, an
 \bibliography{refs}
 
 \begin{IEEEbiographynophoto}{Jerry Adams Franklin}
-Jerry Adams Franklin is an independent researcher working on reproducible evaluation of
-federated and parameter-efficient learning systems. He previously held industry roles in
-software engineering and applied machine learning, spanning production model deployment and
-distributed training pipelines. His research interests include federated learning,
-parameter-efficient fine-tuning of large language models, non-IID partition design, and
+Jerry Adams Franklin is an independent researcher working on reproducible evaluation
+of federated and parameter-efficient learning, including non-IID partition design and
 measurement protocols that separate data-partition variance from training-seed noise.
 \end{IEEEbiographynophoto}
 
