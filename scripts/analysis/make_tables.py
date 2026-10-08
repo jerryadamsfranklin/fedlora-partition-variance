@@ -129,48 +129,59 @@ def tab2_variance() -> str:
 
 
 def tab3_means_comm() -> str:
+    """Nine rows: TL a01 x3, TL a05 x3, L3 p=10 a01 x3; setting in Model column."""
     means = _read("method_means.csv")
     comm = _read("comm.csv")
-    parts = _read("partition_effects.csv")
+    rows_spec: List[Tuple[str, str, str]] = [
+        ("tl", "a01", r"TinyLlama-1.1B ($\alpha{=}0.1$)"),
+        ("tl", "a05", r"TinyLlama-1.1B ($\alpha{=}0.5$)"),
+        ("l3", "a01", r"LLaMA-3.2-3B ($p{=}10$)"),
+    ]
     lines = [
         r"\begin{tabular}{llrrrr}",
         r"\toprule",
-        r"Model & Method & Mean ($\alpha{=}0.1$) & SD & Comm.\ range (MB) & Active clients \\",
+        r"Model & Method & Mean & SD & Comm.\ range (MB) & Active clients \\",
         r"\midrule",
     ]
-    for model in ("tl", "l3"):
+    for model, het, model_tex in rows_spec:
         for meth in ("fedit", "ffa_lora", "flora"):
             m = next(
                 r
                 for r in means
-                if r["model"] == model and r["method"] == meth and r["het"] == "a01"
+                if r["model"] == model and r["method"] == meth and r["het"] == het
             )
             c = next(
                 r
                 for r in comm
-                if r["model"] == model and r["method"] == meth and r["het"] == "a01"
+                if r["model"] == model and r["method"] == meth and r["het"] == het
             )
-            act = [
-                int(r["active_clients"])
-                for r in parts
-                if r["model"] == model and r.get("het", "a01") in ("a01", "")
-            ]
-            if not act:
-                act = [int(r["active_clients"]) for r in parts if r["model"] == model]
-            # Prefer active_min/max from comm when present
             if "active_min" in c and c["active_min"] != "":
                 act_lo, act_hi = int(float(c["active_min"])), int(float(c["active_max"]))
             else:
-                act_lo, act_hi = min(act), max(act)
+                act_lo = act_hi = 10
             lines.append(
-                f"{MODEL_TEX[model]}{' ($p{=}10$)' if model == 'l3' else ''} & "
-                f"{METHOD_TEX[meth]} & "
+                f"{model_tex} & {METHOD_TEX[meth]} & "
                 f"{_f(m['mean'], '.4f')} & {_f(m['sd'], '.4f')} & "
                 f"{fmt_range(c['comm_mb_min'], c['comm_mb_max'], 1)} & "
                 f"{fmt_int_range(act_lo, act_hi)} \\\\"
             )
     lines += [r"\bottomrule", r"\end{tabular}", ""]
     return "\n".join(lines) + "\n"
+
+
+def count_table_data_rows(tex: str) -> int:
+    """Count body rows (lines ending in \\\\) between midrule and bottomrule."""
+    body = False
+    n = 0
+    for line in tex.splitlines():
+        if r"\midrule" in line:
+            body = True
+            continue
+        if r"\bottomrule" in line:
+            break
+        if body and line.rstrip().endswith(r"\\"):
+            n += 1
+    return n
 
 
 def main() -> None:
