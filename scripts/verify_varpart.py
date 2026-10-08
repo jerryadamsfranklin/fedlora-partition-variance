@@ -260,6 +260,10 @@ def _conclusion_tex() -> str:
     )
 
 
+def _pairwise_row(csv_name: str, pair: str, **pred: str) -> Dict[str, str]:
+    return _row(csv_name, pair=pair, **pred)
+
+
 CLAIMS: List[Dict[str, Any]] = [
     # --- Headline / abstract / intro (analysis) ---
     {
@@ -750,6 +754,122 @@ CLAIMS: List[Dict[str, Any]] = [
             abs(_l3_iid_ratio_p10_from_csv() - 0.82) < 5e-3
             and "$0.82$" in _results_tex()
             and "ten-draw residual" in _results_tex()
+        ),
+    },
+    {
+        "id": "holm_tl_fedit_flora",
+        "text": "TinyLlama FedIT vs FLoRA Holm p=0.57",
+        "value": 0.57,
+        "source": "analysis/method_pairwise.csv holm_p model=tl pair=fedit-flora",
+        "kind": "analysis",
+        "check": lambda: (
+            abs(float(_pairwise_row("method_pairwise.csv", "fedit-flora", model="tl")["holm_p"]) - 0.566625)
+            < 5e-3
+            and "Holm $p{=}0.57$" in _results_tex()
+        ),
+    },
+    {
+        "id": "holm_tl_ffa_lt_1e8",
+        "text": "TinyLlama FFA-LoRA contrasts Holm p<1e-8",
+        "value": 1e-8,
+        "source": "analysis/method_pairwise.csv holm_p model=tl FFA pairs",
+        "kind": "analysis",
+        "check": lambda: (
+            float(_pairwise_row("method_pairwise.csv", "fedit-ffa_lora", model="tl")["holm_p"])
+            < 1e-8
+            and float(_pairwise_row("method_pairwise.csv", "ffa_lora-flora", model="tl")["holm_p"])
+            < 1e-8
+            and "TinyLlama Holm $p{<}10^{-8}$" in _results_tex()
+        ),
+    },
+    {
+        "id": "holm_l3_p10_fedit_flora",
+        "text": "LLaMA p=10 FedIT vs FLoRA Holm p=0.83 and CI [-0.00622, +0.00757]",
+        "value": (0.83, -0.00622, 0.00757),
+        "source": "analysis/method_pairwise_l3_p10.csv pair=fedit-flora",
+        "kind": "analysis",
+        "check": lambda: (
+            abs(
+                float(
+                    _pairwise_row(
+                        "method_pairwise_l3_p10.csv", "fedit-flora", model="l3"
+                    )["holm_p"]
+                )
+                - 0.8298
+            )
+            < 5e-3
+            and abs(
+                float(
+                    _pairwise_row(
+                        "method_pairwise_l3_p10.csv", "fedit-flora", model="l3"
+                    )["ci_lo"]
+                )
+                - (-0.00622)
+            )
+            < 5e-5
+            and abs(
+                float(
+                    _pairwise_row(
+                        "method_pairwise_l3_p10.csv", "fedit-flora", model="l3"
+                    )["ci_hi"]
+                )
+                - 0.00757
+            )
+            < 5e-5
+            and "Holm $p{=}0.83$" in _results_tex()
+            and "-0.00622" in _results_tex()
+            and "+0.00757" in _results_tex()
+        ),
+    },
+    {
+        "id": "holm_l3_p10_ffa_lt_1e5",
+        "text": "LLaMA p=10 FFA-LoRA contrasts Holm p<1e-5",
+        "value": 1e-5,
+        "source": "analysis/method_pairwise_l3_p10.csv holm_p FFA pairs",
+        "kind": "analysis",
+        "check": lambda: (
+            float(
+                _pairwise_row(
+                    "method_pairwise_l3_p10.csv", "fedit-ffa_lora", model="l3"
+                )["holm_p"]
+            )
+            < 1e-5
+            and float(
+                _pairwise_row(
+                    "method_pairwise_l3_p10.csv", "ffa_lora-flora", model="l3"
+                )["holm_p"]
+            )
+            < 1e-5
+            and "LLaMA Holm $p{<}10^{-5}$" in _results_tex()
+        ),
+    },
+    {
+        "id": "holm_tl_a05_fedit_flora",
+        "text": "TinyLlama alpha 0.5 FedIT vs FLoRA gap -0.00218 Holm 3.2e-6",
+        "value": (-0.00218, 3.2e-6),
+        "source": "analysis/method_pairwise_tl_a05.csv pair=fedit-flora",
+        "kind": "analysis",
+        "check": lambda: (
+            abs(
+                float(
+                    _pairwise_row(
+                        "method_pairwise_tl_a05.csv", "fedit-flora", model="tl"
+                    )["mean_diff"]
+                )
+                - (-0.0021825)
+            )
+            < 5e-6
+            and abs(
+                float(
+                    _pairwise_row(
+                        "method_pairwise_tl_a05.csv", "fedit-flora", model="tl"
+                    )["holm_p"]
+                )
+                - 3.2197e-6
+            )
+            < 5e-8
+            and "$-0.00218$" in _results_tex()
+            and "3.2{\\times}10^{-6}" in _results_tex()
         ),
     },
     {
