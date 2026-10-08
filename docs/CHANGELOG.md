@@ -82,3 +82,7 @@ Baseline test count at v0-import: 28 passed
   ${\times}10^{k}$ (no e-notation) and round-half-up comm ranges; bib titles
   FederatedGPT and non-IID; resumed-cell sibling diffs registered in V9;
   `check_typography` requires every `fig:`/`tab:` label to be referenced.
+- P6: restore Table~3 $\alpha{=}0.5$ rows; shorten Fig.~1 caption (ieeeaccess
+  `tabular{l}` does not wrap); break IV-A share formula; floats between
+  paragraphs; GitHub `\href`; precise resumed-cell max/median/max wording;
+  define active vs effective clients; `check_layout.py` gates G1--G3.

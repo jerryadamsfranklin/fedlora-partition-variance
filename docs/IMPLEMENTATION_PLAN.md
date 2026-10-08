@@ -358,3 +358,15 @@ CHANGELOG entry.
 
 TEXT EDITS P5-1..P5-7, BIB P5-8..9, PRESENTATION P5-10..12, LAYOUT P5-13,
 REGRESSION P5-14. Acceptance F1-F8. Then commit, merge, push. Do not tag.
+
+## Phase P6: fix P5 regressions and add layout gates
+
+Branch: p6-regressions from main at 8c08fb4. Add to docs/IMPLEMENTATION_PLAN.md first.
+Phase R remains ON HOLD. No new runs. No analysis/*.csv changes except claims.csv.
+
+P6-0  Explain why Table 3 lost alpha 0.5 rows (make_tables regenerate from a01-only loop).
+P6-1..P6-8  Restore Table 3 (9 rows); fix Fig 1 caption; break IV-A share formula;
+      floats between paragraphs; href for GitHub; target 10 pages; precise resumed-cells
+      sentence with stop gate; define active vs effective clients.
+G1--G3  Layout gates (overfull hbox >1pt; caption text in PDF; table row counts).
+Acceptance H1--H5; then commit, merge, push. Do not tag.

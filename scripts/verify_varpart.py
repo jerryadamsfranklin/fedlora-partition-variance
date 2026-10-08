@@ -153,8 +153,8 @@ def _sibling_loss_groups() -> Dict[Tuple[str, str, str, str], Dict[str, float]]:
     return groups
 
 
-def _resumed_max_sibling_diff() -> float:
-    """Max |loss - sibling| over resumed cells with exactly one sibling (r=2)."""
+def _resumed_sibling_diffs() -> List[float]:
+    """|loss - sibling| for every resumed cell with exactly one sibling (r=2)."""
     groups = _sibling_loss_groups()
     diffs: List[float] = []
     for cell in _resumed_cells():
@@ -167,13 +167,30 @@ def _resumed_max_sibling_diff() -> float:
         diffs.append(abs(loss - sib))
     if not diffs:
         raise RuntimeError("no resumed r=2 sibling diffs")
+    return diffs
+
+
+def _resumed_max_sibling_diff() -> float:
+    """Max |diff| over resumed a01 cells with exactly one sibling (V9 X)."""
+    groups = _sibling_loss_groups()
+    diffs: List[float] = []
+    for cell in _resumed_cells():
+        if cell.het != "a01":
+            continue
+        gkey = (cell.model, cell.het, cell.method, str(cell.data_seed))
+        seeds = groups[gkey]
+        if len(seeds) != 2:
+            continue
+        loss = seeds[str(cell.run_seed)]
+        sib = next(v for s, v in seeds.items() if s != str(cell.run_seed))
+        diffs.append(abs(loss - sib))
+    if not diffs:
+        raise RuntimeError("no resumed a01 sibling diffs")
     return max(diffs)
 
 
-def _nonresumed_median_sibling_diff() -> float:
-    """Median |sibling diff| over a01 pairs where neither seed resumed."""
-    from statistics import median
-
+def _nonresumed_a01_sibling_diffs() -> List[float]:
+    """|sibling diff| over a01 pairs where neither seed resumed."""
     groups = _sibling_loss_groups()
     resumed_keys = {
         (c.model, c.het, c.method, str(c.data_seed), str(c.run_seed))
@@ -191,8 +208,33 @@ def _nonresumed_median_sibling_diff() -> float:
         diffs.append(abs(seeds[s1] - seeds[s2]))
     if not diffs:
         raise RuntimeError("no non-resumed a01 sibling pairs")
-    return float(median(diffs))
+    return diffs
 
+
+def _nonresumed_median_sibling_diff() -> float:
+    from statistics import median
+
+    return float(median(_nonresumed_a01_sibling_diffs()))
+
+
+def _nonresumed_max_sibling_diff() -> float:
+    return max(_nonresumed_a01_sibling_diffs())
+
+
+def _resumed_iid_max_diff() -> float:
+    """Max |diff| of the resumed LLaMA IID cell vs each of its other seeds."""
+    groups = _sibling_loss_groups()
+    iid = [c for c in _resumed_cells() if c.het == "iid"]
+    if len(iid) != 1:
+        raise RuntimeError(f"expected one resumed IID cell, got {len(iid)}")
+    cell = iid[0]
+    gkey = (cell.model, cell.het, cell.method, str(cell.data_seed))
+    seeds = groups[gkey]
+    loss = seeds[str(cell.run_seed)]
+    others = [abs(loss - v) for s, v in seeds.items() if s != str(cell.run_seed)]
+    if not others:
+        raise RuntimeError("resumed IID cell has no other seeds")
+    return max(others)
 
 CLAIMS: List[Dict[str, Any]] = [
     # --- Headline / abstract / intro (analysis) ---
@@ -544,12 +586,13 @@ CLAIMS: List[Dict[str, Any]] = [
     },
     {
         "id": "resumed_max_sibling_diff",
-        "text": "Resumed cells differ from sibling by at most 1.4e-3",
+        "text": "Resumed a01 sibling max diff 1.4e-3",
         "value": 1.4e-3,
         "source": "analysis/runs.csv + resume census; manuscript/sections/03_setup.tex",
         "kind": "analysis",
         "check": lambda: (
             abs(_resumed_max_sibling_diff() - 1.4e-3) < 5e-5
+            and len(_resumed_sibling_diffs()) == 8
             and "1.4{\\times}10^{-3}"
             in (REPO_ROOT / "manuscript" / "sections" / "03_setup.tex").read_text(
                 encoding="utf-8"
@@ -565,6 +608,34 @@ CLAIMS: List[Dict[str, Any]] = [
         "check": lambda: (
             abs(_nonresumed_median_sibling_diff() - 3.1e-4) < 5e-6
             and "3.1{\\times}10^{-4}"
+            in (REPO_ROOT / "manuscript" / "sections" / "03_setup.tex").read_text(
+                encoding="utf-8"
+            )
+        ),
+    },
+    {
+        "id": "nonresumed_max_sibling_diff",
+        "text": "Non-resumed a01 max sibling diff 2.6e-3",
+        "value": 2.6e-3,
+        "source": "analysis/runs.csv + resume census; manuscript/sections/03_setup.tex",
+        "kind": "analysis",
+        "check": lambda: (
+            abs(_nonresumed_max_sibling_diff() - 2.6e-3) < 5e-5
+            and "2.6{\\times}10^{-3}"
+            in (REPO_ROOT / "manuscript" / "sections" / "03_setup.tex").read_text(
+                encoding="utf-8"
+            )
+        ),
+    },
+    {
+        "id": "resumed_iid_max_diff",
+        "text": "Resumed LLaMA IID max vs other seeds 1.4e-3",
+        "value": 1.4e-3,
+        "source": "analysis/runs.csv + resume census; manuscript/sections/03_setup.tex",
+        "kind": "analysis",
+        "check": lambda: (
+            abs(_resumed_iid_max_diff() - 1.4e-3) < 5e-5
+            and "The ninth,"
             in (REPO_ROOT / "manuscript" / "sections" / "03_setup.tex").read_text(
                 encoding="utf-8"
             )
