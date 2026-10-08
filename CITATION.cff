@@ -14,7 +14,7 @@ keywords:
   - experimental variance
   - reproducibility
   - large language models
-version: 1.0.0
-doi: "10.5281/zenodo.22861075"
+version: 1.1.0
+doi: "10.5281/zenodo.22861074"
 repository-code: "https://github.com/jerryadamsfranklin/fedlora-partition-variance"
 license: MIT
