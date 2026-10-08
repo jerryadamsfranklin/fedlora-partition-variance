@@ -392,3 +392,52 @@ P8-1..P8-3  Investigate untracked holdout dirs; scratch rebuild must stay at 204
 P8-4  Gitignore LaTeX aux artifacts (*.fdb_latexmk, *.fls, ...).
 P8-5  Insert \raggedbottom before bibliography; do not restore \balance.
 CHECKS L1--L4; then commit, merge, push. Do not tag.
+
+## Phase P9: repository completeness and page-11 layout
+
+Branch: p9-complete from main at b27ec33. Add to docs/IMPLEMENTATION_PLAN.md first.
+Phase R stays on hold.
+
+COMPLETENESS
+P9-1  Determine the file pattern used for the 150 already-committed cells (list the tracked
+      file names under one committed prod_v1 cell, e.g. results.json, run_meta.json,
+      partition_stats.json, instruction_holdout.json, config). Report it.
+P9-2  For all 204 cells, determine the minimal file set a CLEAN CLONE needs so that:
+      build_runs_table.py reproduces analysis/runs.csv byte-identically, and
+      verify_varpart.py passes V1 to V12 on all four grids. Also include the
+      quarantine_stackdrift originals needed for analysis/stack_effect.csv to regenerate
+      identically. Exclude adapter weights and checkpoints (*.safetensors, *.bin, *.pt,
+      *.pth, optimizer state, checkpoint dirs). Do not add stale duplicate holdouts that the
+      builder would not select. Report the list of paths to add and the total size.
+P9-3  Secret and PII scan of EVERY file in that list before staging: HF tokens (hf_...),
+      GitHub tokens (ghp_, github_pat_), IPv4 addresses, host:port strings, ssh strings,
+      absolute home paths containing usernames, emails other than
+      jerry.adamsf@gmail.com. If anything is found, STOP and report the file and pattern.
+      Do not redact silently.
+P9-4  Size gate: if the total added size exceeds 50 MB, STOP and report the breakdown.
+P9-5  Commit the file set. Record in docs/DECISIONS.md that 54 extension cells' metadata
+      had been produced but never committed, and that this phase adds it.
+
+LAYOUT
+P9-6  main.tex: immediately before \begin{IEEEbiographynophoto}, insert
+      \vspace{0pt plus -1fil}
+      to cancel the class's "plus 1fil" stretch, leaving \raggedbottom to absorb the slack.
+      If that does not close the gap, add to the preamble instead:
+      \usepackage{etoolbox} and a \patchcmd on \IEEEbiographynophoto (or its internal
+      macro) changing "plus 1fil" to "plus 0pt". Do NOT edit ieeeaccess.cls.
+
+CHECKS (stop on any failure)
+M1  CLEAN-CLONE GATE: git clone the pushed branch into a fresh temporary directory with
+    no access to the local working tree. In that clone, install from requirements.txt in a
+    fresh venv and run build_runs_table.py into a scratch path: 204 rows, byte-identical to
+    analysis/runs.csv. Run verify_varpart.py for all four grids: exit 0, 44/44. Regenerate
+    stack_effect.csv into a scratch path: identical to the committed file. Report all three.
+M2  Measure page 11 from the rendered geometry, NOT pdftotext blank lines: use
+    pdftotext -bbox-layout to get the y-coordinate of the last line of reference [31] and
+    the first line of the biography. The vertical distance must be 72 pt or less.
+    Report both coordinates.
+M3  Word-level diff against the 142f38cb PDF: zero textual operations.
+M4  All existing gates pass: check_typography, G1, G2, G3, abstract 150 to 250, 31 refs.
+M5  git status --porcelain clean apart from adapter weights and other excluded artifacts,
+    which must be covered by .gitignore. Report the .gitignore lines added.
+THEN merge, push, send the PDF, its sha256, and the M1 and M2 reports. No tag.

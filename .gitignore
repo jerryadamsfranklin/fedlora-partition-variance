@@ -114,3 +114,28 @@ analysis/*.csv.bak
 # Local O11 Linux runner tooling
 .o11_linux/
 .tmp_o10/
+
+# Local N6/N8/N9 ops leftovers (not selected by build_runs_table / verify)
+results/quarantine_duplicate_complete/
+results/m1_timing_sync/
+results/m2_timing_sync/
+results/launch/*_n8_*.jsonl
+results/raw/**/n6_scratch_*/
+# Pre-retrain stackdrift raw dirs and stale holdout mirrors left on disk after
+# quarantine_stackdrift/ absorbed the originals (builder uses post-retrain ts).
+results/raw/**/prod_v2/20260919_*/
+results/downstream_instruction/**/prod_v2/20260919_*/
+# Duplicate-complete keep losers still present under the live trees
+results/downstream_instruction/**/prod_v2/20260920_062710/
+results/downstream_instruction/**/prod_v2/20260920_072653/
+results/downstream_instruction/**/prod_v2/20260920_082916/
+results/downstream_instruction/**/prod_v2/20260920_093035/
+results/raw/**/prod_v2/20260920_054233/
+results/raw/**/prod_v2/20260920_072137/
+results/raw/**/prod_v2/20260920_075041/
+# Local campaign helpers (not part of the public analysis path)
+scripts/phase_g_*.sh
+scripts/phase_g_*.py
+scripts/start_n8_watcher.sh
+scripts/vast_hang_watchdog.sh
+scripts/vast_launch_shard.sh

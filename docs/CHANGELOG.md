@@ -91,3 +91,7 @@ Baseline test count at v0-import: 28 passed
 - P8: `\raggedbottom` before the bibliography; gitignore `*.fdb_latexmk` /
   `*.fls`. Untracked l3_ext holdout dirs left in place (required for 204-row
   rebuild); page-11 spacing is the class biography `\vskip 4\baselineskip plus 1fil`.
+- P9: commit metadata for 54 extension cells (raw + holdout mirrors; weights
+  excluded) so a clean clone rebuilds `runs.csv` and passes V1–V12; cancel
+  biography `plus 1fil` with `\vspace{0pt plus -1fil}` in `main.tex`; measure
+  page-11 gap by `pdftotext -bbox-layout`.
