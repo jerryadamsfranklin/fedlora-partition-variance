@@ -306,3 +306,28 @@ P3-4  Add a one-line note to docs/DECISIONS.md recording that the pre-registered
       the number is reproducible from either fit.
 
 THEN commit, merge to main, push. Do NOT tag until Jerry confirms.
+
+## Phase R: release v1.0.0
+
+Add to docs/IMPLEMENTATION_PLAN.md first, then execute.
+
+R-1  Metadata check BEFORE tagging. Read CITATION.cff and .zenodo.json. If either names a
+     version other than 1.0.0, or a date other than today, update ONLY those fields in one
+     metadata-only commit. Do not touch manuscript/, analysis/, results/, or scripts/.
+     Re-run verify_varpart.py (expect 40/40) and confirm manuscript/main.pdf is
+     byte-identical to bb19d0e (sha256 before and after). If there is nothing to change,
+     tag bb19d0e directly.
+R-2  Annotated tag v1.0.0 on that commit, message "IEEE Access submission snapshot". Push
+     the tag.
+R-3  Create a GitHub RELEASE from tag v1.0.0. Zenodo's integration fires on a release,
+     not on a bare tag. Title "v1.0.0: IEEE Access submission snapshot".
+R-4  Wait for Zenodo to ingest it. Confirm all three:
+       a) https://doi.org/10.5281/zenodo.22861074 resolves to the v1.0.0 record
+       b) the archived zip contains manuscript/main.pdf with the same sha256 as R-1
+       c) the record's version field reads v1.0.0
+     Record the new VERSION DOI in docs/DECISIONS.md and report it to me. Do NOT add it
+     to the manuscript. The manuscript cites the concept DOI by design.
+R-5  Report: tag commit hash, release URL, Zenodo version DOI, the sha256 of main.pdf,
+     and the three R-4 confirmations.
+STOP on any failed check. If Zenodo has not ingested after 30 minutes, report rather
+than retry; a second release would mint a second version DOI.
