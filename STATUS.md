@@ -7,12 +7,10 @@ This file covers one paper: the partition-variance measurement study going to IE
 
 ## Current phase
 
-P8 merged at `b27ec33` (PDF sha256 142f38cb...). Manuscript text unchanged since P7 (zero
-diff ops). Two blockers before release: (1) page-11 gap still ~25 lines; Cursor's check
-counted pdftotext blank lines instead of measuring the page; (2) 54 extension cells' run
-metadata and holdouts were never committed, so a clean clone cannot rebuild runs.csv or
-pass V1. P9 (metadata commit + clean-clone gate + layout fix) handed to Cursor. Phase R ON
-HOLD.
+P9 merged (metadata for 54 extension cells committed; biography `plus 1fil` cancelled
+locally; clean-clone gate passed). Awaiting Jerry sign-off on the P9 PDF and M1/M2
+reports. Phase R ON HOLD. Manuscript text unchanged since P7 (zero word-diff ops vs
+142f38cb).
 
 ## Venue
 
@@ -31,10 +29,10 @@ submission cutoff December 2026 for a March 2027 filing.
 ## Root causes recorded
 
 - Page-11 gap: the class's \vskip 4\baselineskip plus 1fil before the biography competes
-  with \raggedbottom's \vfil, splitting slack and centering the biography
+  with \raggedbottom's \vfil, splitting slack and centering the biography; cancelled with
+  `\vspace{0pt plus -1fil}` before `\begin{IEEEbiographynophoto}`
 - Untracked dirs: 54 extension cells' raw metadata and downstream holdouts (19 to 20 Sep,
-  freeze-v3.1, torch 2.2.0+cu121) were produced but never git-added; the O11 Linux run
-  verified the environment against the local tree, not repository completeness
+  freeze-v3.1, torch 2.2.0+cu121) were produced but never git-added; now committed (P9)
 
 ## Final manuscript state (text frozen since P7)
 
@@ -49,20 +47,17 @@ submission cutoff December 2026 for a March 2027 filing.
 P1 `ae7e1c9` references and Limitations; P2 `7b67182` novelty; P3 `bb19d0e` IID-ratio
 provenance; P4 abstract 297 to 241; P5 `8c08fb4` float citations; P6 regressions fixed and
 layout gates; P7 `4ac7546` "eight", \balance removed; P8 `b27ec33` untracked dirs explained,
-LaTeX artifacts gitignored, \raggedbottom added
+LaTeX artifacts gitignored, \raggedbottom added; P9 metadata completeness + bio fil cancel
++ clean-clone gate
 
 ## Next
 
-1. Cursor runs P9: identify the committed file pattern; commit metadata for all missing
-   cells after a secret/PII scan and a 50 MB size gate; clean-clone gate (runs.csv
-   byte-identical, verify 44/44, stack_effect identical); cancel the biography stretch;
-   measure page 11 by bbox
-2. Sign-off on the P9 PDF and the clean-clone report
-3. Phase R: metadata check, tag v1.0.0, GitHub release, Zenodo ingest, three checks,
+1. Sign-off on the P9 PDF and the clean-clone report
+2. Phase R: metadata check, tag v1.0.0, GitHub release, Zenodo ingest, three checks,
    report version DOI and PDF sha256
-4. Submit via ScholarOne with the sha256-matched PDF; plain-text abstract; cover letter
+3. Submit via ScholarOne with the sha256-matched PDF; plain-text abstract; cover letter
    names cited preprint arXiv:2609.13512 as a separate study with no reused results
-5. Record the manuscript ID; revoke campaign GitHub and HF tokens
+4. Record the manuscript ID; revoke campaign GitHub and HF tokens
 
 ## Open items
 
