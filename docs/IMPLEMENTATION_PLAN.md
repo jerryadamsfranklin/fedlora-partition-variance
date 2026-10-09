@@ -553,3 +553,32 @@ Q2  Rendered last page: photo at 1 x 1.25 in, left of the biography text, not cl
 Q3  pdfimages -list on the PDF: the photo's effective resolution >= 300 ppi.
 Q4  All gates pass (verify 51/51, typography, G1-G3, abstract, 38 refs).
 Q5  Report the new PDF sha256. Commit, merge, push. No tag.
+
+## Phase P14: author biography (NO tag, NO release, NO Zenodo)
+
+Branch: p14-bio from main at the P13 merge. Add to docs/IMPLEMENTATION_PLAN.md first,
+then execute from the plan.
+Base PDF for diffing: sha256 85ac9764f82223d8f85fc3e90fb98d6147c298d392970c9981074d1eb1bcc0f2
+
+P14-1  main.tex, inside \begin{IEEEbiography}[...]{Jerry Adams Franklin} ... \end{IEEEbiography}:
+       replace the ENTIRE biography text with exactly:
+
+received the M.S. degree in data science from Northeastern University, Boston, MA, USA. He has worked as a deep learning engineer at Intel and as a senior AI/ML
+engineer at Digital Currency Group. His research interests include federated learning
+and resource-efficient fine-tuning of large language models.
+
+       Do not change the heading, the photo argument, or the \vspace{0pt plus -1fil}
+       before the environment.
+
+CHECKS (stop on any failure)
+B1  Word-level diff of pdftotext output against the 85ac9764 PDF: the only textual change
+    is the biography text. Anything else, STOP and report.
+B2  check_typography passes (no em dashes, no curly quotes, no "---").
+B3  Render page 11 at 100 dpi and inspect: photo at 1 x 1.25 in on the left, biography
+    beside it, nothing clipped or overlapping, end mark after the biography. Report the
+    page count (expect 11).
+B4  All gates pass: verify_varpart 51/51, G1 (no overfull hbox > 1pt), G2 (all caption
+    text present), G3 (table rows), abstract 150 to 250 words, 38 references.
+B5  git diff --stat touches only manuscript/main.tex, manuscript/main.pdf, and
+    docs/IMPLEMENTATION_PLAN.md. Anything else, STOP.
+THEN commit, merge, push. Report the commit hash and the new PDF sha256. No tag.
