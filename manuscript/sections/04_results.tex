@@ -1,7 +1,7 @@
 \section{Results}
 \label{sec:results}
 
-All analyses use held-out loss as the response. Numbers below come from the pre-registered tables in \texttt{analysis/}. We report TinyLlama and LLaMA-3.2-3B separately. Figure~\ref{fig:heldout} shows the held-out loss of every cell by method and setting.
+All analyses use held-out loss as the response. Numbers below come from the pre-registered tables in \texttt{analysis/}. We report TinyLlama and LLaMA-3.2-3B separately. Fig.~\ref{fig:heldout} shows the held-out loss of every cell by method and setting.
 
 \begin{figure*}[!t]
 \centering
@@ -50,7 +50,7 @@ $[0.027, 0.094]$, and all three share differences against $\alpha{=}0.1$ have
 bootstrap intervals containing zero ($-0.231$ $[-0.568, 0.194]$ for the partition
 share). The pre-registered outcome is that the composition does not change detectably
 between these two skew levels. The absolute magnitudes do change: $\hat\sigma^2_P$
-falls from $4.09{\times}10^{-6}$ to $2.22{\times}10^{-7}$ and the paired per-draw SD
+falls from $4.09{\times}10^{-6}$ to $2.22{\times}10^{-7}$ and the paired per-draw standard deviation (SD)
 from $0.00282$ to $0.00108$, so total variance is about an order of magnitude smaller
 at $\alpha{=}0.5$. This magnitude comparison was not pre-registered and is reported as
 an observation. One consequence is visible in the contrasts: the FedIT--FLoRA pair,
@@ -71,7 +71,7 @@ that $\alpha{=}0.1$ is quieter than IID.
 \subsection{Ranking stability}
 The reference ranking at $\alpha{=}0.1$ orders methods by mean held-out loss over all cells: TinyLlama ranks FLoRA, FedIT, then FFA-LoRA; LLaMA-3.2-3B at $p{=}10$ ranks FLoRA, FedIT, then FFA-LoRA. Under the pre-registered paired protocol ($B{=}10{,}000$), the probability that the best method differs from this reference equals the probability that the full order differs (the two coincide because the only pair whose order changes is the top one; the third method is separated from both by about four (LLaMA-3.2-3B) to eight (TinyLlama) times the per-draw paired SD). On TinyLlama those probabilities are $0.555$, $0.406$, $0.377$, and $0.284$ for $k{\in}\{1,2,3,5\}$ (Wilson~\cite{wilson1927probable} 95\% CI half-widths about $0.01$). On LLaMA-3.2-3B at $p{=}10$ they are $0.700$, $0.533$, and $0.493$ for
 $k{\in}\{1,2,3\}$ (unpaired $0.599$, $0.528$, $0.483$), so a three-draw evaluation at
-3B is close to a coin flip on the top two. Unpaired probabilities are shown in Figure~\ref{fig:flip}; the paired protocol is primary.
+3B is close to a coin flip on the top two. Unpaired probabilities are shown in Fig.~\ref{fig:flip}; the paired protocol is primary.
 
 \begin{figure*}[!t]
 \centering
@@ -87,7 +87,7 @@ reverse at any $k$.
 Conditioned on effect size, the ranking claim is therefore: pairs separated by less than the per-draw paired SD ($0.00282$ on TinyLlama, $0.00770$ on LLaMA-3.2-3B at $p{=}10$) are ordered near-randomly by a few-partition evaluation, while gaps of about $0.023$ (TinyLlama) and $0.031$ (LLaMA) were recovered in every single draw. The flip table is a restatement of that conditioning, not a separate claim about method quality.
 
 \subsection{Draws needed}
-Using the model-based paired SD (Figure~\ref{fig:draws}), detecting a pre-registered $\Delta{=}0.005$ at 80\% power (two-sided, significance level $0.05$) requires $5$ paired partition draws on TinyLlama. At 3B with ten draws, $\Delta{=}0.005$ requires $21$ paired draws, $\Delta{=}0.01$
+Using the model-based paired SD (Fig.~\ref{fig:draws}), detecting a pre-registered $\Delta{=}0.005$ at 80\% power (two-sided, significance level $0.05$) requires $5$ paired partition draws on TinyLlama. At 3B with ten draws, $\Delta{=}0.005$ requires $21$ paired draws, $\Delta{=}0.01$
 requires $7$, $\Delta{=}0.02$ requires $4$, and $\Delta{=}0.05$ requires $3$
 (unpaired per method: $20$, $6$, $3$, $2$). For the observed gaps, each separable pair
 needs $3$ paired draws, whereas the FedIT--FLoRA near-tie needs more than $1000$ under

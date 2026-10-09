@@ -24,20 +24,35 @@ def overfull_hbox_pts(log_text: str) -> list[tuple[float, str]]:
     return hits
 
 
+# Class-intrinsic overfulls also present in the official ACCESS template access.log.
+_CLASS_INTRINSIC_OVERFULL = (
+    re.compile(
+        r"Overfull \\hbox \(505\.12177pt too wide\) has occurred while \\output is active"
+    ),
+    re.compile(
+        r"Overfull \\hbox \(9\.2679pt too wide\) in paragraph at lines \d+--\d+"
+    ),
+)
+
+
+def is_class_intrinsic_overfull(line: str) -> bool:
+    """True for the two ieeeaccess.cls overfulls allowed by G1."""
+    return any(p.search(line) for p in _CLASS_INTRINSIC_OVERFULL)
+
+
 def content_overfull_hbox(
     log_text: str, *, max_pt: float = 1.0
 ) -> list[tuple[float, str, str]]:
-    """Content Overfull \\hbox events that signal real manuscript overflow.
+    """Overfull \\hbox events that fail G1.
 
-    Ignores ieeeaccess float-page chrome (``while \\output is active``) and
-    tracks the current ``(./sections/...)`` / ``(./tables/...)`` input file so
-    title-page class noise is not counted. Any overfull above 20pt is kept
-    regardless of file context (catches clipped figure* captions).
+    Allows only the two class-intrinsic warnings also present in the official
+    IEEE Access template ``access.log`` (505.12177pt while ``\\output`` is active,
+    and 9.2679pt at the title/maketitle paragraph). Any other overfull above
+    ``max_pt`` fails.
     """
     hits: list[tuple[float, str, str]] = []
     current = ""
     for line in log_text.splitlines():
-        # pdfTeX opens inputs as (./path or (/abs/path
         m_open = re.match(r"\(\./([^()\s]+)", line)
         if m_open:
             current = m_open.group(1)
@@ -47,16 +62,14 @@ def content_overfull_hbox(
         pt = float(m.group(1))
         if pt <= max_pt:
             continue
-        if "while \\output is active" in line:
+        if is_class_intrinsic_overfull(line):
             continue
-        in_body = current.startswith("sections/") or current.startswith("tables/")
-        if in_body or pt > 20.0:
-            hits.append((pt, current, line.strip()))
+        hits.append((pt, current, line.strip()))
     return hits
 
 
 def check_g1_overfull(log_path: Path, *, max_pt: float = 1.0) -> list[str]:
-    """G1: no content Overfull \\hbox larger than max_pt."""
+    """G1: no Overfull \\hbox larger than max_pt except class-intrinsic allowlist."""
     text = log_path.read_text(encoding="utf-8", errors="replace")
     bad = content_overfull_hbox(text, max_pt=max_pt)
     return [

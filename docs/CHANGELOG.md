@@ -126,3 +126,7 @@ Baseline test count at v0-import: 28 passed
   provenance wording and spacing; REPRODUCE/CHANGELOG nits. No tag.
 - P15: abstract and introduction replace two prevalence wordings ("often" →
   "can" / "can be"); PDF rebuilt. No tag.
+- P17: migrate manuscript to official IEEE Access LaTeX template (2026-05-13);
+  apply abstract/index-term/Fig./abbreviation/Acknowledgment rules; G1 allowlists
+  the two class-intrinsic overfulls; typography requires the Acknowledgment AI
+  disclosure; template fonts gitignored and not redistributed. No tag.

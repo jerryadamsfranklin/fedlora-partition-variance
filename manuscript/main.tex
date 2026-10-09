@@ -1,5 +1,5 @@
 %% manuscript/main.tex
-%% Phase O3: IEEE Access (ieeeaccess.cls). ORCID, email, and DOI are placeholders.
+%% Built on the official IEEE Access LaTeX template (ACCESS_latex_template_20260513).
 \documentclass{ieeeaccess}
 
 \usepackage[pdftex]{graphicx}
@@ -9,20 +9,9 @@
 \usepackage{cite}
 \usepackage{url}
 \usepackage{xcolor}
-\usepackage{balance}
 \usepackage[hidelinks]{hyperref}
 
-% ieeeaccess.cls \@makecaption expects \xfigwd (normally set by \Figure).
-% All production figures are figure*; use textwidth so captions wrap correctly.
-\gdef\xfigwd{\textwidth}
 
-% ieeeaccess.cls biography envs expect a biography counter and TOC flag that
-% this IEEEtran pairing does not define; provide them so IEEEbiographynophoto works.
-\makeatletter
-\@ifundefined{c@biography}{\newcounter{biography}}{}
-\newif\if@biographyTOCentrynotmade
-\@biographyTOCentrynotmadetrue
-\makeatother
 
 \graphicspath{{../figures/}{figures/}}
 
@@ -35,7 +24,7 @@
 
 \author{\uppercase{Jerry Adams Franklin}\authorrefmark{1}}
 
-\address[1]{Independent Researcher (ORCID: \url{https://orcid.org/0009-0006-8470-8349})}
+\address[1]{Independent Researcher, Rochester, NY, USA}
 
 \tfootnote{}
 
@@ -46,8 +35,8 @@
 \corresp{Corresponding author: Jerry Adams Franklin (e-mail: jerry.adamsf@gmail.com).}
 
 \begin{abstract}
-Federated low-rank adaptation (LoRA) comparisons can rest on a single non-IID partition
-draw, even when reported method gaps sit near run-to-run noise. We measure how much
+Federated low-rank adaptation comparisons can rest on a single heterogeneous
+client partition draw, even when reported method gaps sit near run-to-run noise. We measure how much
 held-out loss variation the partition draw causes, how often few-draw rankings flip, and
 how many draws a given effect requires. In a pre-registered design of $204$ runs at two
 scales (TinyLlama-1.1B-Chat and LLaMA-3.2-3B), with partition seeds separated from
@@ -58,7 +47,7 @@ with ten draws the interaction dominates ($0.992$) and the partition share trunc
 zero. Flips concentrate in the near-tied FedIT--FLoRA pair (three-draw paired flip
 probability $0.377$ and $0.493$), while gaps of $0.023$ to $0.031$ never reverse.
 Detecting that near-tie at 80\% power needs $206$ paired draws on TinyLlama and more than
-$1000$ on LLaMA-3.2-3B; separable pairs need $3$. Extending the 3B grid from six to ten
+$1000$ on LLaMA-3.2-3B; separable pairs need $3$. Extending the LLaMA grid from six to ten
 draws reverses the top-two ordering and grows the interaction component $2.66$-fold, so
 stopping at six would report the opposite ranking. At $\alpha{=}0.5$ the composition is
 statistically unchanged while total variance shrinks by about an order of magnitude. We
@@ -68,7 +57,7 @@ report the minimum detectable difference. We make no method recommendation.
 \end{abstract}
 
 \begin{keywords}
-federated learning, low-rank adaptation, non-IID partitioning, experimental variance, reproducibility, large language models
+experimental variance, federated learning, large language models, low-rank adaptation, non-IID partitioning, reproducibility
 \end{keywords}
 
 \titlepgskip=-15pt
@@ -82,20 +71,16 @@ federated learning, low-rank adaptation, non-IID partitioning, experimental vari
 \input{sections/05_discussion}
 \input{sections/06_conclusion}
 
-\section*{Declarations}
-\subsection*{Data and code availability}
+\section*{Data and Code Availability}
 Code, configurations, the pre-registered analysis plan, per-run metadata, and analysis
 outputs are available at
 \href{https://github.com/jerryadamsfranklin/fedlora-partition-variance}{github.com/jerryadamsfranklin/fedlora-partition-variance}
 and archived at \url{https://doi.org/10.5281/zenodo.22861074}, which resolves to the most
 recent archived version. The submitted snapshot is release \texttt{v1.1.0}. Adapter weights
 are not included in the archive.
-\subsection*{Funding}
-None.
-\subsection*{Conflicts of interest}
-None.
-\subsection*{Generative AI}
-The author used Claude (Anthropic) for language editing and drafting support, and AI coding assistants for implementing experiment and analysis scripts. The author designed the study, verified all code and results, and is responsible for all technical content, analysis, and interpretations.
+
+\section*{Acknowledgment}
+The author used Claude (Anthropic) for drafting support and language editing across all sections of the manuscript and for checking the text against the analysis outputs. The author used the AI coding assistant Cursor to implement the experiment and analysis scripts, including the scripts that generate the figures and tables from the experimental results. The author designed the study, verified all code and results, and is responsible for all technical content, analysis, and interpretations.
 
 \raggedbottom
 \bibliographystyle{IEEEtran}

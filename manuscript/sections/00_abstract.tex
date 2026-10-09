@@ -1,7 +1,7 @@
 % Kept in sync for typography; Access main.tex inlines the abstract before \maketitle.
 \begin{abstract}
-Federated low-rank adaptation (LoRA) comparisons can rest on a single non-IID partition
-draw, even when reported method gaps sit near run-to-run noise. We measure how much
+Federated low-rank adaptation comparisons can rest on a single heterogeneous
+client partition draw, even when reported method gaps sit near run-to-run noise. We measure how much
 held-out loss variation the partition draw causes, how often few-draw rankings flip, and
 how many draws a given effect requires. In a pre-registered design of $204$ runs at two
 scales (TinyLlama-1.1B-Chat and LLaMA-3.2-3B), with partition seeds separated from
@@ -12,7 +12,7 @@ with ten draws the interaction dominates ($0.992$) and the partition share trunc
 zero. Flips concentrate in the near-tied FedIT--FLoRA pair (three-draw paired flip
 probability $0.377$ and $0.493$), while gaps of $0.023$ to $0.031$ never reverse.
 Detecting that near-tie at 80\% power needs $206$ paired draws on TinyLlama and more than
-$1000$ on LLaMA-3.2-3B; separable pairs need $3$. Extending the 3B grid from six to ten
+$1000$ on LLaMA-3.2-3B; separable pairs need $3$. Extending the LLaMA grid from six to ten
 draws reverses the top-two ordering and grows the interaction component $2.66$-fold, so
 stopping at six would report the opposite ranking. At $\alpha{=}0.5$ the composition is
 statistically unchanged while total variance shrinks by about an order of magnitude. We

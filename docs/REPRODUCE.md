@@ -40,12 +40,21 @@ Original Linux Docker pin was **2026-09-20** `python:3.12-slim-bookworm` (`linux
   `statsmodels==0.14.1`, `pandas==2.2.0`, `torch==2.2.0`,
   `transformers==4.45.2`, `peft==0.10.0`, `datasets==2.18.0`,
   `evaluate==0.4.1`, `matplotlib==3.8.0`, `pytest==8.3.5`
-- `pytest -q`: **109 passed**
+- `pytest -q`: **113 passed**
 - `verify_varpart.py` over the four production grids: **51/51 claims** (exit 0)
 
 **macOS was not used for the analysis path.** Local macOS installs may fail or
 segfault on the pinned NumPy/OpenBLAS wheels; use Linux (Docker is fine) to
 reproduce analysis and tests.
+
+### Manuscript PDF
+
+The committed `manuscript/main.pdf` is the submission PDF. To rebuild it from
+source, download the official IEEE Access LaTeX template from
+[ieeeaccess.ieee.org](https://ieeeaccess.ieee.org) and copy its `t1*` font files
+(`.pfb`, `.tfm`, `.fd`, `.map`) into `manuscript/`. Those fonts are IEEE-licensed
+for preparing Access papers and are not redistributed in this repository. Then
+from `manuscript/` run `pdflatex`, `bibtex`, `pdflatex`, `pdflatex`.
 
 ### Numerical reproducibility
 

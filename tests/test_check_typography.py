@@ -5,8 +5,10 @@ from __future__ import annotations
 from pathlib import Path
 
 from scripts.check_typography import (
+    REQUIRED_ACKNOWLEDGMENT,
     abstract_word_count,
     check_abstract_word_count,
+    check_acknowledgment,
     check_float_citations,
     check_latex_em_dash,
 )
@@ -67,3 +69,18 @@ def test_float_citation_flags_unreferenced_label(tmp_path: Path):
     )
     hits = check_float_citations([orphan])
     assert any("fig:orphan" in h for h in hits)
+
+
+def test_acknowledgment_requires_verbatim_paragraph():
+    good = (
+        r"\section*{Acknowledgment}" + "\n" + REQUIRED_ACKNOWLEDGMENT + "\n"
+    )
+    assert check_acknowledgment(Path("manuscript/main.tex"), good) == []
+    bad = r"\section*{Acknowledgment}" + "\nOld AI wording.\n"
+    assert check_acknowledgment(Path("manuscript/main.tex"), bad)
+
+
+def test_acknowledgment_skips_non_main():
+    assert (
+        check_acknowledgment(Path("sections/01_introduction.tex"), "no ack") == []
+    )

@@ -36,7 +36,11 @@ train[3000:3500]. Design size: 204 production cells.
 - `results/`: run metadata and holdout JSON (no adapter weights)
 - `analysis/`: paper CSVs and `claims.csv`
 - `figures/`: manuscript figures
-- `manuscript/`: IEEE Access LaTeX source and PDF
+- `manuscript/`: IEEE Access LaTeX source and PDF. Rebuilding the PDF needs the
+  official IEEE Access LaTeX template fonts (Formata, Times LT, Giovanni), which
+  are not redistributed here; download the template from
+  [ieeeaccess.ieee.org](https://ieeeaccess.ieee.org) and copy its `t1*` font
+  files into `manuscript/`.
 - `docs/`: analysis plan, scope, decisions, provenance, reproduce guide, changelog
 - `tests/`: unit and integration tests for the training path
 

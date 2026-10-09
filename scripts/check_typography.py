@@ -140,6 +140,28 @@ def check_float_citations(tex_files: list[Path]) -> list[str]:
     return hits
 
 
+REQUIRED_ACKNOWLEDGMENT = (
+    "The author used Claude (Anthropic) for drafting support and language editing "
+    "across all sections of the manuscript and for checking the text against the "
+    "analysis outputs. The author used the AI coding assistant Cursor to implement "
+    "the experiment and analysis scripts, including the scripts that generate the "
+    "figures and tables from the experimental results. The author designed the "
+    "study, verified all code and results, and is responsible for all technical "
+    "content, analysis, and interpretations."
+)
+
+
+def check_acknowledgment(path: Path, text: str) -> list[str]:
+    """Require the IEEE AI-policy Acknowledgment paragraph in main.tex."""
+    if path.name != "main.tex":
+        return []
+    if REQUIRED_ACKNOWLEDGMENT not in text:
+        return [f"{path}: Acknowledgment AI-disclosure paragraph missing or altered"]
+    if r"\section*{Acknowledgment}" not in text:
+        return [f"{path}: \\section*{{Acknowledgment}} missing"]
+    return []
+
+
 def check_file(path: Path) -> list[str]:
     text = path.read_text(encoding="utf-8")
     hits: list[str] = []
@@ -154,6 +176,7 @@ def check_file(path: Path) -> list[str]:
             line_no = text[: m.start()].count("\n") + 1
             hits.append(f"{path}:{line_no}: banned sentence start {m.group(1)!r}")
     hits.extend(check_abstract_word_count(path, text))
+    hits.extend(check_acknowledgment(path, text))
     return hits
 
 
