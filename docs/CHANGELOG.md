@@ -112,3 +112,8 @@ Baseline test count at v0-import: 28 passed
   trailers only; trees identical). Push annotated `archive/*` tags for original
   freeze, release, and pre-rewrite-main commits; document the mapping in
   `docs/PROVENANCE.md`. No release.
+- C1: remove internal planning/status files, process logs, regenerable dumps, and
+  campaign watchers (including a rented-instance address at tip); rename
+  reproducibility scripts (`check_manuscript_precision.py`, `verify_linux.sh`,
+  `verify_docker.sh`, `reeval_llama_holdouts.sh`); prune all remote branches except
+  `main`; fix README map and REPRODUCE checkout/claim counts. No tag.

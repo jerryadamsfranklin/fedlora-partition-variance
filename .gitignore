@@ -44,6 +44,7 @@ __pycache__/
 .ruff_cache/
 .tox/
 .venv/
+.venv_*/
 venv/
 
 # Jupyter
@@ -148,3 +149,6 @@ scripts/phase_g_*.py
 scripts/start_n8_watcher.sh
 scripts/vast_hang_watchdog.sh
 scripts/vast_launch_shard.sh
+
+# Verify / local process output
+logs/verify/

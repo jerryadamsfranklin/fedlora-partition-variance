@@ -324,7 +324,7 @@ def run_preview(
     else:
         p(f"PASS: minimum active_clients={min_active} >= {MIN_ACTIVE}")
 
-    preview_path = REPO_ROOT / "docs" / "partition_preview.txt"
+    preview_path = REPO_ROOT / "logs" / "partition_preview.txt"
     body = out.getvalue()
     if append and preview_path.is_file():
         prev = preview_path.read_text(encoding="utf-8")
@@ -350,7 +350,7 @@ def main() -> None:
     parser.add_argument(
         "--append",
         action="store_true",
-        help="Append to docs/partition_preview.txt instead of overwriting",
+        help="Append to logs/partition_preview.txt instead of overwriting",
     )
     args = parser.parse_args()
     seeds = _parse_seeds(args.seeds)

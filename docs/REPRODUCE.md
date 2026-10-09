@@ -16,7 +16,7 @@ pinned wheels but `statistics.stdev` differs by a ULP on some summary rows, so
 ```bash
 git clone https://github.com/jerryadamsfranklin/fedlora-partition-variance.git
 cd fedlora-partition-variance
-git checkout v0.9.2   # or a later archive tag
+git checkout v1.1.0   # the submission snapshot
 python3.12 -m venv .venv
 source .venv/bin/activate
 pip install -U pip
@@ -31,8 +31,8 @@ Set `HF_TOKEN` in the environment for gated model downloads. Never commit it.
 
 ### Verified environment
 
-The pinned stack was installed and executed on **2026-09-20** inside Docker
-`python:3.12-slim-bookworm` (`linux/amd64`):
+The pinned stack was re-verified on **2026-10-09** (C1 clean-clone / local Python 3.12).
+Original Linux Docker pin was **2026-09-20** `python:3.12-slim-bookworm` (`linux/amd64`):
 
 - OS: Linux x86_64 `6.12.54-linuxkit`
 - Python: 3.12.14
@@ -40,8 +40,8 @@ The pinned stack was installed and executed on **2026-09-20** inside Docker
   `statsmodels==0.14.1`, `pandas==2.2.0`, `torch==2.2.0`,
   `transformers==4.45.2`, `peft==0.10.0`, `datasets==2.18.0`,
   `evaluate==0.4.1`, `matplotlib==3.8.0`, `pytest==8.3.5`
-- `pytest -q`: **84 passed**
-- `verify_varpart.py` over the four production grids: **33/33 claims** (exit 0)
+- `pytest -q`: **107 passed**
+- `verify_varpart.py` over the four production grids: **51/51 claims** (exit 0)
 
 **macOS was not used for the analysis path.** Local macOS installs may fail or
 segfault on the pinned NumPy/OpenBLAS wheels; use Linux (Docker is fine) to
@@ -51,7 +51,7 @@ reproduce analysis and tests.
 
 Under the pinned Linux stack, regenerating `analysis/` from the 204-cell
 `runs.csv` reproduces every manuscript-cited value to the number of digits
-printed in the paper (`scripts/ops/o12_manuscript_precision.py` and V9).
+printed in the paper (`scripts/check_manuscript_precision.py` and V9).
 Last-digit (ULP) differences in raw CSV floats across OpenBLAS builds are
 expected and are **not** treated as archive updates. The verifier checks claim
 values rather than byte identity of CSV files. Keep the committed

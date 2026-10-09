@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Campaign tooling (n6 re-eval batch); not part of the analysis path.
+# Re-eval anomalous LLaMA holdouts; not part of the analysis path.
 # Re-eval anomalous l3 prod_v2 holdouts on torch 2.2.0 host.
 set -u
 cd /workspace/fedlora-partition-variance
@@ -10,7 +10,7 @@ export HUGGING_FACE_HUB_TOKEN="$HF_TOKEN"
 export HF_HOME=/workspace/.hf_home
 export TOKENIZERS_PARALLELISM=false
 
-LIST=/tmp/n6_anomalous.txt
+LIST=/tmp/llama_reeval_anomalous.txt
 n=0
 total=$(grep -c . "$LIST")
 while read -r dir; do
@@ -28,7 +28,7 @@ while read -r dir; do
     --start-index 3000 \
     --num-examples 500 \
     --max-seq-length 256 \
-    --summary-csv analysis/n6_reeval_batch.csv
+    --summary-csv logs/verify/llama_holdout_reeval_batch.csv
   python3 - "$hold" <<'PY'
 import json, sys
 r = json.load(open(sys.argv[1]))["row"]

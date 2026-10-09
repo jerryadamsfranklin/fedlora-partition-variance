@@ -27,19 +27,18 @@ train[3000:3500]. Design size: 204 production cells.
 
 ## Repository map
 
-- `src/` — federated LoRA training and aggregation (imported training path)
-- `scripts/` — grid launcher, holdout eval, analysis, verifier; `scripts/ops/`
-  holds campaign tooling
-- `config/` — base and per-cell experiment configs
-- `grids/` — production and smoke grid YAMLs (grids pin freeze tags)
-- `results/` — run metadata and holdout JSON (no adapter weights)
-- `analysis/` — paper CSVs and `claims.csv`; process logs under `analysis/logs/`
-- `figures/` — manuscript figures
-- `manuscript/` — IEEE Access LaTeX source and PDF
-- `docs/` — analysis plan, scope, decisions, provenance, reproduce guide,
-  changelog; partition preview and merged-config dumps
-- `tests/` — unit and integration tests for the training path
-- `literature/` — local citation notes
+- `src/`: federated LoRA training and aggregation (imported training path)
+- `scripts/`: launcher, holdout evaluation, analysis, verifier, and reproducibility checks
+- `config/`: base and per-cell experiment configs
+- `grids/`: production and smoke grid YAMLs (grids pin freeze tags); the `*_n8_m*.yaml`
+  files are the per-machine grids used to retrain 54 cells on the pinned stack
+  (manuscript Section V-D)
+- `results/`: run metadata and holdout JSON (no adapter weights)
+- `analysis/`: paper CSVs and `claims.csv`
+- `figures/`: manuscript figures
+- `manuscript/`: IEEE Access LaTeX source and PDF
+- `docs/`: analysis plan, scope, decisions, provenance, reproduce guide, changelog
+- `tests/`: unit and integration tests for the training path
 
 ## Reproducing
 
@@ -66,10 +65,10 @@ present.
 
 ## Provenance
 
-- `freeze-v1` — 120-cell TinyLlama + LLaMA core design (`prod_v1`)
-- `freeze-v2` — holdout-eval pin used by production cells
-- `freeze-v3.1` — 84-cell addendum (TinyLlama alpha 0.5 and LLaMA seeds
-  2007–2010) after stack-pin hardening (`prod_v2`)
+- `freeze-v1` :  120-cell TinyLlama + LLaMA core design (`prod_v1`)
+- `freeze-v2` :  holdout-eval pin used by production cells
+- `freeze-v3.1` :  84-cell addendum (TinyLlama alpha 0.5 and LLaMA seeds
+  2007-2010) after stack-pin hardening (`prod_v2`)
 
 The training path under `src/` and `scripts/run_experiment.py` is byte-identical
 across these freezes (verifier check V12).
@@ -92,4 +91,4 @@ Software concept DOI (resolves to the latest archive version):
 
 ## License
 
-MIT — see [`LICENSE`](LICENSE).
+MIT :  see [`LICENSE`](LICENSE).
