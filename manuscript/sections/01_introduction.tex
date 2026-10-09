@@ -1,7 +1,7 @@
 \section{Introduction}
 \label{sec:intro}
 
-Federated LoRA methods for instruction tuning report method differences that are often small relative to the noise in a single evaluation. FFA-LoRA~\cite{sun2024ffalora} publishes means over $20$ runs with standard deviations; in the non-private setting the LoRA standard deviation on MNLI-matched ($10.7$) exceeds the mean gap to FFA-LoRA ($3.02$ points). FLoRA~\cite{wang2024flora} compares to FedIT~\cite{zhang2024fedit} with single reported MMLU and MT-bench values after $1$ to $3$ communication rounds, without reported seed replication, including a Llama/Alpaca MMLU margin of $0.44$ points that the paper itself calls ``marginal.'' Those practices establish the motivating fact: published federated LoRA contrasts can sit inside, or only slightly above, ordinary run-to-run variation. What they do not establish is how much of that variation comes from the non-IID partition draw itself.
+Federated LoRA methods for instruction tuning report method differences that are often small relative to the noise in a single evaluation. FFA-LoRA~\cite{sun2024ffalora} publishes means over $20$ runs with standard deviations; in the non-private setting the LoRA standard deviation on MNLI-matched ($10.7$) exceeds the mean gap to FFA-LoRA ($3.02$ points). FLoRA~\cite{wang2024flora} compares to FedIT~\cite{zhang2024fedit} with single reported MMLU~\cite{hendrycks2021mmlu} and MT-bench~\cite{zheng2023judging} values after $1$ to $3$ communication rounds, without reported seed replication, including a Llama/Alpaca MMLU margin of $0.44$ points that the paper itself calls ``marginal.'' Those practices establish the motivating fact: published federated LoRA contrasts can sit inside, or only slightly above, ordinary run-to-run variation. What they do not establish is how much of that variation comes from the non-IID partition draw itself.
 
 In Dirichlet or category-based federated simulations, the ``non-IID'' condition is
 treated as a setting rather than a source of variance in the evaluations examined here:
@@ -23,7 +23,7 @@ The design extension adds a second heterogeneity level and a larger partition co
 test whether the RQ1 composition and the RQ2 ranking behavior hold beyond the originally
 registered setting.
 
-\paragraph{Advance over the state of the art.}
+\subsection{Advance over the state of the art}
 Prior federated LoRA evaluations either report multi-seed means without separating the
 partition draw from the training seed, or treat the non-IID split as a fixed setting rather
 than a variance component, and benchmarks published in 2025 and
@@ -32,7 +32,7 @@ Adjacent work decomposes variance over training or unlearning seeds and over ben
 variants~\cite{bouthillier2021accounting,agarwal2021precipice,lanyon2025unlearningseeds,chanin2026saebench},
 but not over the federated partition draw for LoRA instruction tuning. This paper's advance is to isolate that draw in a pre-registered design, quantify its share relative to interaction and residual noise, and turn the measurement into an explicit reporting protocol that states how many draws were used, that comparisons were paired on those draws, and what minimum difference the design can detect. The same design also shows the cost of too few draws: extending LLaMA-3.2-3B from six to ten partitions reverses the FedIT--FLoRA top-two order and grows the interaction component by a factor of $2.66$.
 
-\paragraph{Contributions.}
+\subsection{Contributions}
 (1)~A pre-registered $204$-run design at two scales, registered in two stages, that separates partition seeds from training seeds under a frozen federation and LoRA configuration. (2)~A method-of-moments variance decomposition with cluster-bootstrap intervals, showing on TinyLlama that partition and interaction shares dominate the residual ($0.508$ and $0.469$ versus $0.023$), while on LLaMA-3.2-3B at $p{=}10$ the interaction dominates ($0.992$) and the partition main-effect interval includes zero after truncation. (3)~A ranking-stability analysis conditioned on effect size: the near-tied FedIT--FLoRA pair flips under few draws (three-draw paired flip probability $0.377$ on TinyLlama and $0.493$ on LLaMA-3.2-3B), whereas gaps of about $0.023$ to $0.031$ never reverse in a single draw. (4)~A draws-needed table for pre-registered deltas and for the observed gaps, including $206$ and more than $1000$ paired draws for the near-tie at the two scales, and the observation that where the interaction dominates, pairing on partitions buys little. (5)~The Partition-Draw Reporting Protocol as three numbered steps (partition-draw count and seeds; paired comparisons; detectable minimum difference).
 
 Section~\ref{sec:related} situates the work against benchmark-variance studies, non-IID simulation practice, and federated LoRA evaluation. Section~\ref{sec:setup} states the design and variance model. Section~\ref{sec:results} reports the measurements. Section~\ref{sec:discussion} gives reporting recommendations and limitations. Section~\ref{sec:conclusion} concludes.

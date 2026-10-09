@@ -1,30 +1,20 @@
 # STATUS
 
-Last updated: 8 Oct 2026
+Last updated: 9 Oct 2026
 
 Replace this file in the Claude Project whenever the state changes. Keep only one copy.
 This file covers one paper: the partition-variance measurement study going to IEEE Access.
 
 ## Current phase
 
-P11 merged. I7 distinguish-scales clause restored; LLaMA p=10 and TinyLlama α=0.5 pairwise
-tables committed; Holm contrasts registered in V9 (51/51). Awaiting Jerry's read-through
-of the P11 PDF. No release work until Jerry says so.
+P12 merged (heading hierarchy + method citations; 38 refs). Awaiting Jerry's read-through.
+No release work until Jerry says so.
 
 ## Venue
 
 IEEE Access, single-anonymized. Binary decisions, about 20% acceptance. Stage 3 desk screen
 is the dominant risk. APC $2,160. No page limit. Abstract 150 to 250 words. Practical
 submission cutoff December 2026 for a March 2027 filing.
-
-## Review method (agreed 8 Oct)
-
-- No "signed off" or "ready" claims; each review states what was checked and what was not
-- Final pass uses a fixed checklist: every number vs data, internal consistency,
-  cross-references, claims about other papers vs sources, venue rules, mandates, every
-  rendered page
-- Stopping rule: after the final pass, only errors of fact, internal contradictions, or
-  venue-rule violations reopen the manuscript
 
 ## Release state
 
@@ -39,10 +29,10 @@ submission cutoff December 2026 for a March 2027 filing.
 
 ## Next
 
-1. Jerry's read-through of the P11 PDF
+1. Jerry's read-through of the P12 PDF
 2. On Jerry's word: R-release v1.1.0, then submit via ScholarOne with the sha256-matched
    PDF; plain-text abstract; cover letter names cited preprint arXiv:2609.13512 as a
-   separate study with no reused results
+   separate study with no reused results (franklin2026adaptive is ref [32])
 3. Mark v1.0.0 superseded; record the v1.1.0 DOI and manuscript ID; revoke campaign tokens
 
 ## Open items

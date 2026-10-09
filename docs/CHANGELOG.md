@@ -105,3 +105,6 @@ Baseline test count at v0-import: 28 passed
 - P11: restore I7 ``cannot distinguish the two scales'' clause; add
   `method_pairwise_l3_p10.csv` and `method_pairwise_tl_a05.csv`; register Holm
   contrasts in V9. No tag.
+- P12: promote intro/Declarations headings; cite MMLU, MT-Bench, Dirichlet,
+  FedAvg, Searle, Field, MixedLM, Wilson, Lin, TinyLlama, Llama~3; seven new
+  refs (31→38). No tag.

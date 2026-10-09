@@ -506,3 +506,14 @@ CHECKS
 Y1  Word diff against the 9e0e9ec0 PDF: exactly the P11-1 change plus reflow.
 Y2  All gates pass (verify, typography, G1-G3, abstract, 31 refs, page-11 bbox).
 Y3  Report the new PDF sha256. Commit, merge, push. No tag.
+
+## Phase P12: heading hierarchy and method citations (NO tag, NO release, NO Zenodo)
+
+Branch: p12-cites from main at 709d4f0. Add to docs/IMPLEMENTATION_PLAN.md first.
+Base PDF for diffing: sha256 34f27884f7824d6da69d35e7232fb152e0851b9143e90ec08d5f698812ab287b
+
+H1--H2  Introduction paragraphs → subsections; Declarations paragraphs → subsection*.
+Bib: add Searle, Field, Seabold, Wilson, Lin, Hendrycks, Zheng. Citations C1--C8.
+Confirm MixedLM / cluster bootstrap / Wilson / Jensen--Shannon in analysis scripts first.
+
+CHECKS Z1--Z4; commit, merge, push. No tag.
