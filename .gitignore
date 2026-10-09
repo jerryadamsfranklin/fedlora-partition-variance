@@ -122,7 +122,7 @@ analysis/*_scratch_*.csv
 analysis/*.csv.bak
 
 # Local O11 Linux runner tooling
-.o11_linux/
+.linux_verify_local/
 .tmp_o10/
 
 # Local N6/N8/N9 ops leftovers (not selected by build_runs_table / verify)
