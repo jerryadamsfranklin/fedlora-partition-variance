@@ -517,3 +517,39 @@ Bib: add Searle, Field, Seabold, Wilson, Lin, Hendrycks, Zheng. Citations C1--C8
 Confirm MixedLM / cluster bootstrap / Wilson / Jensen--Shannon in analysis scripts first.
 
 CHECKS Z1--Z4; commit, merge, push. No tag.
+
+## Phase P13: author photo + reference [5] capitalization (NO tag, NO release)
+
+Branch: p13-photo from main at the P12 merge. Add to docs/IMPLEMENTATION_PLAN.md first.
+Base PDF for diffing: sha256 7b4fd5fe91e9daac13382793c3db2cdb16fab602b1fba8d44f5e7f34d4e3a434
+
+PHOTO
+P13-1  Jerry provides the source photo (do NOT commit the original). From it, produce
+       manuscript/frank.jpg: convert RGBA -> RGB on a white background, crop to exactly
+       4:5 if needed (keep head and shoulders centred), resize to 600 x 750 px (1 x 1.25 in
+       at 600 dpi), sRGB, JPEG quality 92. Strip ALL metadata (EXIF, XMP, ICC beyond sRGB).
+       Verify with exiftool or PIL that no EXIF/XMP/GPS remains; report the output.
+       File name follows the IEEE Access template rule (first five letters of surname).
+P13-2  main.tex: replace
+         \begin{IEEEbiographynophoto}{Jerry Adams Franklin}
+       with
+         \begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{frank.jpg}}]{Jerry Adams Franklin}
+       and the matching \end{IEEEbiographynophoto} with \end{IEEEbiography}.
+       Keep the existing \vspace{0pt plus -1fil} immediately before it. Biography text
+       unchanged.
+P13-3  .gitignore: add common raw-photo patterns (*.heic, *_original.*) so no source photo
+       is ever committed. Only manuscript/frank.jpg is tracked.
+
+BIB
+P13-4  refs.bib zheng2023judging title ->
+       {Judging {LLM}-as-a-Judge with {MT-Bench} and {Chatbot Arena}}
+
+CHECKS (stop on any failure)
+Q1  Word diff against 7b4fd5fe: only reference [5]'s title, plus layout movement on the
+    last page.
+Q2  Rendered last page: photo at 1 x 1.25 in, left of the biography text, not clipped,
+    not overlapping references; biography starts within 72 pt of the last reference
+    (bbox); end mark after it. Report the page count.
+Q3  pdfimages -list on the PDF: the photo's effective resolution >= 300 ppi.
+Q4  All gates pass (verify 51/51, typography, G1-G3, abstract, 38 refs).
+Q5  Report the new PDF sha256. Commit, merge, push. No tag.

@@ -17,6 +17,15 @@ id_rsa.pub
 .netrc
 netrc
 
+# Raw author photos (only the stripped manuscript/frank.jpg is tracked)
+*.heic
+*.HEIC
+*_original.*
+*_original
+*.orig.jpg
+*.orig.jpeg
+*.orig.png
+
 # Optional local overrides that may contain tokens or paths
 config/local_config.yaml
 config/*local*.yaml
