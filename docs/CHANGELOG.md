@@ -24,7 +24,7 @@ Baseline test count at v0-import: 28 passed
   train[0:3000] label_skew alpha=0.1, seeds 2001 to 2010.
 - C addendum: effective clients and discarded trailing samples (optimizer steps
   only on complete accumulation blocks); pre-registered in I6 and limitations.
-- D: Mac smoke tests (docs/smoke_report.md); classify orphan run folders in
+- D: Mac smoke tests (smoke report not retained); classify orphan run folders in
   run_grid/grid_status; TinyLlama per-client upload 9,011,200 bytes (FedIT/FLoRA;
   FFA upload same, download B-only 3,244,032).
 - D fix: shard by (het, data_seed, run_seed) group so all methods share a GPU;
@@ -121,3 +121,6 @@ Baseline test count at v0-import: 28 passed
 - C2: add gitignored `.internal/` for local planning logs; fix dangling
   references after C1 (DECISIONS append for removed planning paths). Manuscript
   and PDF text contain no removed-path hits. No tag.
+- C3: V12 requires empty training-path diff freeze-v1..freeze-v3.1 (manuscript
+  Section III); unit tests for the check; PROVENANCE preprint ref [32]; README
+  provenance wording and spacing; REPRODUCE/CHANGELOG nits. No tag.

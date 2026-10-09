@@ -65,13 +65,13 @@ present.
 
 ## Provenance
 
-- `freeze-v1` :  120-cell TinyLlama + LLaMA core design (`prod_v1`)
-- `freeze-v2` :  holdout-eval pin used by production cells
-- `freeze-v3.1` :  84-cell addendum (TinyLlama alpha 0.5 and LLaMA seeds
+- `freeze-v1`: 120-cell TinyLlama + LLaMA core design (`prod_v1`)
+- `freeze-v2`: holdout-eval pin used by production cells
+- `freeze-v3.1`: 84-cell addendum (TinyLlama alpha 0.5 and LLaMA seeds
   2007-2010) after stack-pin hardening (`prod_v2`)
 
 The training path under `src/` and `scripts/run_experiment.py` is byte-identical
-across these freezes (verifier check V12).
+across these freezes (verifier check V12, freeze-v1 through freeze-v3.1).
 
 ## Inherited code
 
@@ -91,4 +91,4 @@ Software concept DOI (resolves to the latest archive version):
 
 ## License
 
-MIT :  see [`LICENSE`](LICENSE).
+MIT: see [`LICENSE`](LICENSE).

@@ -31,7 +31,7 @@ Set `HF_TOKEN` in the environment for gated model downloads. Never commit it.
 
 ### Verified environment
 
-The pinned stack was re-verified on **2026-10-09** (C1 clean-clone / local Python 3.12).
+The pinned stack was re-verified on **2026-10-09** (clean clone, Python 3.12).
 Original Linux Docker pin was **2026-09-20** `python:3.12-slim-bookworm` (`linux/amd64`):
 
 - OS: Linux x86_64 `6.12.54-linuxkit`
@@ -40,7 +40,7 @@ Original Linux Docker pin was **2026-09-20** `python:3.12-slim-bookworm` (`linux
   `statsmodels==0.14.1`, `pandas==2.2.0`, `torch==2.2.0`,
   `transformers==4.45.2`, `peft==0.10.0`, `datasets==2.18.0`,
   `evaluate==0.4.1`, `matplotlib==3.8.0`, `pytest==8.3.5`
-- `pytest -q`: **107 passed**
+- `pytest -q`: **109 passed**
 - `verify_varpart.py` over the four production grids: **51/51 claims** (exit 0)
 
 **macOS was not used for the analysis path.** Local macOS installs may fail or

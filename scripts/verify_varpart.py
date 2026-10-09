@@ -1609,27 +1609,37 @@ def v11() -> CheckResult:
     return r
 
 
-def v12() -> CheckResult:
-    """Training path unchanged freeze-v1..freeze-v3; eval pinned at freeze-v2 until freeze-v3.1 TL fp32 hotfix."""
-    r = CheckResult("V12")
+def _git_tag_exists(tag: str) -> bool:
     try:
         subprocess.check_output(
-            ["git", "rev-parse", "--verify", "freeze-v3"],
+            ["git", "rev-parse", "--verify", tag],
             cwd=str(REPO_ROOT),
             stderr=subprocess.DEVNULL,
         )
+        return True
     except subprocess.CalledProcessError:
+        return False
+
+
+def _git_diff_name_only(a: str, b: str, *paths: str) -> str:
+    """Return name-only diff between tags for the given paths (empty if identical)."""
+    return subprocess.check_output(
+        ["git", "diff", "--name-only", f"{a}..{b}", "--", *paths],
+        cwd=str(REPO_ROOT),
+        text=True,
+    ).strip()
+
+
+def v12() -> CheckResult:
+    """Training path unchanged freeze-v1..freeze-v3; eval pinned at freeze-v2 until freeze-v3.1 TL fp32 hotfix."""
+    r = CheckResult("V12")
+    if not _git_tag_exists("freeze-v3"):
         r.fail("freeze-v3 tag missing; tag after N1-N4 before launching prod_v2")
         return r
 
-    def _diff(a: str, b: str, *paths: str) -> str:
-        return subprocess.check_output(
-            ["git", "diff", "--name-only", f"{a}..{b}", "--", *paths],
-            cwd=str(REPO_ROOT),
-            text=True,
-        ).strip()
-
-    train_diff = _diff("freeze-v1", "freeze-v3", "src", "scripts/run_experiment.py")
+    train_diff = _git_diff_name_only(
+        "freeze-v1", "freeze-v3", "src", "scripts/run_experiment.py"
+    )
     if train_diff:
         r.fail(
             "training path changed freeze-v1..freeze-v3; prod_v2 cannot pool with prod_v1:\n"
@@ -1638,7 +1648,7 @@ def v12() -> CheckResult:
     else:
         r.note("training path unchanged freeze-v1..freeze-v3 (src, run_experiment.py)")
 
-    eval_diff = _diff(
+    eval_diff = _git_diff_name_only(
         "freeze-v2", "freeze-v3", "scripts/evaluate_instruction_holdout.py"
     )
     if eval_diff:
@@ -1653,17 +1663,9 @@ def v12() -> CheckResult:
         )
 
     # Optional freeze-v3.1: TinyLlama CUDA holdout stays float32 (V7 pooling).
-    try:
-        subprocess.check_output(
-            ["git", "rev-parse", "--verify", "freeze-v3.1"],
-            cwd=str(REPO_ROOT),
-            stderr=subprocess.DEVNULL,
-        )
-        has_v31 = True
-    except subprocess.CalledProcessError:
-        has_v31 = False
+    has_v31 = _git_tag_exists("freeze-v3.1")
     if has_v31:
-        train_v31 = _diff(
+        train_v31 = _git_diff_name_only(
             "freeze-v3", "freeze-v3.1", "src", "scripts/run_experiment.py"
         )
         if train_v31:
@@ -1671,7 +1673,22 @@ def v12() -> CheckResult:
                 "training path changed freeze-v3..freeze-v3.1; not allowed:\n"
                 f"{train_v31}"
             )
-        eval_v31 = _diff(
+        # Manuscript Section III: training path byte-identical freeze-v1..freeze-v3.1.
+        train_v1_v31 = _git_diff_name_only(
+            "freeze-v1", "freeze-v3.1", "src", "scripts/run_experiment.py"
+        )
+        if train_v1_v31:
+            r.fail(
+                "training path changed freeze-v1..freeze-v3.1; "
+                "manuscript byte-identity claim fails:\n"
+                f"{train_v1_v31}"
+            )
+        else:
+            r.note(
+                "training path unchanged freeze-v1..freeze-v3.1 "
+                "(src, run_experiment.py)"
+            )
+        eval_v31 = _git_diff_name_only(
             "freeze-v3",
             "freeze-v3.1",
             "scripts/evaluate_instruction_holdout.py",
