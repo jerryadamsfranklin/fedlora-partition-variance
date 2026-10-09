@@ -3,6 +3,8 @@
 Copy-paste commands for the public archive. Grids pin `freeze_tag`, and the
 production guard refuses to start a production run from an untagged or dirty
 tree, so a casual checkout cannot silently diverge from the archived cells.
+`run_meta.json` `git_commit` values are original pre-rewrite SHAs; see the mapping
+in `docs/PROVENANCE.md` (History rewrite of 9 Oct 2026).
 
 ## 1. Environment
 

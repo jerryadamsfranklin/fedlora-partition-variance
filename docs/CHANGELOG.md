@@ -108,3 +108,7 @@ Baseline test count at v0-import: 28 passed
 - P12: promote intro/Declarations headings; cite MMLU, MT-Bench, Dirichlet,
   FedAvg, Searle, Field, MixedLM, Wilson, Lin, TinyLlama, Llama~3; seven new
   refs (31→38). No tag.
+- C1a: accept the 9 Oct 2026 filter-branch rewrite (author identity and co-author
+  trailers only; trees identical). Push annotated `archive/*` tags for original
+  freeze, release, and pre-rewrite-main commits; document the mapping in
+  `docs/PROVENANCE.md`. No release.

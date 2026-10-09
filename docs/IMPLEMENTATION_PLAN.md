@@ -660,8 +660,8 @@ C1-11 docs/DECISIONS.md: APPEND one row (do not edit past rows):
       status files, process logs, regenerable dumps, and campaign monitoring scripts
       (one contained a rented-instance address); renamed reproducibility scripts; pruned
       all branches except main. Provenance is carried by tags (freeze-v1, freeze-v2,
-      freeze-v3, freeze-v3.1, release tags). History not rewritten | Public archive
-      clarity | phase C1; backup bundle held offline"
+      freeze-v3, freeze-v3.1, release tags, and archive/* originals from C1a).
+      | Public archive clarity | phase C1; backup bundle held offline"
       docs/CHANGELOG.md: add a matching entry.
 
 STEP 4: CHECKS (stop on any failure)
@@ -767,12 +767,12 @@ C1a-6 Documentation (one commit on main, normal push).
      (git filter-branch; author identity and co-author trailers only; trees identical,
      verified C1a-2). Originals preserved under archive/* tags; mapping in
      docs/PROVENANCE.md. No further rewrites."
-     The planned C1 wording "History not rewritten" must not be used anywhere.
+     Do not claim in any committed file that history was left unrewritten.
   c. REPRODUCE.md: one line stating that run_meta commit SHAs refer to original
      commits, with a pointer to the PROVENANCE mapping.
   d. CHANGELOG.md entry.
   CHECK C1a-6:
-   - grep -rn "History not rewritten" . returns nothing
+   - no committed file claims history was left unrewritten (search for that claim)
    - PROVENANCE table has one row per C1a-1 SHA
    - python scripts/verify_varpart.py exits 0, 51/51; print the V12 line verbatim
    - check_typography.py passes on changed docs (no em dashes)
