@@ -124,3 +124,5 @@ Baseline test count at v0-import: 28 passed
 - C3: V12 requires empty training-path diff freeze-v1..freeze-v3.1 (manuscript
   Section III); unit tests for the check; PROVENANCE preprint ref [32]; README
   provenance wording and spacing; REPRODUCE/CHANGELOG nits. No tag.
+- P15: abstract and introduction replace two prevalence wordings ("often" →
+  "can" / "can be"); PDF rebuilt. No tag.
