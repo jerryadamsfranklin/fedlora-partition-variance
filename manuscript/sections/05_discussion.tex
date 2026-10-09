@@ -22,7 +22,7 @@ interaction rather than through a component shared by all three methods, which i
 harder case for a few-draw evaluation because pairing cannot remove it.
 The cross-scale CIs on the
 partition share overlap, and the two scales differ in more than parameter count:
-TinyLlama-1.1B-Chat-v1.0 is instruction-tuned while LLaMA-3.2-3B is a base model, and the
+TinyLlama-1.1B-Chat-v1.0 is instruction-tuned~\cite{zhang2024tinyllama} while LLaMA-3.2-3B is a base model~\cite{grattafiori2024llama3}, and the
 base weights are float32 against float16. The design was therefore scoped to measure the
 partition component within each scale rather than to attribute differences between them,
 and the 3B IID floor is reported descriptively at $2$ degrees of freedom per method. The

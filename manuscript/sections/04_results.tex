@@ -32,7 +32,7 @@ The LLaMA grid was extended from six partition draws to ten after the pre-regist
 design completed, which permits a direct test of how many draws an evaluation needs.
 At $p{=}6$ the reference ranking placed FedIT ahead of FLoRA by $0.00201$; at $p{=}10$
 the order reverses, with FLoRA ahead by $0.00067$. Neither ordering is statistically
-distinguishable (Holm $p{=}0.83$ at $p{=}10$; the paired confidence interval
+distinguishable (Holm-adjusted~\cite{holm1979sequential} $p{=}0.83$ at $p{=}10$; the paired confidence interval
 $[-0.00622, +0.00757]$ contains zero). The interaction component also grows from
 $\hat\sigma^2_{PM}{=}1.11{\times}10^{-5}$ at $p{=}6$ to $2.94{\times}10^{-5}$ at
 $p{=}10$, a factor of $2.66$, while the partition component truncates at zero
@@ -69,7 +69,7 @@ report the 3B IID floor descriptively and do not read either ratio below one as 
 that $\alpha{=}0.1$ is quieter than IID.
 
 \subsection{Ranking stability}
-The reference ranking at $\alpha{=}0.1$ orders methods by mean held-out loss over all cells: TinyLlama ranks FLoRA, FedIT, then FFA-LoRA; LLaMA-3.2-3B at $p{=}10$ ranks FLoRA, FedIT, then FFA-LoRA. Under the pre-registered paired protocol ($B{=}10{,}000$), the probability that the best method differs from this reference equals the probability that the full order differs (the two coincide because the only pair whose order changes is the top one; the third method is separated from both by about four (LLaMA-3.2-3B) to eight (TinyLlama) times the per-draw paired SD). On TinyLlama those probabilities are $0.555$, $0.406$, $0.377$, and $0.284$ for $k{\in}\{1,2,3,5\}$ (Wilson 95\% CI half-widths about $0.01$). On LLaMA-3.2-3B at $p{=}10$ they are $0.700$, $0.533$, and $0.493$ for
+The reference ranking at $\alpha{=}0.1$ orders methods by mean held-out loss over all cells: TinyLlama ranks FLoRA, FedIT, then FFA-LoRA; LLaMA-3.2-3B at $p{=}10$ ranks FLoRA, FedIT, then FFA-LoRA. Under the pre-registered paired protocol ($B{=}10{,}000$), the probability that the best method differs from this reference equals the probability that the full order differs (the two coincide because the only pair whose order changes is the top one; the third method is separated from both by about four (LLaMA-3.2-3B) to eight (TinyLlama) times the per-draw paired SD). On TinyLlama those probabilities are $0.555$, $0.406$, $0.377$, and $0.284$ for $k{\in}\{1,2,3,5\}$ (Wilson~\cite{wilson1927probable} 95\% CI half-widths about $0.01$). On LLaMA-3.2-3B at $p{=}10$ they are $0.700$, $0.533$, and $0.493$ for
 $k{\in}\{1,2,3\}$ (unpaired $0.599$, $0.528$, $0.483$), so a three-draw evaluation at
 3B is close to a coin flip on the top two. Unpaired probabilities are shown in Figure~\ref{fig:flip}; the paired protocol is primary.
 
@@ -113,7 +113,7 @@ At $\alpha{=}0.1$, TinyLlama means are FLoRA $1.6957$ (SD $0.0013$), FedIT $1.69
 \end{table*}
 
 \subsection{Partition statistics and communication}
-Among five exploratory Spearman correlations of partition-mean held-out loss with partition statistics, TinyLlama mean Jensen--Shannon divergence has $\rho{=}0.72$ ($p{=}0.019$, $n{=}10$). That association does not survive Holm correction across the five TinyLlama tests (Holm $p{=}0.093$) and does not replicate on LLaMA ($\rho{=}0.086$, $p{=}0.87$, $n{=}6$). Active clients vary only from 9 to 10 at $\alpha{=}0.1$ and show no reliable association ($\rho{=}0.35$, $p{=}0.32$ on TinyLlama; $\rho{=}0.13$, $p{=}0.80$ on LLaMA). We treat RQ4 as exploratory and do not build an argument on any single correlation.
+Among five exploratory Spearman correlations of partition-mean held-out loss with partition statistics, TinyLlama mean Jensen--Shannon divergence~\cite{lin1991divergence} has $\rho{=}0.72$ ($p{=}0.019$, $n{=}10$). That association does not survive Holm correction across the five TinyLlama tests (Holm $p{=}0.093$) and does not replicate on LLaMA ($\rho{=}0.086$, $p{=}0.87$, $n{=}6$). Active clients vary only from 9 to 10 at $\alpha{=}0.1$ and show no reliable association ($\rho{=}0.35$, $p{=}0.32$ on TinyLlama; $\rho{=}0.13$, $p{=}0.80$ on LLaMA). We treat RQ4 as exploratory and do not build an argument on any single correlation.
 
 Measured total communication matches the per-client payload constants of Section~\ref{sec:setup}, multiplied by active clients and rounds, exactly for all method--model pairs ($\max|\mathrm{error}|{=}0$). Across $\alpha{=}0.1$ partitions, TinyLlama totals range from $2320.3$ to $2578.1$~MB for FedIT and FLoRA and from $884.8$ to $983.1$~MB for FFA-LoRA; LLaMA ranges are $2362.5$ to $2625.0$~MB and $992.3$ to $1102.5$~MB. At $\alpha{=}0.5$, every TinyLlama partition has ten active clients, so communication is constant within method ($2578.1$~MB for FedIT/FLoRA; $983.1$~MB for FFA-LoRA). The FFA-LoRA range is lower because this implementation uploads $A$ and $B$ in the first round and $B$ alone thereafter, and downloads $B$ only (Section~\ref{sec:setup}); we report the values as measured within method and do not rank methods by bytes.
 
