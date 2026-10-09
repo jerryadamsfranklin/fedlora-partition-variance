@@ -152,3 +152,6 @@ scripts/vast_launch_shard.sh
 
 # Verify / local process output
 logs/verify/
+
+# Local planning (not public)
+.internal/

@@ -14,13 +14,13 @@ Baseline test count at v0-import: 28 passed
   Formatter test uses hard-coded strings from `client.py` (no FederatedClient
   construction).
 - B4: add `scripts/make_vp_configs.py` (12 `config/vp/*.yaml`),
-  `scripts/print_merged_config.py`, and `docs/merged_configs.txt`; list merge
+  `scripts/print_merged_config.py`, and `docs/merged_configs.txt` (dump later removed in C1); list merge
   replaces base `target_modules` with q_proj/v_proj.
 - B5: grids `grids/tl.yaml` and `grids/l3.yaml`, launcher `scripts/run_grid.py`,
   status tool `scripts/grid_status.py` (enumerate, shard, production guard).
 - B6: add `scripts/vast_setup.sh` for Vast.ai instance bootstrap (clone freeze-v1,
   deps, HF login, prefetch, pytest).
-- C: `scripts/inspect_partitions.py` and `docs/partition_preview.txt` for Dolly
+- C: `scripts/inspect_partitions.py` and `docs/partition_preview.txt` (dump later removed in C1) for Dolly
   train[0:3000] label_skew alpha=0.1, seeds 2001 to 2010.
 - C addendum: effective clients and discarded trailing samples (optimizer steps
   only on complete accumulation blocks); pre-registered in I6 and limitations.
@@ -51,7 +51,7 @@ Baseline test count at v0-import: 28 passed
   `wandb`/`seaborn`/`scikit-learn` from `requirements.txt`; V9 exports
   `analysis/claims.csv`; delete `docs/IJACSA_FORMAT_AND_SUBMISSION.md` and
   `manuscript/template/` (SAI zip + IJACSA copyright PDF); public STATUS;
-  move process logs to `analysis/logs/` and campaign scripts to `scripts/ops/`;
+  move process logs to `analysis/logs/` and campaign scripts to `scripts/ops/` (both later removed from the public tree in C1);
   rewrite README and add `docs/REPRODUCE.md`.
 - O11: Linux Docker verify of the pinned stack (`python:3.12-slim-bookworm`
   linux/amd64, 2026-09-20): 84 tests, full analysis over 204 cells,
@@ -68,9 +68,10 @@ Baseline test count at v0-import: 28 passed
   predate this pointer fix (and the O12 analysis fixes); tip tagged
   `ieee-access-submitted-final`. No new Zenodo release (code unchanged).
 - Docs cleanup: remove campaign scaffolding from the public tree
-  (`IMPLEMENTATION_PLAN.md`, `PHASE_N_RUNBOOK.md`, phase/smoke reports,
-  `STATUS.md`). Keep pre-registration and archive docs (`ANALYSIS_PLAN`,
-  `SCOPE`, `DECISIONS`, `PROVENANCE`, `REPRODUCE`, `CHANGELOG`).
+  (internal planning log `IMPLEMENTATION_PLAN.md` (not public),
+  `PHASE_N_RUNBOOK.md`, phase/smoke reports, `STATUS.md`). Keep
+  pre-registration and archive docs (`ANALYSIS_PLAN`, `SCOPE`, `DECISIONS`,
+  `PROVENANCE`, `REPRODUCE`, `CHANGELOG`).
 - P1: `scripts/check_typography.py` also flags LaTeX `---` em dashes in `.tex`
   files (comment lines skipped; `--` still allowed). Unit test added.
   Manuscript: Holm 1979 citation; bib/related-work accuracy; limitations
@@ -117,3 +118,6 @@ Baseline test count at v0-import: 28 passed
   reproducibility scripts (`check_manuscript_precision.py`, `verify_linux.sh`,
   `verify_docker.sh`, `reeval_llama_holdouts.sh`); prune all remote branches except
   `main`; fix README map and REPRODUCE checkout/claim counts. No tag.
+- C2: add gitignored `.internal/` for local planning logs; fix dangling
+  references after C1 (DECISIONS append for removed planning paths). Manuscript
+  and PDF text contain no removed-path hits. No tag.
