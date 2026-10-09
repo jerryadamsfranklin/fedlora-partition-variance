@@ -3,64 +3,60 @@
 Last updated: 9 Oct 2026
 
 Replace this file in the Claude Project whenever the state changes. Keep only one copy.
-This file covers one paper: the partition-variance measurement study going to IEEE Access.
 
 ## Current phase
 
-P13 merged (PDF sha256 85ac9764f82223d8f85fc3e90fb98d6147c298d392970c9981074d1eb1bcc0f2,
-11 pages, 38 references). Author photo `manuscript/frank.jpg` (600×750, metadata-
-stripped) and reference [5] Chatbot Arena capitalization. Next: R-release v1.1.0 on
-Jerry's word and ScholarOne submission.
+Phase C1 (repo cleanup, branch pruning) stopped at C1-2: main and tags were rewritten
+on 9 Oct with git filter-branch (author identity, co-author trailers). Phase C1a issued:
+accept the rewrite, prove trees identical, secret-scan, push archive/* tags for original
+commits, document the mapping, then resume C1. Release on hold until Jerry says "release".
 
 ## Venue
 
-IEEE Access, single-anonymized. Decisions: accept (minor edits permitted); reject with
-updates required (one resubmission, same reviewers); reject final. About 20% acceptance;
-about 4 weeks to decision, 4 to 6 weeks to publication. APC $2,160 billed after
-acceptance. Practical cutoff December 2026 for a March 2027 filing.
+IEEE Access only. Single-anonymized; Accept / Reject with updates (one resubmission) /
+Reject. Abstract 150 to 250 words. APC $2,160 billed after acceptance. Never dual-submit.
+Practical submission cutoff December 2026 for March 2027 filing.
 
-## APC (checked 9 Oct)
+## Done
 
-- Billed after acceptance via CCC/RightsLink; no stated deadline for discount requests
-- IEEE member 5%; member plus IEEE Society 20% ($432); NOT for Student or Graduate Student
-  members, so Jerry would need regular membership; join before the acceptance invoice
-- Low-income-country program does not apply (US)
-- Hardship: email apcinquiries@ieee.org after acceptance, before paying; no guarantee
+- All production runs on torch 2.2.0+cu121 RTX 4090; runs.csv 204 rows; V2 passes
+- Analysis per ANALYSIS_PLAN I1 to I10 (p=10 primary per I10); pairwise CSVs added
+- Manuscript final: main.pdf sha256 91ace178...5e22b4, 11 pages, 38 refs, abstract 241
+  words, preprint is ref [32]; bio, photo, AI disclosure, declarations done
+- Verifier 51/51 (V1 to V12, V9 claim map, bite-tested); layout gates G1 to G3;
+  typography checks; clean-clone gate (Python 3.12 venv) passes
+- All 38 references verified against primary sources; uncited claims fixed (P12)
+- Novelty search: no prior partition-vs-training-seed decomposition found
+- Zenodo concept DOI 10.5281/zenodo.22861074; CITATION.cff uses concept DOI
+- Backups of repo before C1: mirror and bundle (verified), backup/pre-author-rewrite-de20c25
 
-## Decisions (8 to 9 Oct)
+## Key results (from repo CSVs; V9 registered)
 
-- IEEE Access is the venue; TMLR is not the fallback
-- Author photo included at submission so no layout change is needed after acceptance;
-  the original photo is never committed, only the stripped 600 x 750 copy
-- Next paper: broader scope for a higher-tier venue; its own scope and approval
-
-## Submission package
-
-- PDF: sha256 85ac9764f82223d8f85fc3e90fb98d6147c298d392970c9981074d1eb1bcc0f2
-- Cover letter: preprint is reference [32]
-- Plain-text abstract (232 words source / ~241 PDF), keywords, title unchanged
-- R-release block: expected sha256 and base commit = the post-P13 PDF and merge commit
-
-## Release state
-
-- Concept DOI 10.5281/zenodo.22861074 (cited in the manuscript)
-- Versions: 22861075 (v0.9.1), 22862931 (v0.9.2), 23226559 (v1.0.0, premature). All
-  permanent; v1.0.0 tag not to be moved
-- v1.1.0 to be cut only on Jerry's word
+- l3 p=10 fedit vs flora: +0.00067, CI [-0.00622, +0.00757], Holm 0.830 (null)
+- l3 p=10 FFA contrasts: Holm 2.77e-6 and 6.08e-10
+- tl alpha 0.5 near-tie resolves: -0.00218, Holm 3.22e-6
 
 ## Next
 
-1. Jerry pastes R-release with sha256 85ac9764...; submit via ScholarOne; record the ID
-2. Jerry edits Zenodo record 23226559 description to "superseded"; revoke campaign tokens
-3. Decide on IEEE regular plus Computer Society membership before any acceptance invoice
+1. Jerry confirms the 9 Oct rewrite was his request, then Cursor runs C1a
+2. Review C1a-1c table and V12 line before any branch deletion
+3. Resume C1: prune to main only, file cleanup, README and REPRODUCE fixes, K1 to K8
+4. On "release": v1.1.0 from post-C1 main; verify PDF sha 91ace178
+5. Submit via ScholarOne: plain-text abstract, keywords, cover letter; record manuscript ID
 
 ## Open items
 
-- Attorney: IEEE Access and the scholarly-articles criterion
-- Three IJACSA project docs are obsolete and can be deleted
+- Revoke campaign GitHub and HF tokens (recommended now, not after submission)
+- Zenodo record 23226559 (v1.0.0, premature): mark superseded after v1.1.0
+- Website title inconsistency (Intel, Nokia, DCG titles) before submission
+- IEEE membership plus Society for APC discount, decide before acceptance invoice;
+  hardship request to apcinquiries@ieee.org only after acceptance
+- Attorney: Early Access as publication
 
-## Known residual risks (cannot be resolved by checking)
+## Standing rules
 
-- Stage 3 desk screen: a measurement plus protocol, not a method
-- Two scales, one dataset, one metric; the mechanistic argument in V-D addresses it
-- NeurIPS page ranges for FLoRA and FedLLM-Bench not independently confirmed
+- No tag, release, or Zenodo action without Jerry saying "release" (C1a archive tags
+  carry an explicit one-off authorization)
+- No further history rewrites, no force-push
+- Every change logged in docs/IMPLEMENTATION_PLAN.md as a phase with checks
+- Do not edit aggregator or training-loop code; v1.0.0 tag is not moved

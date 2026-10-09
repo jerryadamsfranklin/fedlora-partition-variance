@@ -582,3 +582,212 @@ B4  All gates pass: verify_varpart 51/51, G1 (no overfull hbox > 1pt), G2 (all c
 B5  git diff --stat touches only manuscript/main.tex, manuscript/main.pdf, and
     docs/IMPLEMENTATION_PLAN.md. Anything else, STOP.
 THEN commit, merge, push. Report the commit hash and the new PDF sha256. No tag.
+
+## Phase C1: repository cleanup and branch pruning (NO tag, NO release, NO Zenodo)
+
+Add to docs/IMPLEMENTATION_PLAN.md first (it is deleted at the end of this phase; the
+DECISIONS.md row below is the permanent record). Work on branch c1-cleanup from main.
+HARD RULES: do not touch anything under manuscript/; do not rebuild the PDF;
+manuscript/main.pdf must keep sha256
+91ace17843fa3b8cb7c8642221c820ea2c424d641e09727732f6186cec5e22b4.
+Do not edit src/, tests/, scripts/run_experiment.py, scripts/evaluate_instruction_holdout.py,
+results/, analysis/*.csv, config/, figures/. Do not rewrite git history. No force-push.
+
+STEP 0: BACKUP (before anything else)
+C1-0  Outside the repo: git clone --mirror <origin> ~/fedlora-backup-mirror-20261009 and
+      git -C <repo> bundle create ~/fedlora-backup-20261009.bundle --all
+      Verify the bundle (git bundle verify). Report both paths. Never delete these.
+
+STEP 1: BRANCH AND TAG AUDIT (report only; no deletions in this step)
+C1-1  List every remote branch and every tag with its commit hash.
+C1-2  Explain why p1-refs-tone ... p8-final and phase-c ... phase-o and
+      docs-phase-b-decision show 86 to 98 commits ahead of main. For each, report
+      git merge-base --is-ancestor <branch> main, and whether its tree content is in main
+      (e.g. squash merge). If main's history was rewritten or force-pushed at any point,
+      STOP and report what happened and when. Do not continue.
+C1-3  Confirm these tags exist on origin: freeze-v1, freeze-v2, freeze-v3, freeze-v3.1,
+      v0.9.0-n8-prep, v0.9.1, v0.9.2, v1.0.0. Confirm the commits recorded in every
+      results/**/run_meta.json (0812fcf, f3e773d, 7cff2a4) are reachable from a tag.
+C1-4  For each branch except main: git log --oneline <branch> --not main --tags. If any
+      such commit hash is cited in docs/DECISIONS.md, docs/CHANGELOG.md or
+      docs/PROVENANCE.md, create an annotated tag archive/<branch> on that branch tip
+      and push it, so the cited commit stays reachable. Report which were tagged.
+
+STEP 2: DELETE BRANCHES (only after Step 1 passes)
+C1-5  Delete these remote and local branches, keeping main only:
+      p14-bio p13-photo p12-cites p11-final p10-text p9-complete p8-final p7-polish
+      p6-regressions p5-presentation p4-abstract p3-iid-ratio p2-positioning
+      p1-refs-tone phase-o phase-n phase-j phase-i phase-h phase-d phase-c
+      docs-phase-b-decision
+      Do NOT delete any tag.
+
+STEP 3: FILE CLEANUP on c1-cleanup
+C1-6  git rm:
+        STATUS.md
+        docs/IMPLEMENTATION_PLAN.md
+        docs/merged_configs.txt
+        docs/partition_preview.txt
+        analysis/logs/              (entire directory)
+        scripts/watch_n8_loop.sh    (contains a rented-instance IP:port)
+        scripts/ops/watch_prod_v2_health.sh
+      First confirm with grep that no file in scripts/, src/, tests/ reads any of these
+      paths. If one does, STOP and report.
+C1-7  git mv (descriptive names) and update every reference to them:
+        scripts/ops/o12_manuscript_precision.py -> scripts/check_manuscript_precision.py
+        scripts/ops/o11_linux_verify.sh         -> scripts/verify_linux.sh
+        scripts/ops/o11_docker_run.sh           -> scripts/verify_docker.sh
+        scripts/ops/n6_reeval_batch.sh          -> scripts/reeval_llama_holdouts.sh
+      Change verify_linux.sh to write its logs to logs/verify/ (gitignored) instead of
+      analysis/logs/. Remove the now-empty scripts/ops/.
+C1-8  README.md:
+      - Repository map: delete the literature/ line (the folder does not exist); delete
+        "process logs under analysis/logs/"; delete "partition preview and merged-config
+        dumps"; describe scripts/ as launcher, holdout evaluation, analysis, verifier and
+        reproducibility checks.
+      - Add under grids/: "the *_n8_m*.yaml files are the per-machine grids used to
+        retrain 54 cells on the pinned stack (manuscript Section V-D)".
+      - Replace every em dash with a colon, comma or parentheses. No other content changes.
+C1-9  docs/REPRODUCE.md:
+      - "git checkout v0.9.2   # or a later archive tag" -> "git checkout v1.1.0   # the
+        submission snapshot"
+      - Update the verified-environment block: replace "33/33 claims" with the current
+        verify_varpart claim count and "84 passed" with the current pytest count, and add
+        the date these were re-run in C1-12.
+      - Update the precision-check reference to scripts/check_manuscript_precision.py.
+C1-10 .gitignore: add logs/ (if absent) and logs/verify/.
+C1-11 docs/DECISIONS.md: APPEND one row (do not edit past rows):
+      "9 Oct 2026 | Repository cleanup before submission: removed internal planning and
+      status files, process logs, regenerable dumps, and campaign monitoring scripts
+      (one contained a rented-instance address); renamed reproducibility scripts; pruned
+      all branches except main. Provenance is carried by tags (freeze-v1, freeze-v2,
+      freeze-v3, freeze-v3.1, release tags). History not rewritten | Public archive
+      clarity | phase C1; backup bundle held offline"
+      docs/CHANGELOG.md: add a matching entry.
+
+STEP 4: CHECKS (stop on any failure)
+K1  git diff --stat main...c1-cleanup shows nothing under manuscript/, src/, tests/,
+    results/, analysis/*.csv, config/, figures/. sha256 of manuscript/main.pdf equals
+    91ace178... .
+K2  grep across tracked files (excluding docs/DECISIONS.md and docs/CHANGELOG.md) finds
+    none of: IMPLEMENTATION_PLAN, STATUS.md, analysis/logs, partition_preview,
+    merged_configs, watch_n8_loop, watch_prod_v2_health, o11_, o12_, n6_reeval,
+    scripts/ops, literature/.
+K3  No IPv4 address with a port in any tracked file at HEAD. "@gmail" appears only in
+    manuscript/main.tex.
+K4  pytest -q passes; report the count.
+K5  CLEAN-CLONE GATE: push c1-cleanup, clone it into a fresh temp dir, create a fresh
+    python3.12 venv from requirements.txt, then: build_runs_table over the four
+    production grids = 204 rows byte-identical to analysis/runs.csv; verify_varpart
+    exit 0 with all claims passing (report the count); regenerate stack_effect.csv into
+    a scratch path, byte-identical to the committed file; check_typography passes.
+C1-12 Put the K4/K5 counts and date into docs/REPRODUCE.md (C1-9), commit.
+THEN merge c1-cleanup into main with git merge --ff-only, push, and delete the
+c1-cleanup branch.
+K6  git ls-remote --heads origin shows only main. git ls-remote --tags origin shows every
+    tag from C1-3 plus any archive/* tags from C1-4.
+REPORT: backup paths; the C1-2 explanation; archive tags created; files deleted and
+renamed; K1 to K6 results; the final main commit hash; the PDF sha256 (must be 91ace178...).
+
+## Phase C1a: Accept the 9 Oct 2026 history rewrite and preserve original commits (amends C1)
+
+AUTHORIZATION (Jerry): I accept that main and the tags were rewritten on 9 Oct 2026
+with git filter-branch. I authorize creating and pushing ONLY the annotated archive/*
+tags defined in C1a-4. No other tag, release, or Zenodo action. Do not create GitHub
+releases for archive tags.
+
+HARD RULES
+- No further history rewriting. No force-push of any ref. Never use --force or --tags.
+- Do not move or delete any existing tag (freeze-*, v0.9.*, v1.0.0, v0.9.0-n8-prep).
+- Do not touch manuscript/, src/, tests/, results/. manuscript/main.pdf sha256 must stay
+  91ace17843fa3b8cb7c8642221c820ea2c424d641e09727732f6186cec5e22b4.
+- Never delete backup/pre-author-rewrite-de20c25, the mirror, or the bundle.
+- Stop on any failed check and report. Do not improvise fixes.
+
+C1a-0 Log first. Append this phase with its checks to docs/IMPLEMENTATION_PLAN.md
+  under C1. Commit "plan: C1a rewrite acceptance and archive tags". Normal push.
+
+C1a-1 Inventory original commits.
+  a. Collect distinct git commit SHAs from every results/**/run_meta.json, including
+     results/quarantine_stackdrift. Print sha | run count.
+  b. Add de20c25 (pre-rewrite main tip) and e9ed8ec (v1.0.0 original base).
+  c. For v0.9.0-n8-prep, v0.9.1, v0.9.2, v1.0.0: print
+     tag | current peel | original commit | rewritten (Y/N).
+     Get originals from the Zenodo record file names (they contain the short SHA)
+     or the backup bundle. If an original cannot be determined, print UNKNOWN.
+  CHECK C1a-1: every SHA from (a) and (b) passes `git cat-file -e <sha>^{commit}`.
+  Any missing -> STOP.
+
+C1a-2 Prove the rewrite changed metadata only.
+  Pairs: 0812fcf/aaab722, f3e773d/d9fc854, 7cff2a4/051eea4, de20c25/daec4f6,
+  plus any release-tag pairs flagged rewritten in C1a-1c.
+  CHECK C1a-2 (all must hold, print each):
+   - git rev-parse <orig>^{tree} == git rev-parse <new>^{tree}
+   - git diff --stat de20c25 daec4f6 is empty
+   - git rev-list --count de20c25 == git rev-list --count daec4f6
+  Any mismatch -> STOP.
+
+C1a-3 Secret scan across ALL refs (old branches included).
+  Run gitleaks detect over full history, or git log -p --all with patterns:
+  hf_[A-Za-z0-9]{30,}, ghp_, github_pat_, AKIA[0-9A-Z]{16}, -----BEGIN,
+  \b\d{1,3}(\.\d{1,3}){3}:\d{2,5}\b
+  CHECK C1a-3: zero tokens or private keys. List host:port hits with file and commit
+  (expected: scripts/watch_n8_loop.sh 60.250.87.179:59442). Report them; do not rewrite.
+  Any token or key -> STOP, push nothing.
+
+C1a-4 Create annotated tags locally. Message for each:
+  "Original pre-rewrite commit. Rewritten twin: <new sha>. Trees identical
+   (verified C1a-2). See docs/PROVENANCE.md."
+   archive/freeze-v1-original    -> 0812fcf
+   archive/freeze-v3-original    -> f3e773d
+   archive/freeze-v3.1-original  -> 7cff2a4
+   archive/pre-rewrite-main      -> de20c25
+   archive/v1.0.0-original       -> e9ed8ec   (only if v1.0.0 now peels elsewhere)
+   archive/<tag>-original        for each v0.9.x tag flagged rewritten in C1a-1c
+   archive/run-commit-<short>    for any C1a-1a SHA not contained in the tags above
+  CHECK C1a-4: for every SHA from C1a-1a, `git tag --contains <sha> | grep '^archive/'`
+  is non-empty.
+
+C1a-5 Push archive tags one by one: git push origin refs/tags/archive/<name>
+  Record `gh release list` before and after.
+  CHECK C1a-5: `git ls-remote --tags origin 'refs/tags/archive/*'` shows every tag
+  with the peeled SHA from C1a-4. Release list unchanged (same count, same names).
+
+C1a-6 Documentation (one commit on main, normal push).
+  a. docs/PROVENANCE.md: new section "History rewrite of 9 Oct 2026". Table:
+     role | original SHA | archive tag | rewritten SHA | current tag | tree equal.
+     One row per C1a-1 SHA. Text:
+     "On 9 Oct 2026 the repository history was rewritten with git filter-branch to set
+     a single author and committer identity and to remove tool co-author trailers from
+     commit messages. File trees are unchanged. The run_meta.json files record the
+     original commit SHAs and are not edited. Each original commit is preserved under
+     an archive/* tag. Releases archived on Zenodo before this date were built from
+     the original commits."
+  b. docs/DECISIONS.md: append one row in the existing format (append-only):
+     "2026-10-09 | History rewrite accepted | main and tags were rewritten on 9 Oct 2026
+     (git filter-branch; author identity and co-author trailers only; trees identical,
+     verified C1a-2). Originals preserved under archive/* tags; mapping in
+     docs/PROVENANCE.md. No further rewrites."
+     The planned C1 wording "History not rewritten" must not be used anywhere.
+  c. REPRODUCE.md: one line stating that run_meta commit SHAs refer to original
+     commits, with a pointer to the PROVENANCE mapping.
+  d. CHANGELOG.md entry.
+  CHECK C1a-6:
+   - grep -rn "History not rewritten" . returns nothing
+   - PROVENANCE table has one row per C1a-1 SHA
+   - python scripts/verify_varpart.py exits 0, 51/51; print the V12 line verbatim
+   - check_typography.py passes on changed docs (no em dashes)
+   - PDF sha256 unchanged
+  If V12 fails -> STOP and paste the output. Do not edit V12.
+
+THEN RESUME C1 FROM C1-2 with these amendments:
+- C1-2's "stop if history rewritten" check is replaced by C1a-2 passing.
+- Before deleting any remote branch: git fetch --tags origin, re-run CHECK C1a-4
+  against the fetched tags, and confirm `gh pr list --state open` is empty
+  (if not, list the PRs and STOP).
+- Delete remote branches with `git push origin --delete <branch>`, one per command.
+  Keep only main.
+- New K7: in a fresh clone, every C1a-1a SHA passes git cat-file -e, and the
+  clean-clone gate passes (runs.csv 204 rows byte-identical, stack_effect.csv identical).
+- New K8: origin tag list = pre-C1 tags + archive/* only; release list unchanged.
+- Final report lists every tag, branch, and release action taken, with SHAs.
+  STOP after C1a-6 and report C1a-1c + V12 before any branch deletion.
