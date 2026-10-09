@@ -6,10 +6,8 @@ Replace this file in the Claude Project whenever the state changes. Keep only on
 
 ## Current phase
 
-Phase C1 (repo cleanup, branch pruning) stopped at C1-2: main and tags were rewritten
-on 9 Oct with git filter-branch (author identity, co-author trailers). Phase C1a issued:
-accept the rewrite, prove trees identical, secret-scan, push archive/* tags for original
-commits, document the mapping, then resume C1. Release on hold until Jerry says "release".
+Phase C1 (repo cleanup, branch pruning) resumed after C1a passed. Branches deleted only
+if contained in main or an archive/* tag. Release on hold until Jerry says "release".
 
 ## Venue
 
@@ -23,12 +21,16 @@ Practical submission cutoff December 2026 for March 2027 filing.
 - Analysis per ANALYSIS_PLAN I1 to I10 (p=10 primary per I10); pairwise CSVs added
 - Manuscript final: main.pdf sha256 91ace178...5e22b4, 11 pages, 38 refs, abstract 241
   words, preprint is ref [32]; bio, photo, AI disclosure, declarations done
-- Verifier 51/51 (V1 to V12, V9 claim map, bite-tested); layout gates G1 to G3;
-  typography checks; clean-clone gate (Python 3.12 venv) passes
-- All 38 references verified against primary sources; uncited claims fixed (P12)
-- Novelty search: no prior partition-vs-training-seed decomposition found
+- Verifier 51/51 (V12 PASS after rewrite); layout gates G1 to G3; typography checks;
+  clean-clone gate passes
+- All 38 references verified; uncited claims fixed (P12); novelty search clean
 - Zenodo concept DOI 10.5281/zenodo.22861074; CITATION.cff uses concept DOI
-- Backups of repo before C1: mirror and bundle (verified), backup/pre-author-rewrite-de20c25
+- Backups before C1: mirror, bundle, backup/pre-author-rewrite-de20c25
+- C1a: 9 Oct filter-branch rewrite accepted; trees identical (de20c25/daec4f6, 106
+  commits each); no tokens or keys in any ref; 8 archive/* tags pushed (3 freeze
+  originals, pre-rewrite main, 4 release originals); PROVENANCE mapping, DECISIONS row,
+  REPRODUCE note in 482575a; releases unchanged (4)
+- run_meta SHAs: 7cff2a4 x141, 0812fcf x128, f3e773d x1, all reachable via archive tags
 
 ## Key results (from repo CSVs; V9 registered)
 
@@ -38,15 +40,16 @@ Practical submission cutoff December 2026 for March 2027 filing.
 
 ## Next
 
-1. Jerry confirms the 9 Oct rewrite was his request, then Cursor runs C1a
-2. Review C1a-1c table and V12 line before any branch deletion
-3. Resume C1: prune to main only, file cleanup, README and REPRODUCE fixes, K1 to K8
-4. On "release": v1.1.0 from post-C1 main; verify PDF sha 91ace178
-5. Submit via ScholarOne: plain-text abstract, keywords, cover letter; record manuscript ID
+1. C1 resume: containment check, prune contained branches, file cleanup, README and
+   REPRODUCE fixes, remove instance IPs from tip, K1 to K8
+2. Review C1-R2 reports (270 run_meta breakdown, tree-match uniqueness) and any
+   non-contained branches
+3. On "release": v1.1.0 from post-C1 main; verify PDF sha 91ace178
+4. Submit via ScholarOne: plain-text abstract, keywords, cover letter; record manuscript ID
 
 ## Open items
 
-- Revoke campaign GitHub and HF tokens (recommended now, not after submission)
+- Revoke campaign GitHub and HF tokens (recommended now)
 - Zenodo record 23226559 (v1.0.0, premature): mark superseded after v1.1.0
 - Website title inconsistency (Intel, Nokia, DCG titles) before submission
 - IEEE membership plus Society for APC discount, decide before acceptance invoice;
@@ -55,8 +58,7 @@ Practical submission cutoff December 2026 for March 2027 filing.
 
 ## Standing rules
 
-- No tag, release, or Zenodo action without Jerry saying "release" (C1a archive tags
-  carry an explicit one-off authorization)
-- No further history rewrites, no force-push
+- No tag, release, or Zenodo action without Jerry saying "release"
+- No further history rewrites, no force-push; never delete C1 backups
 - Every change logged in docs/IMPLEMENTATION_PLAN.md as a phase with checks
-- Do not edit aggregator or training-loop code; v1.0.0 tag is not moved
+- Do not edit aggregator or training-loop code; existing tags are never moved

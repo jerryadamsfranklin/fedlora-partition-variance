@@ -791,3 +791,48 @@ THEN RESUME C1 FROM C1-2 with these amendments:
 - New K8: origin tag list = pre-C1 tags + archive/* only; release list unchanged.
 - Final report lists every tag, branch, and release action taken, with SHAs.
   STOP after C1a-6 and report C1a-1c + V12 before any branch deletion.
+
+## Phase C1 resume (after C1a, verified 9 Oct 2026)
+
+AUTHORIZATION (Jerry): Resume C1 from C1-3. Branch deletion is authorized subject to
+C1-R1. No tag, release, or Zenodo action. No history rewrite. No force-push.
+All C1 and C1a hard rules still apply (manuscript/, src/, tests/, results/ untouched;
+PDF sha256 91ace17843fa3b8cb7c8642221c820ea2c424d641e09727732f6186cec5e22b4).
+
+C1-R0 Log: append "C1 resume" with checks C1-R1..R3, K7, K8 to
+  docs/IMPLEMENTATION_PLAN.md. Commit and push normally.
+
+C1-R1 Branch containment (before any deletion).
+  git fetch --all --tags --prune
+  For each remote branch except main:
+    contained = tip is an ancestor of main OR of any archive/* tag
+    (git merge-base --is-ancestor <tip> <ref>)
+  Print: branch | tip | contained (Y/N) | containing ref
+  Delete ONLY contained branches: git push origin --delete <branch>, one per command.
+  Non-contained branches: do NOT delete. Print commits unique to them
+  (git log --oneline <tip> --not main $(git tag -l 'archive/*')) and leave them.
+  CHECK C1-R1: gh pr list --state open is empty (else STOP before deleting anything);
+  every deleted branch was contained.
+
+C1-R2 Reports only (non-blocking):
+  a. run_meta count by directory (results/<grid>/, results/quarantine_stackdrift/,
+     any other) and by SHA; show how 270 relates to runs.csv 204 + quarantine 54.
+  b. For each release tag original from C1a-1c: number of commits in the object store
+     with that tree. Expected exactly 1 each.
+
+C1-R3 Run the original C1 file-cleanup, README, and REPRODUCE steps, with this addition:
+  no host:port or bare instance IP may remain in the CURRENT tree. scripts/watch_n8_loop.sh
+  (60.250.87.179|59442) and the scan/report files containing host:ports are removed
+  or redacted at tip only. Do not touch history.
+  CHECK C1-R3: git grep -nE '\b([0-9]{1,3}\.){3}[0-9]{1,3}\b' HEAD returns no instance IPs
+  (list any hits; version strings like 2.2.0 are fine).
+
+Then run K1..K6 plus:
+  K7 Fresh clone: every SHA 7cff2a4, 0812fcf, f3e773d passes git cat-file -e;
+     clean-clone gate passes (runs.csv 204 rows byte-identical, stack_effect.csv identical);
+     verify_varpart.py 51/51.
+  K8 Origin tags = pre-C1 tags + 8 archive/* tags; gh release list = same 4 releases.
+
+Final report: every branch deleted (with tip SHA), every branch kept and why,
+every file removed or renamed, all tag/release actions (expected: none), K1..K8 results,
+PDF sha256.
